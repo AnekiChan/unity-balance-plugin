@@ -49,6 +49,14 @@ namespace BalancePlugin
             window.LoadGraph(graph);
         }
 
+        private void OnEnable()
+        {
+            _isConnecting = false;
+            _connectionStartNode = null;
+            _isDraggingNode = false;
+            _isPanning = false;
+        }
+
         private void OnGUI()
         {
             DrawToolbar();

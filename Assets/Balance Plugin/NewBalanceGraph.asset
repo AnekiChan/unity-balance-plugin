@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Nodes:
   - Id: 528f8e7a-bb83-4ce6-a670-5bcccf384c51
-    Position: {x: 807.4958, y: 199.71416}
+    Position: {x: 822.4958, y: 249.71417}
     Type: 0
     Label: Source
     Value: 100
   - Id: d0616f58-f015-47eb-bb2a-417f17e8a776
-    Position: {x: 279.24872, y: 212.945}
+    Position: {x: 270.24872, y: 239.945}
     Type: 0
     Label: Source
     Value: 100
   - Id: 6c464a3b-1d13-42b1-af3b-d6ab13977e73
-    Position: {x: 571.2748, y: 128.24329}
-    Type: 1
+    Position: {x: 538.2748, y: 170.24329}
+    Type: 3
     Label: ffgdfg
     Value: 100
   Connections:
