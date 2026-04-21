@@ -7,10 +7,16 @@ namespace BalancePlugin
     {
         private BalancingNode _currentNode;
         private BalancingWindow _parentWindow;
+        private BalancingData _data;
 
         public void SetParentWindow(BalancingWindow parent)
         {
             _parentWindow = parent;
+        }
+
+        public void SetData(BalancingData data)
+        {
+            _data = data;
         }
 
         public void SetNode(BalancingNode node)
@@ -36,25 +42,48 @@ namespace BalancePlugin
             _currentNode.DisplayName = EditorGUILayout.TextField("Name", _currentNode.DisplayName);
 
             EditorGUILayout.Space();
-            DrawCustomProperties();
+            DrawNodeSpecificFields();
         }
 
-        private void DrawCustomProperties()
+        private void DrawNodeSpecificFields()
         {
-            SerializedObject so = new SerializedObject(_currentNode);
-            SerializedProperty iterator = so.GetIterator();
-            bool first = true;
-
-            while (iterator.NextVisible(first))
+            if (_currentNode is SourceNode sourceNode)
             {
-                first = false;
-                if (iterator.name == "NodeId" || iterator.name == "Position" || iterator.name == "DisplayName")
-                    continue;
-
-                EditorGUILayout.PropertyField(iterator, true);
+                DrawCurrencySelector("Output Currency");
+                sourceNode.ProduceAmount = EditorGUILayout.IntField("Produce Amount", sourceNode.ProduceAmount);
+                sourceNode.SendInterval = EditorGUILayout.IntField("Send Interval (ticks)", sourceNode.SendInterval);
             }
+            else if (_currentNode is PoolNode poolNode)
+            {
+                DrawCurrencySelector("Stored Currency");
+                poolNode.StoredAmount = EditorGUILayout.IntField("Stored Amount", poolNode.StoredAmount);
+                poolNode.SendInterval = EditorGUILayout.IntField("Send Interval (ticks)", poolNode.SendInterval);
+                poolNode.OutputAmount = EditorGUILayout.IntField("Output Amount", poolNode.OutputAmount);
+            }
+            else if (_currentNode is DrainNode drainNode)
+            {
+                drainNode.DrainAmount = EditorGUILayout.IntField("Drain Amount", drainNode.DrainAmount);
+            }
+            else if (_currentNode is ConverterNode converterNode)
+            {
+                DrawCurrencySelector("Output Currency");
+                // converterNode.InputAmount = EditorGUILayout.IntField("Input Amount Required", converterNode.InputAmount);
+                converterNode.OutputAmount = EditorGUILayout.IntField("Output Amount", converterNode.OutputAmount);
+            }
+        }
 
-            so.ApplyModifiedProperties();
+        private void DrawCurrencySelector(string label)
+        {
+            if (_data != null && _data.Currencies != null && _data.Currencies.Count > 0)
+            {
+                if (_currentNode.CurrencyIndex >= _data.Currencies.Count)
+                    _currentNode.CurrencyIndex = 0;
+                _currentNode.CurrencyIndex = EditorGUILayout.Popup(label, _currentNode.CurrencyIndex, _data.Currencies.ToArray());
+            }
+            else
+            {
+                EditorGUILayout.LabelField(label, "No currencies available");
+            }
         }
     }
 }

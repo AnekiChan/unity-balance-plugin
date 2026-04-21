@@ -21,6 +21,9 @@ namespace BalancePlugin
         private const float NodeWidth = 100f;
         private const float NodeHeight = 40f;
         private const float ConnectionPointRadius = 8f;
+        private const float SidebarWidth = 200f;
+        private Vector2 _currencyScrollOffset;
+        private int _tickCount = 100;
 
         private BalancingNode _draggedNode;
         private Vector2 _dragOffset;
@@ -49,11 +52,25 @@ namespace BalancePlugin
             if (_data == null)
             {
                 _data = (BalancingData)EditorGUILayout.ObjectField(_data, typeof(BalancingData), false);
+                if (_data != null)
+                {
+                    _tickCount = _data.TickCount;
+                    LoadNodesFromAsset();
+                }
                 return;
             }
 
             GUILayout.BeginHorizontal();
-            _data = (BalancingData)EditorGUILayout.ObjectField(_data, typeof(BalancingData), false);
+            BalancingData newData = (BalancingData)EditorGUILayout.ObjectField(_data, typeof(BalancingData), false);
+            if (newData != _data)
+            {
+                _data = newData;
+                if (_data != null)
+                {
+                    _tickCount = _data.TickCount;
+                    LoadNodesFromAsset();
+                }
+            }
             if (GUILayout.Button("Create"))
             {
                 CreateNewData();
@@ -72,9 +89,17 @@ namespace BalancePlugin
             DrawConnections();
             DrawNodes();
 
+            DrawSidebar();
+
             ProcessInput(e);
             
             HandleMouseCapture();
+
+            if (GUI.changed && _data != null)
+            {
+                EditorUtility.SetDirty(_data);
+                AssetDatabase.SaveAssets();
+            }
         }
         
         private void HandleMouseCapture()
@@ -108,11 +133,41 @@ namespace BalancePlugin
                 AssetDatabase.SaveAssets();
 
                 _data = newData;
+                _tickCount = _data.TickCount;
                 EditorGUIUtility.PingObject(newData);
+                LoadNodesFromAsset();
             }
             catch (System.Exception ex)
             {
                 UnityEngine.Debug.LogError("CreateNewData: " + ex.Message + "\n" + ex.StackTrace);
+            }
+        }
+
+        private void LoadNodesFromAsset()
+        {
+            if (_data == null)
+                return;
+
+            if (_data.Nodes == null)
+                _data.Nodes = new System.Collections.Generic.List<BalancingNode>();
+            if (_data.Connections == null)
+                _data.Connections = new System.Collections.Generic.List<NodeConnection>();
+
+            UnityEngine.Object[] allSubAssets = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(_data));
+            
+            var validNodes = new System.Collections.Generic.List<BalancingNode>();
+            foreach (var obj in allSubAssets)
+            {
+                if (obj is BalancingNode node && obj != _data)
+                {
+                    validNodes.Add(node);
+                }
+            }
+
+            if (validNodes.Count > 0)
+            {
+                _data.Nodes = validNodes;
+                AssetDatabase.SaveAssets();
             }
         }
 
@@ -137,6 +192,7 @@ namespace BalancePlugin
                             _draggedNode.Position = mouseWorld - _dragOffset;
                             GUI.changed = true;
                             Repaint();
+                            EditorUtility.SetDirty(_data);
                             e.Use();
                         }
                         else if (_isDraggingConnection)
@@ -174,9 +230,12 @@ namespace BalancePlugin
                             {
                                 if (_currentMode == EditorMode.Connect)
                                 {
-                                    _isConnectingViaNode = true;
-                                    _connectionStartNode = clickedNode;
-                                    _connectionEndPoint = e.mousePosition;
+                                    if (clickedNode.CanHaveOutput)
+                                    {
+                                        _isConnectingViaNode = true;
+                                        _connectionStartNode = clickedNode;
+                                        _connectionEndPoint = e.mousePosition;
+                                    }
                                 }
                                 else
                                 {
@@ -239,7 +298,7 @@ namespace BalancePlugin
                         if (_isDraggingConnection && _data != null)
                         {
                             BalancingNode targetNode = GetNodeAtMouse();
-                            if (targetNode != null && targetNode != _connectionFromNode)
+                            if (targetNode != null && targetNode != _connectionFromNode && targetNode.CanHaveInput)
                             {
                                 CreateConnection(_connectionFromNode, targetNode);
                             }
@@ -249,7 +308,7 @@ namespace BalancePlugin
                         else if (_isConnectingViaNode && _connectionStartNode != null && _data != null)
                         {
                             BalancingNode targetNode = GetNodeAtMouse();
-                            if (targetNode != null && targetNode != _connectionStartNode)
+                            if (targetNode != null && targetNode != _connectionStartNode && targetNode.CanHaveInput)
                             {
                                 CreateConnection(_connectionStartNode, targetNode);
                             }
@@ -272,11 +331,15 @@ namespace BalancePlugin
                         string deletedNodeId = _selectedNode.NodeId;
                         foreach (var node in _data.Nodes)
                         {
+                            if (node == null)
+                                continue;
                             node.InputNodeIds.Remove(deletedNodeId);
                             node.OutputNodeIds.Remove(deletedNodeId);
                         }
                         _data.Nodes.Remove(_selectedNode);
+                        AssetDatabase.RemoveObjectFromAsset(_selectedNode);
                         _data.Connections.RemoveAll(c => c.FromNodeId == deletedNodeId || c.ToNodeId == deletedNodeId);
+                        AssetDatabase.SaveAssets();
                         _selectedNode = null;
                         e.Use();
                     }
@@ -299,16 +362,84 @@ namespace BalancePlugin
             gridOffset.x = gridOffset.x % scaledGridSize;
             gridOffset.y = gridOffset.y % scaledGridSize;
 
-            for (float x = gridOffset.x; x < position.width; x += scaledGridSize)
+            for (float x = gridOffset.x; x < position.width - SidebarWidth; x += scaledGridSize)
             {
                 Handles.DrawLine(new Vector2(x, 0), new Vector2(x, position.height));
             }
             for (float y = gridOffset.y; y < position.height; y += scaledGridSize)
             {
-                Handles.DrawLine(new Vector2(0, y), new Vector2(position.width, y));
+                Handles.DrawLine(new Vector2(0, y), new Vector2(position.width - SidebarWidth, y));
             }
 
             Handles.EndGUI();
+        }
+
+        private void DrawSidebar()
+        {
+            float toolbarHeight = 35f;
+            float sidebarX = position.width - SidebarWidth;
+            Rect sidebarRect = new Rect(sidebarX, toolbarHeight, SidebarWidth, position.height - toolbarHeight);
+            EditorGUI.DrawRect(sidebarRect, new Color(0.15f, 0.15f, 0.15f));
+
+            float sectionGap = 8f;
+            float padding = 10f;
+
+            float y = toolbarHeight + padding;
+
+            GUI.Label(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 20), "Simulation");
+            y += 22f;
+
+            if (_data != null)
+            {
+                _tickCount = EditorGUI.IntField(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 18), "Ticks", _tickCount);
+                y += 22f;
+
+                if (GUI.Button(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 22), "Predict"))
+                {
+                    _data.TickCount = _tickCount;
+                    _data.CalculateStatistics();
+                }
+            }
+
+            y += 28f;
+            EditorGUI.DrawRect(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 1), Color.gray);
+
+            y += sectionGap + padding;
+            GUI.Label(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 20), "Currencies");
+            y += 22f;
+
+            if (_data != null)
+            {
+                if (GUI.Button(new Rect(sidebarX + padding, y, 30, 20), "+"))
+                {
+                    _data.Currencies.Add("NewCurrency");
+                    _inspectorWindow?.SetData(_data);
+                }
+                y += 24f;
+
+                float listHeight = position.height - y - padding;
+                Rect scrollRect = new Rect(sidebarX + 5, y, SidebarWidth - 10, listHeight);
+                _currencyScrollOffset = GUI.BeginScrollView(scrollRect, _currencyScrollOffset, new Rect(0, 0, SidebarWidth - 30, _data.Currencies.Count * 28));
+
+                for (int i = 0; i < _data.Currencies.Count; i++)
+                {
+                    float itemY = i * 28;
+                    _data.Currencies[i] = GUI.TextField(new Rect(0, itemY, SidebarWidth - 60, 20), _data.Currencies[i]);
+                    if (GUI.Button(new Rect(SidebarWidth - 60, itemY, 25, 20), "X"))
+                    {
+                        _data.Currencies.RemoveAt(i);
+                        foreach (var node in _data.Nodes)
+                        {
+                            if (node.CurrencyIndex >= _data.Currencies.Count)
+                                node.CurrencyIndex = Mathf.Max(0, _data.Currencies.Count - 1);
+                        }
+                        _inspectorWindow?.SetData(_data);
+                        break;
+                    }
+                }
+
+                GUI.EndScrollView();
+            }
         }
 
         private void DrawNodes()
@@ -316,8 +447,17 @@ namespace BalancePlugin
             if (_data == null || _data.Nodes == null)
                 return;
 
+            if (_selectedNode != null && !_data.Nodes.Contains(_selectedNode))
+            {
+                _selectedNode = null;
+                _inspectorWindow?.SetNode(null);
+            }
+
             foreach (var node in _data.Nodes)
             {
+                if (node == null)
+                    continue;
+
                 Vector2 pos = (node.Position - _scrollOffset) * _zoom;
                 Rect nodeRect = new Rect(pos.x, pos.y, NodeWidth * _zoom, NodeHeight * _zoom);
 
@@ -346,9 +486,14 @@ namespace BalancePlugin
                 {
                     Handles.color = nodeColor;
                 }
-                Handles.DrawSolidDisc(inputDotPos, Vector3.forward, ConnectionPointRadius * _zoom);
-                Handles.color = nodeColor;
-                Handles.DrawSolidDisc(outputDotPos, Vector3.forward, ConnectionPointRadius * _zoom);
+
+                if (node.CanHaveInput)
+                    Handles.DrawSolidDisc(inputDotPos, Vector3.forward, ConnectionPointRadius * _zoom);
+                if (node.CanHaveOutput)
+                {
+                    Handles.color = nodeColor;
+                    Handles.DrawSolidDisc(outputDotPos, Vector3.forward, ConnectionPointRadius * _zoom);
+                }
                 Handles.EndGUI();
             }
         }
@@ -364,6 +509,9 @@ namespace BalancePlugin
 
         private void CreateConnection(BalancingNode fromNode, BalancingNode toNode)
         {
+            if (!fromNode.CanHaveOutput || !toNode.CanHaveInput)
+                return;
+
             if (fromNode.OutputNodeIds.Contains(toNode.NodeId))
                 return;
 
@@ -379,15 +527,18 @@ namespace BalancePlugin
 
         private void DrawConnections()
         {
-            if (_data == null || _data.Connections == null)
+            if (_data == null || _data.Connections == null || _data.Nodes == null)
                 return;
 
             Handles.BeginGUI();
 
             foreach (var conn in _data.Connections)
             {
-                BalancingNode fromNode = _data.Nodes.Find(n => n.NodeId == conn.FromNodeId);
-                BalancingNode toNode = _data.Nodes.Find(n => n.NodeId == conn.ToNodeId);
+                if (string.IsNullOrEmpty(conn.FromNodeId) || string.IsNullOrEmpty(conn.ToNodeId))
+                    continue;
+
+                BalancingNode fromNode = _data.Nodes.Find(n => n != null && n.NodeId == conn.FromNodeId);
+                BalancingNode toNode = _data.Nodes.Find(n => n != null && n.NodeId == conn.ToNodeId);
 
                 if (fromNode == null || toNode == null) continue;
 
@@ -437,6 +588,8 @@ namespace BalancePlugin
             Vector2 mousePos = (Event.current.mousePosition + _scrollOffset) / _zoom;
             foreach (var node in _data.Nodes)
             {
+                if (node == null)
+                    continue;
                 Rect nodeRect = new Rect(node.Position.x, node.Position.y, NodeWidth, NodeHeight);
                 if (nodeRect.Contains(mousePos))
                     return node;
@@ -453,6 +606,11 @@ namespace BalancePlugin
 
             foreach (var n in _data.Nodes)
             {
+                if (n == null)
+                    continue;
+                if (!n.CanHaveOutput)
+                    continue;
+
                 Vector2 outputPos = n.Position + new Vector2(NodeWidth, NodeHeight / 2);
 
                 if (Vector2.Distance(mousePos, outputPos) < ConnectionPointRadius + 5)
@@ -465,15 +623,15 @@ namespace BalancePlugin
 
         private NodeConnection GetConnectionAtMouse()
         {
-            if (_data == null || _data.Connections == null)
+            if (_data == null || _data.Connections == null || _data.Nodes == null)
                 return null;
 
             Vector2 mousePos = (Event.current.mousePosition + _scrollOffset) / _zoom;
 
             foreach (var conn in _data.Connections)
             {
-                BalancingNode fromNode = _data.Nodes.Find(n => n.NodeId == conn.FromNodeId);
-                BalancingNode toNode = _data.Nodes.Find(n => n.NodeId == conn.ToNodeId);
+                BalancingNode fromNode = _data.Nodes.Find(n => n != null && n.NodeId == conn.FromNodeId);
+                BalancingNode toNode = _data.Nodes.Find(n => n != null && n.NodeId == conn.ToNodeId);
 
                 if (fromNode == null || toNode == null)
                     continue;
@@ -529,9 +687,12 @@ namespace BalancePlugin
         private void CreateNode<T>(Vector2 worldPos) where T : BalancingNode
         {
             T node = CreateInstance<T>();
+            node.hideFlags = HideFlags.None;
             node.DisplayName = typeof(T).Name.Replace("Node", "");
             node.Position = worldPos;
             _data.Nodes.Add(node);
+            AssetDatabase.AddObjectToAsset(node, _data);
+            AssetDatabase.SaveAssets();
         }
 
         private void ShowNodeContextMenu(BalancingNode node)
@@ -542,11 +703,15 @@ namespace BalancePlugin
                 string deletedNodeId = node.NodeId;
                 foreach (var n in _data.Nodes)
                 {
+                    if (n == null)
+                        continue;
                     n.InputNodeIds.Remove(deletedNodeId);
                     n.OutputNodeIds.Remove(deletedNodeId);
                 }
                 _data.Nodes.Remove(node);
+                AssetDatabase.RemoveObjectFromAsset(node);
                 _data.Connections.RemoveAll(c => c.FromNodeId == deletedNodeId || c.ToNodeId == deletedNodeId);
+                AssetDatabase.SaveAssets();
             });
 
             if (node.OutputNodeIds.Count > 0)
@@ -556,7 +721,7 @@ namespace BalancePlugin
                     string nodeId = node.NodeId;
                     foreach (var targetId in node.OutputNodeIds)
                     {
-                        var targetNode = _data.Nodes.Find(n => n.NodeId == targetId);
+                        var targetNode = _data.Nodes.Find(n => n != null && n.NodeId == targetId);
                         if (targetNode != null)
                         {
                             targetNode.InputNodeIds.Remove(nodeId);
@@ -564,6 +729,7 @@ namespace BalancePlugin
                     }
                     node.OutputNodeIds.Clear();
                     _data.Connections.RemoveAll(c => c.FromNodeId == nodeId);
+                    AssetDatabase.SaveAssets();
                 });
             }
 
@@ -583,11 +749,11 @@ namespace BalancePlugin
                 _inspectorWindow = GetWindow<NodeInspectorWindow>("Node Inspector");
                 _inspectorWindow.SetParentWindow(this);
             }
+            _inspectorWindow.SetData(_data);
             _inspectorWindow.SetNode(_selectedNode);
             _inspectorWindow.Focus();
         }
 
-        [MenuItem("Tools/Balancing Inspector")]
         public static void OpenInspectorWindow()
         {
             GetWindow<NodeInspectorWindow>("Node Inspector");
