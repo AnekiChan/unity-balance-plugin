@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BalancePlugin
 {
@@ -417,19 +418,22 @@ namespace BalancePlugin
             {
                 if (GUI.Button(new Rect(sidebarX + padding, y, 30, 20), "+"))
                 {
-                    _data.Currencies.Add("NewCurrency");
+                    _data.Currencies.Add(new CurrencyInfo { Name = "NewCurrency", Color = GetRandomCurrencyColor() });
                     _inspectorWindow?.SetData(_data);
                 }
                 y += 24f;
 
                 float listHeight = sidebarHeight - (y - toolbarHeight) - padding;
                 Rect scrollRect = new Rect(sidebarX + 5, y, SidebarWidth - 10, listHeight);
-                _currencyScrollOffset = GUI.BeginScrollView(scrollRect, _currencyScrollOffset, new Rect(0, 0, SidebarWidth - 30, _data.Currencies.Count * 28));
+                _currencyScrollOffset = GUI.BeginScrollView(scrollRect, _currencyScrollOffset, new Rect(0, 0, SidebarWidth - 30, _data.Currencies.Count * 56));
 
                 for (int i = 0; i < _data.Currencies.Count; i++)
                 {
-                    float itemY = i * 28;
-                    _data.Currencies[i] = GUI.TextField(new Rect(0, itemY, SidebarWidth - 60, 20), _data.Currencies[i]);
+                    float itemY = i * 56;
+                    _data.Currencies[i].Name = GUI.TextField(new Rect(0, itemY, SidebarWidth - 60, 20), _data.Currencies[i].Name);
+                    Color newColor = EditorGUI.ColorField(new Rect(SidebarWidth - 32, itemY - 2, 30, 16), _data.Currencies[i].Color);
+                    if (newColor != _data.Currencies[i].Color)
+                        _data.Currencies[i].Color = newColor;
                     if (GUI.Button(new Rect(SidebarWidth - 60, itemY, 25, 20), "X"))
                     {
                         _data.Currencies.RemoveAt(i);
@@ -445,6 +449,24 @@ namespace BalancePlugin
 
                 GUI.EndScrollView();
             }
+        }
+
+        private Color GetRandomCurrencyColor()
+        {
+            Color[] presetColors = new Color[]
+            {
+                Color.red,
+                new Color(1f, 0.5f, 0f),
+                Color.yellow,
+                Color.green,
+                new Color(0f, 1f, 0.5f),
+                Color.cyan,
+                Color.blue,
+                new Color(0.5f, 0f, 1f),
+                new Color(1f, 0f, 0.5f),
+                new Color(1f, 0.5f, 0.5f)
+            };
+            return presetColors[Random.Range(0, presetColors.Length)];
         }
 
         private void DrawBottomPanel()
@@ -482,7 +504,94 @@ namespace BalancePlugin
             float graphWidth = position.width - SidebarWidth - controlPanelWidth - padding * 2;
             Rect graphRect = new Rect(graphX, panelY + padding, graphWidth, controlPanelHeight);
             EditorGUI.DrawRect(graphRect, new Color(0.18f, 0.18f, 0.18f));
-            GUI.Label(new Rect(graphX + 10, panelY + BottomPanelHeight / 2 - 8, graphWidth - 20, 16), "Graph (TBD)");
+
+            if (_data != null && _data.TickInfos != null && _data.TickInfos.Count > 1)
+            {
+                DrawGraph(graphX, graphY: panelY + padding, graphWidth, controlPanelHeight);
+            }
+            else
+            {
+                GUI.Label(new Rect(graphX + 10, panelY + BottomPanelHeight / 2 - 8, graphWidth - 20, 16), "Graph (run Predict)");
+            }
+        }
+
+        private void DrawGraph(float graphX, float graphY, float graphWidth, float graphHeight)
+        {
+            var tickInfos = _data.TickInfos;
+            int tickCount = tickInfos.Count - 1;
+            if (tickCount <= 0)
+                return;
+
+            float padding = 30f;
+            float labelHeight = 20f;
+            float drawWidth = graphWidth - padding * 2;
+            float drawHeight = graphHeight - labelHeight - padding;
+
+            int currencyCount = _data.Currencies.Count;
+            var allValues = new List<List<float>>();
+            for (int c = 0; c < currencyCount; c++)
+            {
+                var values = new List<float>();
+                foreach (var info in tickInfos)
+                {
+                    values.Add(info.Resources.ContainsKey(c) ? info.Resources[c] : 0f);
+                }
+                allValues.Add(values);
+            }
+
+            float minValue = 0f;
+            float maxValue = 0f;
+            for (int c = 0; c < currencyCount; c++)
+            {
+                float currencyMax = allValues[c].Max();
+                float currencyMin = allValues[c].Min();
+                if (currencyMax > maxValue)
+                    maxValue = currencyMax;
+                if (currencyMin < minValue && currencyMin < 0)
+                    minValue = currencyMin;
+            }
+
+            if (minValue >= 0)
+                minValue = 0;
+
+            float valueRange = maxValue - minValue;
+            if (valueRange < 0.001f)
+                valueRange = 1f;
+
+            Handles.BeginGUI();
+
+            Handles.color = new Color(0.5f, 0.5f, 0.5f, 0.3f);
+            Handles.DrawLine(new Vector2(graphX + padding, graphY + padding + drawHeight), new Vector2(graphX + padding + drawWidth, graphY + padding + drawHeight));
+            Handles.DrawLine(new Vector2(graphX + padding, graphY + padding), new Vector2(graphX + padding, graphY + padding + drawHeight));
+
+            for (int c = 0; c < currencyCount; c++)
+            {
+                var values = allValues[c];
+                Color lineColor = _data.Currencies[c].Color;
+                Handles.color = lineColor;
+
+                for (int t = 0; t < tickCount; t++)
+                {
+                    float x1 = graphX + padding + (float)t / tickCount * drawWidth;
+                    float y1 = graphY + padding + drawHeight - (values[t] - minValue) / valueRange * drawHeight;
+                    float x2 = graphX + padding + (float)(t + 1) / tickCount * drawWidth;
+                    float y2 = graphY + padding + drawHeight - (values[t + 1] - minValue) / valueRange * drawHeight;
+
+                    Handles.DrawLine(new Vector2(x1, y1), new Vector2(x2, y2));
+                }
+            }
+
+            Handles.EndGUI();
+
+            GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
+            labelStyle.fontSize = 10;
+            labelStyle.normal.textColor = Color.white;
+
+            GUI.Label(new Rect(graphX + padding, graphY + graphHeight - 12, 30, 16), "0", labelStyle);
+            GUI.Label(new Rect(graphX + graphWidth - padding - 20, graphY + graphHeight - 12, 30, 16), tickCount.ToString(), labelStyle);
+
+            string maxLabel = maxValue.ToString("F0");
+            GUI.Label(new Rect(graphX + 2, graphY + padding, 25, 16), maxLabel, labelStyle);
         }
 
         private void CreateNodeByType(string nodeType)

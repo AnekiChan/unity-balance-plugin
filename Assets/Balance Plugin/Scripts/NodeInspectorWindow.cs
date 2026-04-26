@@ -78,7 +78,10 @@ namespace BalancePlugin
             {
                 if (_currentNode.CurrencyIndex >= _data.Currencies.Count)
                     _currentNode.CurrencyIndex = 0;
-                _currentNode.CurrencyIndex = EditorGUILayout.Popup(label, _currentNode.CurrencyIndex, _data.Currencies.ToArray());
+                string[] currencyNames = new string[_data.Currencies.Count];
+                for (int i = 0; i < _data.Currencies.Count; i++)
+                    currencyNames[i] = _data.Currencies[i].Name;
+                _currentNode.CurrencyIndex = EditorGUILayout.Popup(label, _currentNode.CurrencyIndex, currencyNames);
             }
             else
             {

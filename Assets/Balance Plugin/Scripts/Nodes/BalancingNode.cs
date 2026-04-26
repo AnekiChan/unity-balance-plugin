@@ -26,7 +26,7 @@ namespace BalancePlugin
                 return "Coin";
             if (CurrencyIndex >= data.Currencies.Count)
                 CurrencyIndex = 0;
-            return data.Currencies[CurrencyIndex];
+            return data.Currencies[CurrencyIndex].Name;
         }
     }
 }

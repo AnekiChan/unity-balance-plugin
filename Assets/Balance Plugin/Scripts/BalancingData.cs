@@ -5,7 +5,7 @@ namespace BalancePlugin
 {
     public class BalancingData : ScriptableObject
     {
-        public List<string> Currencies = new List<string> { "Coin" };
+        public List<CurrencyInfo> Currencies = new List<CurrencyInfo> { new CurrencyInfo { Name = "Coin", Color = Color.red } };
         [HideInInspector]
         public List<BalancingNode> Nodes = new List<BalancingNode>();
         [HideInInspector]
@@ -15,6 +15,8 @@ namespace BalancePlugin
         [Min(1)] public int TickCount = 1;
 
         private List<TickInfo> _tickInfos = new List<TickInfo>();
+
+        public List<TickInfo> TickInfos => _tickInfos;
 
         private void OnEnable()
         {
@@ -75,7 +77,7 @@ namespace BalancePlugin
                 debugString += "Tick: " + info.Tick + " Resources: ";
                 foreach (var res in info.Resources)
                 {
-                    debugString += Currencies[res.Key] + ": " + res.Value + " ";
+                    debugString += Currencies[res.Key].Name + ": " + res.Value + " ";
                 }
                 debugString += "\n";
             }
@@ -100,5 +102,12 @@ namespace BalancePlugin
     {
         public int Tick;
         public Dictionary<int, int> Resources = new Dictionary<int, int>();
+    }
+
+    [System.Serializable]
+    public class CurrencyInfo
+    {
+        public string Name = "NewCurrency";
+        public Color Color = Color.red;
     }
 }
