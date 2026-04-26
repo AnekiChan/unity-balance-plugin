@@ -22,6 +22,7 @@ namespace BalancePlugin
         private const float NodeHeight = 40f;
         private const float ConnectionPointRadius = 8f;
         private const float SidebarWidth = 200f;
+        private const float BottomPanelHeight = 180f;
         private Vector2 _currencyScrollOffset;
         private int _tickCount = 100;
 
@@ -77,10 +78,6 @@ namespace BalancePlugin
             }
             _showGrid = GUILayout.Toggle(_showGrid, "Show Grid");
             GUILayout.Label("Zoom: " + _zoom.ToString("F1"));
-            if (GUILayout.Button(_currentMode == EditorMode.Select ? "Connect" : "Select", GUILayout.Width(60)))
-            {
-                _currentMode = _currentMode == EditorMode.Select ? EditorMode.Connect : EditorMode.Select;
-            }
             GUILayout.EndHorizontal();
 
             if (_showGrid)
@@ -90,9 +87,10 @@ namespace BalancePlugin
             DrawNodes();
 
             DrawSidebar();
+            DrawBottomPanel();
 
             ProcessInput(e);
-            
+
             HandleMouseCapture();
 
             if (GUI.changed && _data != null)
@@ -101,7 +99,7 @@ namespace BalancePlugin
                 AssetDatabase.SaveAssets();
             }
         }
-        
+
         private void HandleMouseCapture()
         {
             if (_isPanning)
@@ -154,7 +152,7 @@ namespace BalancePlugin
                 _data.Connections = new System.Collections.Generic.List<NodeConnection>();
 
             UnityEngine.Object[] allSubAssets = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(_data));
-            
+
             var validNodes = new System.Collections.Generic.List<BalancingNode>();
             foreach (var obj in allSubAssets)
             {
@@ -290,7 +288,7 @@ namespace BalancePlugin
                     }
                     break;
 
-                
+
 
                 case EventType.MouseUp:
                     if (e.button == 0)
@@ -366,7 +364,7 @@ namespace BalancePlugin
             {
                 Handles.DrawLine(new Vector2(x, 0), new Vector2(x, position.height));
             }
-            for (float y = gridOffset.y; y < position.height; y += scaledGridSize)
+            for (float y = gridOffset.y; y < position.height - BottomPanelHeight; y += scaledGridSize)
             {
                 Handles.DrawLine(new Vector2(0, y), new Vector2(position.width - SidebarWidth, y));
             }
@@ -378,33 +376,40 @@ namespace BalancePlugin
         {
             float toolbarHeight = 35f;
             float sidebarX = position.width - SidebarWidth;
-            Rect sidebarRect = new Rect(sidebarX, toolbarHeight, SidebarWidth, position.height - toolbarHeight);
+            float sidebarHeight = position.height - toolbarHeight - BottomPanelHeight;
+            Rect sidebarRect = new Rect(sidebarX, toolbarHeight, SidebarWidth, sidebarHeight);
             EditorGUI.DrawRect(sidebarRect, new Color(0.15f, 0.15f, 0.15f));
 
-            float sectionGap = 8f;
             float padding = 10f;
+            float sectionGap = 8f;
+            float halfHeight = (sidebarHeight - padding * 2 - sectionGap) / 2;
 
             float y = toolbarHeight + padding;
 
-            GUI.Label(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 20), "Simulation");
+            GUI.Label(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 20), "Nodes");
             y += 22f;
 
-            if (_data != null)
+            float nodeButtonSize = (SidebarWidth - padding * 2 - 4f) / 2;
+            string[] nodeTypes = new string[] { "Source", "Drain", "Converter", "Pool" };
+            for (int i = 0; i < nodeTypes.Length; i++)
             {
-                _tickCount = EditorGUI.IntField(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 18), "Ticks", _tickCount);
-                y += 22f;
+                float btnX = sidebarX + padding + (i % 2) * (nodeButtonSize + 4f);
+                float btnY = y + (i / 2) * (nodeButtonSize + 4f);
 
-                if (GUI.Button(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 22), "Predict"))
+                if (GUI.Button(new Rect(btnX, btnY, nodeButtonSize, nodeButtonSize), nodeTypes[i]))
                 {
-                    _data.TickCount = _tickCount;
-                    _data.CalculateStatistics();
+                    CreateNodeByType(nodeTypes[i]);
                 }
             }
 
-            y += 28f;
-            EditorGUI.DrawRect(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 1), Color.gray);
+            y += nodeButtonSize * 2 + 4f;
 
-            y += sectionGap + padding;
+            if (GUI.Button(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 28), _currentMode == EditorMode.Select ? "Connection Mode" : "Select Mode"))
+            {
+                _currentMode = _currentMode == EditorMode.Select ? EditorMode.Connect : EditorMode.Select;
+            }
+
+            y += 32f + sectionGap;
             GUI.Label(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 20), "Currencies");
             y += 22f;
 
@@ -417,7 +422,7 @@ namespace BalancePlugin
                 }
                 y += 24f;
 
-                float listHeight = position.height - y - padding;
+                float listHeight = sidebarHeight - (y - toolbarHeight) - padding;
                 Rect scrollRect = new Rect(sidebarX + 5, y, SidebarWidth - 10, listHeight);
                 _currencyScrollOffset = GUI.BeginScrollView(scrollRect, _currencyScrollOffset, new Rect(0, 0, SidebarWidth - 30, _data.Currencies.Count * 28));
 
@@ -442,12 +447,74 @@ namespace BalancePlugin
             }
         }
 
+        private void DrawBottomPanel()
+        {
+            float panelY = position.height - BottomPanelHeight;
+            Rect panelRect = new Rect(0, panelY, position.width - SidebarWidth, BottomPanelHeight);
+            EditorGUI.DrawRect(panelRect, new Color(0.12f, 0.12f, 0.12f));
+
+            float padding = 10f;
+            float controlPanelWidth = (position.width - SidebarWidth) / 4;
+            float controlPanelHeight = BottomPanelHeight - padding * 2;
+
+            Rect controlBoxRect = new Rect(padding, panelY + padding, controlPanelWidth - padding, controlPanelHeight);
+            EditorGUI.DrawRect(controlBoxRect, new Color(0.2f, 0.2f, 0.2f));
+
+            float innerPadding = 8f;
+            float ctrlInnerY = panelY + padding + innerPadding;
+
+            GUI.Label(new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 16), "Ticks:");
+            ctrlInnerY += 18f;
+
+            if (_data != null)
+            {
+                _tickCount = EditorGUI.IntField(new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 18), _tickCount);
+                ctrlInnerY += 24f;
+
+                if (GUI.Button(new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 22), "Predict"))
+                {
+                    _data.TickCount = _tickCount;
+                    _data.CalculateStatistics();
+                }
+            }
+
+            float graphX = padding + controlPanelWidth;
+            float graphWidth = position.width - SidebarWidth - controlPanelWidth - padding * 2;
+            Rect graphRect = new Rect(graphX, panelY + padding, graphWidth, controlPanelHeight);
+            EditorGUI.DrawRect(graphRect, new Color(0.18f, 0.18f, 0.18f));
+            GUI.Label(new Rect(graphX + 10, panelY + BottomPanelHeight / 2 - 8, graphWidth - 20, 16), "Graph (TBD)");
+        }
+
+        private void CreateNodeByType(string nodeType)
+        {
+            if (_data == null)
+                return;
+
+            float centerX = (position.width - SidebarWidth) / 2;
+            float centerY = (position.height - BottomPanelHeight) / 2;
+            Vector2 spawnPos = new Vector2(centerX, centerY);
+            spawnPos = (spawnPos - _scrollOffset) / _zoom;
+
+            switch (nodeType)
+            {
+                case "Source":
+                    CreateNode<SourceNode>(spawnPos);
+                    break;
+                case "Drain":
+                    CreateNode<DrainNode>(spawnPos);
+                    break;
+                case "Pool":
+                    CreateNode<PoolNode>(spawnPos);
+                    break;
+                case "Converter":
+                    CreateNode<ConverterNode>(spawnPos);
+                    break;
+            }
+        }
+
         private void DrawNodes()
         {
             if (_data == null || _data.Nodes == null)
-                return;
-
-            if (_selectedNode != null && !_data.Nodes.Contains(_selectedNode))
             {
                 _selectedNode = null;
                 _inspectorWindow?.SetNode(null);
