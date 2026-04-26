@@ -26,7 +26,7 @@ namespace BalancePlugin
                 Connections = new List<NodeConnection>();
         }
 
-        public void CalculateStatistics()
+        public void CalculateStatistics(bool debugValues = true)
         {
             _tickInfos.Clear();
             foreach (BalancingNode node in Nodes)
@@ -43,7 +43,8 @@ namespace BalancePlugin
                 }
                 CalculateTick(i);
             }
-            DebugTicks();
+            if (debugValues)
+                DebugTicks();
         }
 
         private void ClearNodes()

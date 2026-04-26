@@ -26,6 +26,7 @@ namespace BalancePlugin
         private const float BottomPanelHeight = 180f;
         private Vector2 _currencyScrollOffset;
         private int _tickCount = 100;
+        private bool _debugValues = true;
 
         private BalancingNode _draggedNode;
         private Vector2 _dragOffset;
@@ -496,8 +497,11 @@ namespace BalancePlugin
                 if (GUI.Button(new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 22), "Predict"))
                 {
                     _data.TickCount = _tickCount;
-                    _data.CalculateStatistics();
+                    _data.CalculateStatistics(_debugValues);
                 }
+                ctrlInnerY += 26f;
+
+                _debugValues = GUI.Toggle(new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 16), _debugValues, "Debug values");
             }
 
             float graphX = padding + controlPanelWidth;
@@ -564,6 +568,18 @@ namespace BalancePlugin
             Handles.DrawLine(new Vector2(graphX + padding, graphY + padding + drawHeight), new Vector2(graphX + padding + drawWidth, graphY + padding + drawHeight));
             Handles.DrawLine(new Vector2(graphX + padding, graphY + padding), new Vector2(graphX + padding, graphY + padding + drawHeight));
 
+            for (int i = 1; i < 10; i++)
+            {
+                float x = graphX + padding + (float)i / 10 * drawWidth;
+                Handles.DrawLine(new Vector2(x, graphY + padding), new Vector2(x, graphY + padding + drawHeight));
+            }
+
+            for (int i = 1; i < 4; i++)
+            {
+                float y = graphY + padding + drawHeight - (float)i / 4 * drawHeight;
+                Handles.DrawLine(new Vector2(graphX + padding, y), new Vector2(graphX + padding + drawWidth, y));
+            }
+
             for (int c = 0; c < currencyCount; c++)
             {
                 var values = allValues[c];
@@ -592,6 +608,25 @@ namespace BalancePlugin
 
             string maxLabel = maxValue.ToString("F0");
             GUI.Label(new Rect(graphX + 2, graphY + padding, 25, 16), maxLabel, labelStyle);
+
+            GUIStyle tickLabelStyle = new GUIStyle(GUI.skin.label);
+            tickLabelStyle.fontSize = 9;
+            tickLabelStyle.normal.textColor = new Color(0.7f, 0.7f, 0.7f);
+
+            for (int i = 1; i < 10; i++)
+            {
+                float x = graphX + padding + (float)i / 10 * drawWidth;
+                string xLabel = Mathf.RoundToInt((float)i / 10 * tickCount).ToString();
+                GUI.Label(new Rect(x - 10, graphY + graphHeight - 12, 20, 14), xLabel, tickLabelStyle);
+            }
+
+            for (int i = 1; i < 4; i++)
+            {
+                float y = graphY + padding + drawHeight - (float)i / 4 * drawHeight;
+                float yValue = minValue + (float)i / 4 * valueRange;
+                string yLabel = yValue.ToString("F0");
+                GUI.Label(new Rect(graphX + 2, y - 6, 25, 14), yLabel, tickLabelStyle);
+            }
         }
 
         private void CreateNodeByType(string nodeType)
