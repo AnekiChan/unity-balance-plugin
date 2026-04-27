@@ -10,7 +10,7 @@ namespace BalancePlugin
         public override bool CanHaveInput => false;
         public override bool CanHaveOutput => true;
 
-        [Min(1)] public int ProduceAmount = 1;
+        [Min(1)] public int OutputAmount = 1;
         [Min(1)] public int SendInterval = 1;
 
         public override void Initialize()
@@ -24,7 +24,7 @@ namespace BalancePlugin
             foreach (string nodeName in OutputNodeIds)
             {
                 BalancingNode node = data.GetNode(nodeName);
-                node.ProcessResources(data, tick, CurrencyIndex, ProduceAmount);
+                node.ProcessResources(data, tick, CurrencyIndex, OutputAmount);
             }
         }
     }

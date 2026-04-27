@@ -50,8 +50,8 @@ namespace BalancePlugin
             if (_currentNode is SourceNode sourceNode)
             {
                 DrawCurrencySelector("Output Currency");
-                sourceNode.ProduceAmount = EditorGUILayout.IntField("Produce Amount", sourceNode.ProduceAmount);
                 sourceNode.SendInterval = EditorGUILayout.IntField("Send Interval (ticks)", sourceNode.SendInterval);
+                sourceNode.OutputAmount = EditorGUILayout.IntField("Output Amount", sourceNode.OutputAmount);
             }
             else if (_currentNode is PoolNode poolNode)
             {
