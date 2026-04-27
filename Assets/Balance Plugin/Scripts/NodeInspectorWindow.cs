@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using System;
 
 namespace BalancePlugin
 {
@@ -8,6 +9,7 @@ namespace BalancePlugin
         private BalancingNode _currentNode;
         private BalancingWindow _parentWindow;
         private BalancingData _data;
+        private int _currentTick = 1;
 
         public void SetParentWindow(BalancingWindow parent)
         {
@@ -22,6 +24,11 @@ namespace BalancePlugin
         public void SetNode(BalancingNode node)
         {
             _currentNode = node;
+        }
+
+        public void SetCurrentTick(int tick)
+        {
+            _currentTick = tick;
         }
 
         [MenuItem("Tools/Balancing Inspector")]
@@ -43,6 +50,11 @@ namespace BalancePlugin
 
             EditorGUILayout.Space();
             DrawNodeSpecificFields();
+
+            if (GUI.changed)
+            {
+                EditorUtility.SetDirty(_currentNode);
+            }
         }
 
         private void DrawNodeSpecificFields()
@@ -51,14 +63,14 @@ namespace BalancePlugin
             {
                 DrawCurrencySelector("Output Currency");
                 sourceNode.SendInterval = EditorGUILayout.IntField("Send Interval (ticks)", sourceNode.SendInterval);
-                sourceNode.OutputAmount = EditorGUILayout.IntField("Output Amount", sourceNode.OutputAmount);
+                DrawOutputAmountFields(sourceNode.OutputAmountType, sourceNode, "Output");
             }
             else if (_currentNode is PoolNode poolNode)
             {
                 DrawCurrencySelector("Stored Currency");
-                poolNode.StoredAmount = EditorGUILayout.IntField("Stored Amount", poolNode.StoredAmount);
+                poolNode.StartAmount = EditorGUILayout.IntField("Initial Amount", poolNode.StartAmount);
                 poolNode.SendInterval = EditorGUILayout.IntField("Send Interval (ticks)", poolNode.SendInterval);
-                poolNode.OutputAmount = EditorGUILayout.IntField("Output Amount", poolNode.OutputAmount);
+                DrawOutputAmountFields(poolNode.OutputAmountType, poolNode, "Output");
             }
             else if (_currentNode is DrainNode drainNode)
             {
@@ -67,8 +79,117 @@ namespace BalancePlugin
             else if (_currentNode is ConverterNode converterNode)
             {
                 DrawCurrencySelector("Output Currency");
-                // converterNode.InputAmount = EditorGUILayout.IntField("Input Amount Required", converterNode.InputAmount);
-                converterNode.OutputAmount = EditorGUILayout.IntField("Output Amount", converterNode.OutputAmount);
+                DrawOutputAmountFields(converterNode.OutputAmountType, converterNode, "Output");
+            }
+        }
+
+        private void DrawOutputAmountFields(OutputAmountType amountType, BalancingNode node, string prefix)
+        {
+            Type nodeType = node.GetType();
+
+            System.Reflection.FieldInfo typeField = nodeType.GetField(prefix + "AmountType");
+            if (typeField != null)
+            {
+                OutputAmountType currentType = (OutputAmountType)typeField.GetValue(node);
+                OutputAmountType newType = (OutputAmountType)EditorGUILayout.EnumPopup(prefix + " Type", currentType);
+                if (newType != currentType)
+                {
+                    typeField.SetValue(node, newType);
+                    EditorUtility.SetDirty(node);
+                }
+
+                switch (newType)
+                {
+                    case OutputAmountType.Number:
+                        DrawNumberField(nodeType, node, prefix);
+                        break;
+
+                    case OutputAmountType.Formula:
+                        DrawFormulaField(nodeType, node, prefix);
+                        break;
+
+                    case OutputAmountType.Random:
+                        DrawRandomFields(nodeType, node, prefix);
+                        break;
+                }
+            }
+        }
+
+        private void DrawNumberField(Type nodeType, BalancingNode node, string prefix)
+        {
+            System.Reflection.FieldInfo amountField = nodeType.GetField(prefix + "Amount");
+            if (amountField != null)
+            {
+                int currentValue = (int)amountField.GetValue(node);
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.PrefixLabel(prefix + " Amount");
+                int newValue = EditorGUILayout.IntField(currentValue);
+                if (newValue != currentValue)
+                {
+                    amountField.SetValue(node, newValue);
+                    EditorUtility.SetDirty(node);
+                }
+                EditorGUILayout.EndHorizontal();
+            }
+        }
+
+        private void DrawFormulaField(Type nodeType, BalancingNode node, string prefix)
+        {
+            System.Reflection.FieldInfo formulaField = nodeType.GetField(prefix + "Formula");
+            if (formulaField != null)
+            {
+                string currentFormula = (string)formulaField.GetValue(node);
+                string newFormula = EditorGUILayout.TextField(prefix + " Formula", currentFormula);
+                if (newFormula != currentFormula)
+                {
+                    formulaField.SetValue(node, newFormula);
+                    EditorUtility.SetDirty(node);
+                }
+
+                EditorGUI.indentLevel++;
+                var (success, result, preview) = FormulaEvaluator.Evaluate(newFormula, _currentTick);
+                if (success)
+                {
+                    GUIStyle normalStyle = new GUIStyle(GUI.skin.label);
+                    normalStyle.normal.textColor = Color.black;
+                    // EditorGUILayout.LabelField("Result:", result, normalStyle);
+                    EditorGUILayout.LabelField("Preview:", "[" + preview + ", ..., " + result + "]");
+                }
+                else
+                {
+                    GUIStyle errorStyle = new GUIStyle(GUI.skin.label);
+                    errorStyle.normal.textColor = Color.red;
+                    EditorGUILayout.LabelField("Error:", result, errorStyle);
+                }
+                EditorGUI.indentLevel--;
+            }
+        }
+
+        private void DrawRandomFields(Type nodeType, BalancingNode node, string prefix)
+        {
+            System.Reflection.FieldInfo amountField = nodeType.GetField(prefix + "RandomAmount");
+            System.Reflection.FieldInfo chanceField = nodeType.GetField(prefix + "RandomChance");
+
+            if (amountField != null)
+            {
+                int currentAmount = (int)amountField.GetValue(node);
+                int newAmount = EditorGUILayout.IntField(prefix + " Amount", currentAmount);
+                if (newAmount != currentAmount)
+                {
+                    amountField.SetValue(node, newAmount);
+                    EditorUtility.SetDirty(node);
+                }
+            }
+
+            if (chanceField != null)
+            {
+                float currentChance = (float)chanceField.GetValue(node);
+                float newChance = EditorGUILayout.Slider(prefix + " Chance (%)", currentChance, 0f, 100f);
+                if (Math.Abs(newChance - currentChance) > 0.01f)
+                {
+                    chanceField.SetValue(node, newChance);
+                    EditorUtility.SetDirty(node);
+                }
             }
         }
 

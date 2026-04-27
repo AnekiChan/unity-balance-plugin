@@ -962,6 +962,7 @@ namespace BalancePlugin
             }
             _inspectorWindow.SetData(_data);
             _inspectorWindow.SetNode(_selectedNode);
+            _inspectorWindow.SetCurrentTick(_tickCount);
             _inspectorWindow.Focus();
         }
 

@@ -1,26 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8852778510509476673
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d39a91973cc6f64429985602188291c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeId: 0983bcff-9273-4ef0-b698-a3f4815a2748
-  DisplayName: Converter
-  Position: {x: 661.00006, y: 103}
-  InputNodeIds:
-  - fc80bfb9-1ebd-4a99-8c7d-f502f067c9ab
-  OutputNodeIds:
-  - cec0755e-6f97-47d8-b1e7-5669d3b7eef5
-  CurrencyIndex: 1
-  OutputAmount: 1
 --- !u!114 &-6359971014517114096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35,38 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: ca0e2eaf-901f-42b1-88cb-593d2b64046e
   DisplayName: Source
-  Position: {x: 219.42857, y: 223.99998}
+  Position: {x: 414.4286, y: 199}
   InputNodeIds: []
   OutputNodeIds:
   - 289d46a7-db32-464a-9e4e-4cdcd406ef91
-  - fc80bfb9-1ebd-4a99-8c7d-f502f067c9ab
   CurrencyIndex: 0
-  ProduceAmount: 1
+  OutputAmountType: 1
+  OutputAmount: 1
+  OutputFormula: ceil(x*1,5)
+  OutputRandomAmount: 1
+  OutputRandomChance: 18.8
   SendInterval: 1
---- !u!114 &-1730974073059379961
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeId: fc80bfb9-1ebd-4a99-8c7d-f502f067c9ab
-  DisplayName: Pool
-  Position: {x: 492.00006, y: 105.000015}
-  InputNodeIds:
-  - ca0e2eaf-901f-42b1-88cb-593d2b64046e
-  OutputNodeIds:
-  - 0983bcff-9273-4ef0-b698-a3f4815a2748
-  CurrencyIndex: 0
-  StartAmount: 0
-  StoredAmount: 2
-  SendInterval: 1
-  OutputAmount: 2
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,42 +45,10 @@ MonoBehaviour:
   Nodes:
   - {fileID: 9023382014242959607}
   - {fileID: -6359971014517114096}
-  - {fileID: -1730974073059379961}
-  - {fileID: -8852778510509476673}
-  - {fileID: 1289316968219969447}
   Connections:
   - FromNodeId: ca0e2eaf-901f-42b1-88cb-593d2b64046e
     ToNodeId: 289d46a7-db32-464a-9e4e-4cdcd406ef91
-  - FromNodeId: ca0e2eaf-901f-42b1-88cb-593d2b64046e
-    ToNodeId: fc80bfb9-1ebd-4a99-8c7d-f502f067c9ab
-  - FromNodeId: fc80bfb9-1ebd-4a99-8c7d-f502f067c9ab
-    ToNodeId: 0983bcff-9273-4ef0-b698-a3f4815a2748
-  - FromNodeId: 0983bcff-9273-4ef0-b698-a3f4815a2748
-    ToNodeId: cec0755e-6f97-47d8-b1e7-5669d3b7eef5
-  TickCount: 100
---- !u!114 &1289316968219969447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeId: cec0755e-6f97-47d8-b1e7-5669d3b7eef5
-  DisplayName: Pool
-  Position: {x: 838.00006, y: 101.00001}
-  InputNodeIds:
-  - 0983bcff-9273-4ef0-b698-a3f4815a2748
-  OutputNodeIds: []
-  CurrencyIndex: 1
-  StartAmount: 0
-  StoredAmount: 49
-  SendInterval: 1
-  OutputAmount: 1
+  TickCount: 10
 --- !u!114 &9023382014242959607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,12 +63,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 289d46a7-db32-464a-9e4e-4cdcd406ef91
   DisplayName: Pool
-  Position: {x: 493, y: 326.85712}
+  Position: {x: 580, y: 204.85712}
   InputNodeIds:
   - ca0e2eaf-901f-42b1-88cb-593d2b64046e
   OutputNodeIds: []
   CurrencyIndex: 0
-  StartAmount: 0
-  StoredAmount: 100
-  SendInterval: 1
+  OutputAmountType: 0
   OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  StartAmount: 0
+  StoredAmount: 85
+  SendInterval: 1
