@@ -27,6 +27,8 @@ namespace BalancePlugin
         private Vector2 _currencyScrollOffset;
         private int _tickCount = 100;
         private bool _debugValues = true;
+        private int _exportCurrencyIndex = 0;
+        private string _exportFolderPath = "Assets";
 
         private BalancingNode _draggedNode;
         private Vector2 _dragOffset;
@@ -118,7 +120,7 @@ namespace BalancePlugin
                 newData.hideFlags = HideFlags.None;
 
                 // string path = "Assets/Balance Plugin/SOs/BalancingData.asset";
-                string basePath = "Assets/Balance Plugin/SOs/BalancingData";
+                string basePath = "Assets/BalancingData_";
                 string extension = ".asset";
                 string path = basePath + extension;
 
@@ -502,6 +504,29 @@ namespace BalancePlugin
                 ctrlInnerY += 26f;
 
                 _debugValues = GUI.Toggle(new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 16), _debugValues, "Debug values");
+                ctrlInnerY += 26f;
+
+                if (_data.Currencies.Count > 0)
+                {
+                    string[] currencyNames = _data.Currencies.Select(c => c.Name).ToArray();
+                    _exportCurrencyIndex = EditorGUI.Popup(
+                        new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 18),
+                        _exportCurrencyIndex, currencyNames
+                    );
+                    ctrlInnerY += 22f;
+
+                    _exportFolderPath = EditorGUI.TextField(
+                        new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 18),
+                        _exportFolderPath
+                    );
+                    ctrlInnerY += 22f;
+
+                    if (GUI.Button(new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 22), $"Export {currencyNames[_exportCurrencyIndex]}"))
+                    {
+                        _data.CreateGraphSO(currencyNames[_exportCurrencyIndex], _exportFolderPath);
+                    }
+                    ctrlInnerY += 26f;
+                }
             }
 
             float graphX = padding + controlPanelWidth;

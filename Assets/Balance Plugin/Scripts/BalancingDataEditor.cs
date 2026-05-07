@@ -8,7 +8,7 @@ namespace BalancePlugin
         [MenuItem("Assets/Create/Balance/Balancing Data")]
         public static void CreateBalancingData()
         {
-            string path = "Assets/Balance Plugin/SOs/BalancingData_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".asset";
+            string path = "Assets/" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".asset";
             BalancingData data = CreateInstance<BalancingData>();
             AssetDatabase.CreateAsset(data, path);
             AssetDatabase.SaveAssets();

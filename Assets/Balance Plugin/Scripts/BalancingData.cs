@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 namespace BalancePlugin
@@ -88,6 +90,48 @@ namespace BalancePlugin
         public BalancingNode GetNode(string id)
         {
             return Nodes.Find(n => n.NodeId == id);
+        }
+
+        public void CreateGraphSO(string currencyName, string folderPath = "Assets")
+        {
+            if (_tickInfos.Count == 0)
+                return;
+
+            int currencyIndex = Currencies.FindIndex(c => c.Name == currencyName);
+            if (currencyIndex < 0)
+            {
+                Debug.LogError($"Currency '{currencyName}' not found");
+                return;
+            }
+
+            AnimationCurve graph = new AnimationCurve();
+            foreach (TickInfo info in _tickInfos)
+            {
+                if (info.Resources.TryGetValue(currencyIndex, out int value))
+                {
+                    graph.AddKey(info.Tick, value);
+                }
+            }
+
+            CurrencyGraph currencyGraph = CreateInstance<CurrencyGraph>();
+            currencyGraph.Graph = graph;
+
+            string absoluteDir = Path.GetFullPath(Path.Combine(Application.dataPath, "..", folderPath));
+            System.IO.Directory.CreateDirectory(absoluteDir);
+
+            string basePath = $"{folderPath}/{currencyName}Graph";
+            string extension = ".asset";
+
+            string path = basePath + extension;
+            int counter = 1;
+            while (AssetDatabase.LoadAssetAtPath<CurrencyGraph>(path) != null)
+            {
+                path = basePath + "_" + counter + extension;
+                counter++;
+            }
+            AssetDatabase.CreateAsset(currencyGraph, path);
+            AssetDatabase.SaveAssets();
+            EditorGUIUtility.PingObject(currencyGraph);
         }
     }
 
