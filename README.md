@@ -19,9 +19,9 @@ Unity plugin for game balancing similar to Machinations. Provides node-based vis
 2. Go to `Window > Package Manager`
 3. Click the `+` button in the top-left corner
 4. Select `Add package from git URL...`
-5. Enter the following URL:
+5. Enter the following URL (note the leading slash in the path):
    ```
-   https://github.com/AnekiChan/unity-balance-plugin.git?path=Assets/Balance%20Plugin
+   https://github.com/AnekiChan/unity-balance-plugin.git?path=/Assets/Balance%20Plugin
    ```
 6. Click `Add`
 
@@ -32,7 +32,7 @@ Add the following to your project's `Packages/manifest.json`:
 ```json
 {
   "dependencies": {
-    "com.anekichan.balance-plugin": "https://github.com/AnekiChan/unity-balance-plugin.git?path=Assets/Balance%20Plugin"
+    "com.anekichan.balance-plugin": "https://github.com/AnekiChan/unity-balance-plugin.git?path=/Assets/Balance%20Plugin"
   }
 }
 ```
