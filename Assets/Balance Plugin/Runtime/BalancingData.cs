@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace BalancePlugin
 {
@@ -92,6 +95,7 @@ namespace BalancePlugin
             return Nodes.Find(n => n.NodeId == id);
         }
 
+#if UNITY_EDITOR
         public void CreateGraphSO(string currencyName, string folderPath = "Assets")
         {
             if (_tickInfos.Count == 0)
@@ -133,6 +137,7 @@ namespace BalancePlugin
             AssetDatabase.SaveAssets();
             EditorGUIUtility.PingObject(currencyGraph);
         }
+#endif
     }
 
     [System.Serializable]
