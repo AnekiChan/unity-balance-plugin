@@ -1,0 +1,30 @@
+﻿{
+  "name": "com.anekichan.balance-plugin",
+  "version": "1.0.0",
+  "displayName": "Balance Plugin",
+  "description": "Unity plugin for game balancing similar to Machinations. Provides node-based visual scripting for economy and resource flow simulation.",
+  "unity": "2021.3",
+  "unityRelease": "0",
+  "documentationUrl": "https://github.com/AnekiChan/unity-balance-plugin#readme",
+  "changelogUrl": "https://github.com/AnekiChan/unity-balance-plugin/blob/main/CHANGELOG.md",
+  "licensesUrl": "https://github.com/AnekiChan/unity-balance-plugin/blob/main/LICENSE",
+  "repositories": {
+    "type": "git",
+    "url": "https://github.com/AnekiChan/unity-balance-plugin.git"
+  },
+  "keywords": [
+    "balance",
+    "economy",
+    "machinations",
+    "nodes",
+    "simulation",
+    "game design"
+  ],
+  "author": {
+    "name": "AnekiChan",
+    "url": "https://github.com/AnekiChan"
+  },
+  "dependencies": {
+    "com.unity.modules.imggui": "1.0.0"
+  }
+}
