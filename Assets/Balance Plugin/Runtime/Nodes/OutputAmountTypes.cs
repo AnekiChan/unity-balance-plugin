@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace BalancePlugin
@@ -54,25 +55,25 @@ namespace BalancePlugin
             { "e", Math.E }
         };
 
-        public static (bool success, string result, string preview) Evaluate(string formula, int x)
+        public static (bool success, string result, string preview) Evaluate(string formula, int x, int s = 0)
         {
             if (string.IsNullOrWhiteSpace(formula))
                 return (false, "Formula is empty", "");
 
             try
             {
-                double result = EvaluateFormula(formula, x);
+                double result = EvaluateFormula(formula, x, s);
                 int rounded = (int)Math.Round(result);
 
                 string preview = "";
                 for (int i = 1; i <= 2; i++)
                 {
-                    double previewValue = EvaluateFormula(formula, i);
-                    preview += ((int)Math.Round(previewValue)).ToString();
+                    double previewValue = EvaluateFormula(formula, i, s);
+                    preview += ((int)Math.Round(previewValue)).ToString(CultureInfo.InvariantCulture);
                     if (i < 2) preview += ", ";
                 }
 
-                return (true, rounded.ToString(), preview);
+                return (true, rounded.ToString(CultureInfo.InvariantCulture), preview);
             }
             catch (Exception ex)
             {
@@ -80,11 +81,11 @@ namespace BalancePlugin
             }
         }
 
-        public static int EvaluateSingle(string formula, int x)
+        public static int EvaluateSingle(string formula, int x, int s = 0)
         {
             try
             {
-                double result = EvaluateFormula(formula, x);
+                double result = EvaluateFormula(formula, x, s);
                 return (int)Math.Round(result);
             }
             catch
@@ -104,30 +105,23 @@ namespace BalancePlugin
             return result;
         }
 
-        private static double EvaluateFormula(string formula, int x)
+        private static double EvaluateFormula(string formula, int x, int s = 0)
         {
-            string processed = Preprocess(formula, x);
+            string processed = Preprocess(formula, x, s);
             return EvaluateExpression(processed);
         }
 
-        private static string Preprocess(string formula, int x)
+        private static string Preprocess(string formula, int x, int s = 0)
         {
             string result = formula.Trim().ToLower();
 
             result = result.Replace("^", "#pow#");
 
             foreach (var c in Constants)
-                result = Regex.Replace(result, @"\b" + c.Key + @"\b", c.Value.ToString(), RegexOptions.IgnoreCase);
+                result = Regex.Replace(result, @"\b" + c.Key + @"\b", c.Value.ToString(CultureInfo.InvariantCulture), RegexOptions.IgnoreCase);
 
-            result = Regex.Replace(result, @"(\w+)\s*\(", match =>
-            {
-                string func = match.Groups[1].Value.ToLower();
-                if (SingleArgFunctions.ContainsKey(func) || TwoArgFunctions.ContainsKey(func))
-                    return match.Value;
-                return match.Value;
-            });
-
-            result = result.Replace("x", x.ToString());
+            result = Regex.Replace(result, @"\bx\b", x.ToString(CultureInfo.InvariantCulture));
+            result = Regex.Replace(result, @"\bs\b", s.ToString(CultureInfo.InvariantCulture));
 
             return result;
         }
@@ -152,7 +146,7 @@ namespace BalancePlugin
                         double value = EvaluateFunctionCall(funcCall);
                         string before = funcStart > 0 ? expr.Substring(0, funcStart) : "";
                         string after = i + 1 < expr.Length ? expr.Substring(i + 1) : "";
-                        expr = before + value.ToString() + after;
+                        expr = before + value.ToString(CultureInfo.InvariantCulture) + after;
                         i = Math.Max(0, funcStart + 1);
                     }
                 }
@@ -171,7 +165,7 @@ namespace BalancePlugin
                 expr = ProcessMultiplyDivide(expr);
             }
 
-            return double.Parse(expr.Trim());
+            return double.Parse(expr.Trim(), CultureInfo.InvariantCulture);
         }
 
         private static bool TryFindMatchingParen(string expr, int closeIndex, out int openIndex)
@@ -256,7 +250,7 @@ namespace BalancePlugin
                 double expVal = EvaluateExpression(expr.Substring(idx + 5, end - idx - 5));
                 double result = Math.Pow(baseVal, expVal);
 
-                expr = expr.Substring(0, start) + result.ToString() + expr.Substring(end);
+                expr = expr.Substring(0, start) + result.ToString(CultureInfo.InvariantCulture) + expr.Substring(end);
                 idx = expr.IndexOf("#pow#", start);
             }
 
@@ -282,7 +276,7 @@ namespace BalancePlugin
                     double leftVal = EvaluateExpression(left);
                     double rightVal = EvaluateExpression(right);
 
-                    return (c == '+' ? leftVal + rightVal : leftVal - rightVal).ToString();
+                    return (c == '+' ? leftVal + rightVal : leftVal - rightVal).ToString(CultureInfo.InvariantCulture);
                 }
             }
 
@@ -303,13 +297,13 @@ namespace BalancePlugin
                     string left = expr.Substring(0, i).Trim();
                     string right = expr.Substring(i + 1).Trim();
 
-                    double leftVal = double.Parse(left);
-                    double rightVal = double.Parse(right);
+                    double leftVal = double.Parse(left, CultureInfo.InvariantCulture);
+                    double rightVal = double.Parse(right, CultureInfo.InvariantCulture);
 
                     return c == '*'
-                        ? (leftVal * rightVal).ToString()
-                        : c == '/' ? (leftVal / rightVal).ToString()
-                        : (leftVal % rightVal).ToString();
+                        ? (leftVal * rightVal).ToString(CultureInfo.InvariantCulture)
+                        : c == '/' ? (leftVal / rightVal).ToString(CultureInfo.InvariantCulture)
+                        : (leftVal % rightVal).ToString(CultureInfo.InvariantCulture);
                 }
             }
 

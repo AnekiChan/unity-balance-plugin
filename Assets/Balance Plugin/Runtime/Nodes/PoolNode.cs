@@ -26,7 +26,7 @@ namespace BalancePlugin
             StoredAmount = StartAmount;
         }
 
-        public int GetOutputAmount(int tick)
+        public int GetOutputAmount(int tick, int s = 0)
         {
             switch (OutputAmountType)
             {
@@ -34,7 +34,7 @@ namespace BalancePlugin
                     return OutputAmount;
 
                 case OutputAmountType.Formula:
-                    return FormulaEvaluator.EvaluateSingle(OutputFormula, tick);
+                    return FormulaEvaluator.EvaluateSingle(OutputFormula, tick, s);
 
                 case OutputAmountType.Random:
                     if (UnityEngine.Random.value * 100f < OutputRandomChance)
@@ -48,7 +48,7 @@ namespace BalancePlugin
 
         public override void ProcessResources(BalancingData data, int tick, int SendCurrencyIndex, int SendAmount)
         {
-            int outputAmount = GetOutputAmount(tick);
+            int outputAmount = GetOutputAmount(tick, SendAmount);
 
             if (prevTick != tick && (tick % SendInterval == 0) && StoredAmount >= outputAmount && outputAmount > 0)
             {

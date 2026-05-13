@@ -147,12 +147,11 @@ namespace BalancePlugin
                 }
 
                 EditorGUI.indentLevel++;
-                var (success, result, preview) = FormulaEvaluator.Evaluate(newFormula, _currentTick);
+                var (success, result, preview) = FormulaEvaluator.Evaluate(newFormula, _currentTick, 0);
                 if (success)
                 {
                     GUIStyle normalStyle = new GUIStyle(GUI.skin.label);
                     normalStyle.normal.textColor = Color.black;
-                    // EditorGUILayout.LabelField("Result:", result, normalStyle);
                     EditorGUILayout.LabelField("Preview:", "[" + preview + ", ..., " + result + "]");
                 }
                 else
@@ -161,6 +160,10 @@ namespace BalancePlugin
                     errorStyle.normal.textColor = Color.red;
                     EditorGUILayout.LabelField("Error:", result, errorStyle);
                 }
+                GUIStyle hintStyle = new GUIStyle(GUI.skin.label);
+                hintStyle.normal.textColor = Color.gray;
+                hintStyle.fontSize = 10;
+                EditorGUILayout.LabelField("x = tick number, s = input amount", hintStyle);
                 EditorGUI.indentLevel--;
             }
         }
