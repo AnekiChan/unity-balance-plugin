@@ -48,7 +48,7 @@ MonoBehaviour:
   - a98bceb0-0846-4c3a-a18d-a8050fac5450
   - 289d46a7-db32-464a-9e4e-4cdcd406ef91
   CurrencyIndex: 0
-  OutputAmountType: 0
+  OutputAmountType: 1
   OutputAmount: 1
   OutputFormula: ceil(x*1,5)
   OutputRandomAmount: 1

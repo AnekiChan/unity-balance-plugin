@@ -2,7 +2,6 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace BalancePlugin
 {
@@ -107,207 +106,257 @@ namespace BalancePlugin
 
         private static double EvaluateFormula(string formula, int x, int s = 0)
         {
-            string processed = Preprocess(formula, x, s);
-            return EvaluateExpression(processed);
-        }
-
-        private static string Preprocess(string formula, int x, int s = 0)
-        {
-            string result = formula.Trim().ToLower();
-
-            result = result.Replace("^", "#pow#");
-
-            foreach (var c in Constants)
-                result = Regex.Replace(result, @"\b" + c.Key + @"\b", c.Value.ToString(CultureInfo.InvariantCulture), RegexOptions.IgnoreCase);
-
-            result = Regex.Replace(result, @"\bx\b", x.ToString(CultureInfo.InvariantCulture));
-            result = Regex.Replace(result, @"\bs\b", s.ToString(CultureInfo.InvariantCulture));
-
-            return result;
+            return new Parser(formula, x, s).Parse();
         }
 
         private static double EvaluateExpression(string expr)
         {
-            expr = expr.Trim();
-            if (string.IsNullOrEmpty(expr))
-                return 0;
+            return new Parser(expr, 0, 0).Parse();
+        }
 
-            if (expr.Contains("(") && expr.Contains(")"))
+        private sealed class Parser
+        {
+            private readonly string _text;
+            private readonly int _x;
+            private readonly int _s;
+            private int _position;
+
+            public Parser(string text, int x, int s)
             {
-                for (int i = expr.Length - 1; i >= 0; i--)
+                _text = text ?? "";
+                _x = x;
+                _s = s;
+            }
+
+            public double Parse()
+            {
+                double value = ParseAddSubtract();
+                SkipWhitespace();
+
+                if (!IsAtEnd)
+                    throw new Exception("Unexpected token: " + Current);
+
+                return value;
+            }
+
+            private double ParseAddSubtract()
+            {
+                double value = ParseMultiplyDivide();
+
+                while (true)
                 {
-                    if (expr[i] == ')' && TryFindMatchingParen(expr, i, out int open))
+                    SkipWhitespace();
+
+                    if (Match('+'))
+                        value += ParseMultiplyDivide();
+                    else if (Match('-'))
+                        value -= ParseMultiplyDivide();
+                    else
+                        return value;
+                }
+            }
+
+            private double ParseMultiplyDivide()
+            {
+                double value = ParsePower();
+
+                while (true)
+                {
+                    SkipWhitespace();
+
+                    if (Match('*'))
+                        value *= ParsePower();
+                    else if (Match('/'))
+                        value /= ParsePower();
+                    else if (Match('%'))
+                        value %= ParsePower();
+                    else
+                        return value;
+                }
+            }
+
+            private double ParsePower()
+            {
+                double value = ParseUnary();
+                SkipWhitespace();
+
+                if (Match('^'))
+                    value = Math.Pow(value, ParsePower());
+
+                return value;
+            }
+
+            private double ParseUnary()
+            {
+                SkipWhitespace();
+
+                if (Match('+'))
+                    return ParseUnary();
+
+                if (Match('-'))
+                    return -ParseUnary();
+
+                return ParsePrimary();
+            }
+
+            private double ParsePrimary()
+            {
+                SkipWhitespace();
+
+                if (Match('('))
+                {
+                    double value = ParseAddSubtract();
+                    Expect(')');
+                    return value;
+                }
+
+                if (IsAtEnd)
+                    throw new Exception("Unexpected end of formula");
+
+                if (char.IsDigit(Current) || Current == '.' || Current == ',')
+                    return ParseNumber();
+
+                if (char.IsLetter(Current))
+                    return ParseIdentifier();
+
+                throw new Exception("Unexpected token: " + Current);
+            }
+
+            private double ParseNumber()
+            {
+                int start = _position;
+                bool hasDecimalSeparator = false;
+
+                while (!IsAtEnd)
+                {
+                    char c = Current;
+                    if (char.IsDigit(c))
                     {
-                        int funcStart = open;
-                        while (funcStart > 0 && char.IsLetter(expr[funcStart - 1]))
-                            funcStart--;
-
-                        string funcCall = expr.Substring(funcStart, i - funcStart + 1);
-                        double value = EvaluateFunctionCall(funcCall);
-                        string before = funcStart > 0 ? expr.Substring(0, funcStart) : "";
-                        string after = i + 1 < expr.Length ? expr.Substring(i + 1) : "";
-                        expr = before + value.ToString(CultureInfo.InvariantCulture) + after;
-                        i = Math.Max(0, funcStart + 1);
+                        _position++;
+                        continue;
                     }
-                }
-            }
 
-            if (expr.Contains("#pow#"))
-                expr = ProcessPowerOperator(expr);
-
-            if (expr.Contains("+") || expr.Contains("-"))
-            {
-                expr = ProcessAddSubtract(expr);
-            }
-
-            if (expr.Contains("*") || expr.Contains("/") || expr.Contains("%"))
-            {
-                expr = ProcessMultiplyDivide(expr);
-            }
-
-            return double.Parse(expr.Trim(), CultureInfo.InvariantCulture);
-        }
-
-        private static bool TryFindMatchingParen(string expr, int closeIndex, out int openIndex)
-        {
-            int depth = 1;
-            openIndex = -1;
-            for (int i = closeIndex - 1; i >= 0; i--)
-            {
-                if (expr[i] == ')') depth++;
-                else if (expr[i] == '(')
-                {
-                    depth--;
-                    if (depth == 0)
+                    if ((c == '.' || c == ',') && !hasDecimalSeparator && HasDigitAfter(_position))
                     {
-                        openIndex = i;
-                        return true;
+                        hasDecimalSeparator = true;
+                        _position++;
+                        continue;
                     }
+
+                    break;
                 }
-            }
-            return false;
-        }
 
-        private static double EvaluateFunctionCall(string call)
-        {
-            int openParen = call.IndexOf('(');
-            int closeParen = call.LastIndexOf(')');
-            string funcName = call.Substring(0, openParen).ToLower();
-            string argsStr = call.Substring(openParen + 1, closeParen - openParen - 1);
-
-            if (TwoArgFunctions.TryGetValue(funcName, out var twoArgFunc))
-            {
-                var args = SplitArguments(argsStr);
-                if (args.Length == 2)
-                    return twoArgFunc(EvaluateExpression(args[0]), EvaluateExpression(args[1]));
+                string number = _text.Substring(start, _position - start).Replace(',', '.');
+                return double.Parse(number, CultureInfo.InvariantCulture);
             }
 
-            if (SingleArgFunctions.TryGetValue(funcName, out var singleArgFunc))
+            private double ParseIdentifier()
             {
-                double arg = EvaluateExpression(argsStr);
-                return singleArgFunc(arg);
-            }
+                string name = ParseIdentifierName().ToLowerInvariant();
 
-            throw new Exception("Unknown function: " + funcName);
-        }
+                if (name == "x")
+                    return _x;
 
-        private static string[] SplitArguments(string args)
-        {
-            var result = new List<string>();
-            int depth = 0;
-            int lastStart = 0;
+                if (name == "s")
+                    return _s;
 
-            for (int i = 0; i < args.Length; i++)
-            {
-                if (args[i] == '(') depth++;
-                else if (args[i] == ')') depth--;
-                else if (depth == 0 && args[i] == ',')
+                if (Constants.TryGetValue(name, out double constant))
+                    return constant;
+
+                SkipWhitespace();
+                if (!Match('('))
+                    throw new Exception("Unknown variable: " + name);
+
+                List<double> args = new List<double>();
+                SkipWhitespace();
+
+                if (!Match(')'))
                 {
-                    result.Add(args.Substring(lastStart, i - lastStart).Trim());
-                    lastStart = i + 1;
+                    do
+                    {
+                        args.Add(ParseAddSubtract());
+                        SkipWhitespace();
+                    }
+                    while (Match(';') || MatchArgumentComma());
+
+                    Expect(')');
                 }
+
+                return EvaluateFunction(name, args);
             }
 
-            result.Add(args.Substring(lastStart).Trim());
-            return result.ToArray();
-        }
-
-        private static string ProcessPowerOperator(string expr)
-        {
-            int idx = expr.IndexOf("#pow#");
-            while (idx >= 0)
+            private double EvaluateFunction(string name, List<double> args)
             {
-                int start = idx - 1;
-                while (start >= 0 && (char.IsDigit(expr[start]) || expr[start] == '.' || expr[start] == '-'))
-                    start--;
-                start++;
-
-                int end = idx + 6;
-                while (end < expr.Length && (char.IsDigit(expr[end]) || expr[end] == '.' || expr[end] == '-'))
-                    end++;
-
-                double baseVal = EvaluateExpression(expr.Substring(start, idx - start));
-                double expVal = EvaluateExpression(expr.Substring(idx + 5, end - idx - 5));
-                double result = Math.Pow(baseVal, expVal);
-
-                expr = expr.Substring(0, start) + result.ToString(CultureInfo.InvariantCulture) + expr.Substring(end);
-                idx = expr.IndexOf("#pow#", start);
-            }
-
-            return expr.Replace("#pow#", "^");
-        }
-
-        private static string ProcessAddSubtract(string expr)
-        {
-            int parenDepth = 0;
-
-            for (int i = expr.Length - 1; i >= 0; i--)
-            {
-                char c = expr[i];
-                if (c == ')') parenDepth++;
-                else if (c == '(') parenDepth--;
-                else if (parenDepth == 0 && (c == '+' || (c == '-' && i > 0 && !char.IsDigit(expr[i - 1]) && expr[i - 1] != ')')))
+                if (SingleArgFunctions.TryGetValue(name, out var singleArgFunc))
                 {
-                    string left = expr.Substring(0, i).Trim();
-                    string right = expr.Substring(i + 1).Trim();
+                    if (args.Count != 1)
+                        throw new Exception("Function " + name + " expects 1 argument");
 
-                    if (left.Length == 0) continue;
-
-                    double leftVal = EvaluateExpression(left);
-                    double rightVal = EvaluateExpression(right);
-
-                    return (c == '+' ? leftVal + rightVal : leftVal - rightVal).ToString(CultureInfo.InvariantCulture);
+                    return singleArgFunc(args[0]);
                 }
-            }
 
-            return expr;
-        }
-
-        private static string ProcessMultiplyDivide(string expr)
-        {
-            int parenDepth = 0;
-
-            for (int i = expr.Length - 1; i >= 0; i--)
-            {
-                char c = expr[i];
-                if (c == ')') parenDepth++;
-                else if (c == '(') parenDepth--;
-                else if (parenDepth == 0 && (c == '*' || c == '/' || c == '%'))
+                if (TwoArgFunctions.TryGetValue(name, out var twoArgFunc))
                 {
-                    string left = expr.Substring(0, i).Trim();
-                    string right = expr.Substring(i + 1).Trim();
+                    if (args.Count != 2)
+                        throw new Exception("Function " + name + " expects 2 arguments");
 
-                    double leftVal = double.Parse(left, CultureInfo.InvariantCulture);
-                    double rightVal = double.Parse(right, CultureInfo.InvariantCulture);
-
-                    return c == '*'
-                        ? (leftVal * rightVal).ToString(CultureInfo.InvariantCulture)
-                        : c == '/' ? (leftVal / rightVal).ToString(CultureInfo.InvariantCulture)
-                        : (leftVal % rightVal).ToString(CultureInfo.InvariantCulture);
+                    return twoArgFunc(args[0], args[1]);
                 }
+
+                throw new Exception("Unknown function: " + name);
             }
 
-            return expr;
+            private string ParseIdentifierName()
+            {
+                int start = _position;
+
+                while (!IsAtEnd && (char.IsLetterOrDigit(Current) || Current == '_'))
+                    _position++;
+
+                return _text.Substring(start, _position - start);
+            }
+
+            private bool MatchArgumentComma()
+            {
+                SkipWhitespace();
+
+                if (Current != ',')
+                    return false;
+
+                _position++;
+                return true;
+            }
+
+            private void Expect(char expected)
+            {
+                SkipWhitespace();
+
+                if (!Match(expected))
+                    throw new Exception("Expected '" + expected + "'");
+            }
+
+            private bool Match(char expected)
+            {
+                if (Current != expected)
+                    return false;
+
+                _position++;
+                return true;
+            }
+
+            private void SkipWhitespace()
+            {
+                while (!IsAtEnd && char.IsWhiteSpace(Current))
+                    _position++;
+            }
+
+            private bool HasDigitAfter(int index)
+            {
+                return index + 1 < _text.Length && char.IsDigit(_text[index + 1]);
+            }
+
+            private bool IsAtEnd => _position >= _text.Length;
+            private char Current => IsAtEnd ? '\0' : _text[_position];
         }
     }
 }
