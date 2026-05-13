@@ -7,8 +7,8 @@
   "unityRelease": "0",
   "documentationUrl": "https://github.com/AnekiChan/unity-balance-plugin#readme",
   "changelogUrl": "https://github.com/AnekiChan/unity-balance-plugin/blob/main/CHANGELOG.md",
-  "licenseUrl": "https://github.com/AnekiChan/unity-balance-plugin/blob/main/LICENSE",
-  "repository": {
+  "licensesUrl": "https://github.com/AnekiChan/unity-balance-plugin/blob/main/LICENSE",
+  "repositories": {
     "type": "git",
     "url": "https://github.com/AnekiChan/unity-balance-plugin.git"
   },
