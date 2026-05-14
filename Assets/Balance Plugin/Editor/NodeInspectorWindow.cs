@@ -31,7 +31,7 @@ namespace BalancePlugin
             _currentTick = tick;
         }
 
-        [MenuItem("Tools/Balancing Inspector")]
+        [MenuItem("Tools/Balance/Balance Inspector")]
         public static void ShowWindow()
         {
             GetWindow<NodeInspectorWindow>("Node Inspector");

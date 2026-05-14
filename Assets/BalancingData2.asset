@@ -14,16 +14,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 22767ce4-e595-4127-bfce-8522c7133f26
   DisplayName: Source
-  Position: {x: 243, y: 195}
+  Position: {x: 288, y: 162}
   InputNodeIds: []
   OutputNodeIds:
-  - 56297537-5730-4b0c-9cf6-08b79a8ca02d
+  - 82c2281d-9a49-4010-af24-31e45f43e28b
+  - c07acaad-8378-45d3-977f-55404efcda14
   CurrencyIndex: 0
-  OutputAmountType: 1
+  OutputAmountType: 0
   OutputAmount: 1
-  OutputFormula: x^2
+  OutputFormula: x
   OutputRandomAmount: 1
   OutputRandomChance: 50
+  SendInterval: 1
+--- !u!114 &-4100903886359840317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 82c2281d-9a49-4010-af24-31e45f43e28b
+  DisplayName: Pool
+  Position: {x: 487, y: 273}
+  InputNodeIds:
+  - 22767ce4-e595-4127-bfce-8522c7133f26
+  OutputNodeIds: []
+  CurrencyIndex: 0
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  StartAmount: 0
+  StoredAmount: 100
   SendInterval: 1
 --- !u!114 &-3238084182884107214
 MonoBehaviour:
@@ -39,15 +67,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 56297537-5730-4b0c-9cf6-08b79a8ca02d
   DisplayName: Converter
-  Position: {x: 435, y: 222}
+  Position: {x: 589, y: 115}
   InputNodeIds:
-  - 22767ce4-e595-4127-bfce-8522c7133f26
+  - c07acaad-8378-45d3-977f-55404efcda14
   OutputNodeIds:
   - 0550ddff-ac4e-408f-9242-74278585307e
   CurrencyIndex: 1
-  OutputAmountType: 1
+  OutputAmountType: 0
   OutputAmount: 1
-  OutputFormula: s*(0.1/x)
+  OutputFormula: 1
   OutputRandomAmount: 1
   OutputRandomChance: 50
 --- !u!114 &11400000
@@ -71,12 +99,18 @@ MonoBehaviour:
   - {fileID: -5574955690540403210}
   - {fileID: -3238084182884107214}
   - {fileID: 7213885663186602774}
+  - {fileID: -4100903886359840317}
+  - {fileID: 8160663312115862930}
   Connections:
-  - FromNodeId: 22767ce4-e595-4127-bfce-8522c7133f26
-    ToNodeId: 56297537-5730-4b0c-9cf6-08b79a8ca02d
   - FromNodeId: 56297537-5730-4b0c-9cf6-08b79a8ca02d
     ToNodeId: 0550ddff-ac4e-408f-9242-74278585307e
-  TickCount: 1000
+  - FromNodeId: 22767ce4-e595-4127-bfce-8522c7133f26
+    ToNodeId: 82c2281d-9a49-4010-af24-31e45f43e28b
+  - FromNodeId: 22767ce4-e595-4127-bfce-8522c7133f26
+    ToNodeId: c07acaad-8378-45d3-977f-55404efcda14
+  - FromNodeId: c07acaad-8378-45d3-977f-55404efcda14
+    ToNodeId: 56297537-5730-4b0c-9cf6-08b79a8ca02d
+  TickCount: 100
 --- !u!114 &7213885663186602774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,7 +125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 0550ddff-ac4e-408f-9242-74278585307e
   DisplayName: Pool
-  Position: {x: 617, y: 225}
+  Position: {x: 762, y: 115}
   InputNodeIds:
   - 56297537-5730-4b0c-9cf6-08b79a8ca02d
   OutputNodeIds: []
@@ -102,5 +136,33 @@ MonoBehaviour:
   OutputRandomAmount: 1
   OutputRandomChance: 50
   StartAmount: 0
-  StoredAmount: 50067
+  StoredAmount: 49
+  SendInterval: 1
+--- !u!114 &8160663312115862930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: c07acaad-8378-45d3-977f-55404efcda14
+  DisplayName: Pool
+  Position: {x: 436, y: 115}
+  InputNodeIds:
+  - 22767ce4-e595-4127-bfce-8522c7133f26
+  OutputNodeIds:
+  - 56297537-5730-4b0c-9cf6-08b79a8ca02d
+  CurrencyIndex: 0
+  OutputAmountType: 0
+  OutputAmount: 2
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  StartAmount: 0
+  StoredAmount: 2
   SendInterval: 1

@@ -24,6 +24,7 @@ namespace BalancePlugin
         public override void Initialize()
         {
             StoredAmount = StartAmount;
+            prevTick = 0;
         }
 
         public int GetOutputAmount(int tick, int s = 0)
@@ -55,7 +56,7 @@ namespace BalancePlugin
                 foreach (string nodeName in OutputNodeIds)
                 {
                     BalancingNode node = data.GetNode(nodeName);
-                    node.ProcessResources(data, tick, CurrencyIndex, outputAmount);
+                    node?.ProcessResources(data, tick, CurrencyIndex, outputAmount);
                     StoredAmount -= outputAmount;
                     prevTick = tick;
                 }

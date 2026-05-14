@@ -36,12 +36,14 @@ namespace BalancePlugin
             _tickInfos.Clear();
             foreach (BalancingNode node in Nodes)
             {
+                if (node == null)
+                    continue;
                 node.Initialize();
             }
             CalculateTick(0);
             for (int i = 1; i <= TickCount; i++)
             {
-                List<BalancingNode> startNodes = Nodes.FindAll(x => x.InputNodeIds.Count == 0);
+                List<BalancingNode> startNodes = Nodes.FindAll(x => x != null && x.InputNodeIds.Count == 0);
                 foreach (BalancingNode node in startNodes)
                 {
                     node.ProcessResources(this, i, -1, -1);
@@ -63,7 +65,7 @@ namespace BalancePlugin
 
         private void CalculateTick(int tick)
         {
-            List<BalancingNode> poolNodes = Nodes.FindAll(x => x.NodeType == "Pool");
+            List<BalancingNode> poolNodes = Nodes.FindAll(x => x != null && x.NodeType == "Pool");
             Dictionary<int, int> resourses = new Dictionary<int, int>();
             foreach (BalancingNode node in poolNodes)
             {
@@ -92,7 +94,7 @@ namespace BalancePlugin
 
         public BalancingNode GetNode(string id)
         {
-            return Nodes.Find(n => n.NodeId == id);
+            return Nodes.Find(n => n != null && n.NodeId == id);
         }
 
 #if UNITY_EDITOR

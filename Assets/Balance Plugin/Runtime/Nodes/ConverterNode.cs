@@ -47,7 +47,7 @@ namespace BalancePlugin
             foreach (string nodeName in OutputNodeIds)
             {
                 BalancingNode node = data.GetNode(nodeName);
-                node.ProcessResources(data, tick, CurrencyIndex, amount);
+                node?.ProcessResources(data, tick, CurrencyIndex, amount);
             }
         }
     }

@@ -1,148 +1,226 @@
-using UnityEngine;
-using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace BalancePlugin
 {
-    public enum EditorMode
-    {
-        Select,
-        Connect
-    }
-
     public class BalancingWindow : EditorWindow
     {
+        private const float MinRightPanelWidth = 180f;
+        private const float MaxRightPanelWidth = 380f;
+        private const float MinBottomPanelHeight = 120f;
+        private const float MaxBottomPanelHeight = 360f;
+
         private BalancingData _data;
-        private EditorMode _currentMode = EditorMode.Select;
-        private Vector2 _scrollOffset;
-        private float _zoom = 1f;
-        private bool _showGrid = true;
-        private const float GridSize = 20f;
-        private const float NodeWidth = 100f;
-        private const float NodeHeight = 40f;
-        private const float ConnectionPointRadius = 8f;
-        private const float SidebarWidth = 200f;
-        private const float BottomPanelHeight = 180f;
-        private Vector2 _currencyScrollOffset;
+        private BalanceGraphView _graphView;
+        private VisualElement _rightPanel;
+        private IMGUIContainer _bottomPanel;
+        private ScrollView _currencyList;
+        private Label _emptyState;
+        private float _rightPanelWidth = 240f;
+        private float _bottomPanelHeight = 210f;
         private int _tickCount = 100;
         private bool _debugValues = true;
-        private int _exportCurrencyIndex = 0;
+        private int _exportCurrencyIndex;
         private string _exportFolderPath = "Assets";
 
-        private BalancingNode _draggedNode;
-        private Vector2 _dragOffset;
-        private bool _isDraggingConnection;
-        private BalancingNode _connectionFromNode;
-        private Vector2 _connectionEndPoint;
-        private BalancingNode _connectionStartNode;
-        private bool _isConnectingViaNode;
-
-        private BalancingNode _selectedNode;
-        private NodeInspectorWindow _inspectorWindow;
-        private bool _inspectorWindowOpen;
-        private bool _isPanning;
-        private Vector2 _lastMousePos;
-
-        [MenuItem("Tools/Balancing Window")]
+        [MenuItem("Tools/Balance/Balance Window")]
         public static void ShowWindow()
         {
-            GetWindow<BalancingWindow>("Balancing");
+            GetWindow<BalancingWindow>("Balance");
         }
 
-        private void OnGUI()
+        public static void OpenInspectorWindow()
         {
-            Event e = Event.current;
-
-            if (_data == null)
-            {
-                _data = (BalancingData)EditorGUILayout.ObjectField(_data, typeof(BalancingData), false);
-                if (_data != null)
-                {
-                    _tickCount = _data.TickCount;
-                    LoadNodesFromAsset();
-                }
-                return;
-            }
-
-            GUILayout.BeginHorizontal();
-            BalancingData newData = (BalancingData)EditorGUILayout.ObjectField(_data, typeof(BalancingData), false);
-            if (newData != _data)
-            {
-                _data = newData;
-                if (_data != null)
-                {
-                    _tickCount = _data.TickCount;
-                    LoadNodesFromAsset();
-                }
-            }
-            if (GUILayout.Button("Create"))
-            {
-                CreateNewData();
-            }
-            _showGrid = GUILayout.Toggle(_showGrid, "Show Grid");
-            GUILayout.Label("Zoom: " + _zoom.ToString("F1"));
-            GUILayout.EndHorizontal();
-
-            if (_showGrid)
-                DrawGrid();
-
-            DrawConnections();
-            DrawNodes();
-
-            DrawSidebar();
-            DrawBottomPanel();
-
-            ProcessInput(e);
-
-            HandleMouseCapture();
-
-            if (GUI.changed && _data != null)
-            {
-                EditorUtility.SetDirty(_data);
-                AssetDatabase.SaveAssets();
-            }
+            NodeInspectorWindow.ShowWindow();
         }
 
-        private void HandleMouseCapture()
+        private void OnEnable()
         {
-            if (_isPanning)
-            {
-                Repaint();
-            }
+            BuildWindow();
         }
 
-        private void CreateNewData()
+        private void OnDisable()
         {
-            try
+            _graphView?.SaveNodePositions();
+        }
+
+        private void BuildWindow()
+        {
+            rootVisualElement.Clear();
+            rootVisualElement.style.flexDirection = FlexDirection.Column;
+
+            var toolbar = new Toolbar();
+            toolbar.Add(new Label("Data") { style = { marginLeft = 6, unityFontStyleAndWeight = FontStyle.Bold } });
+
+            var dataField = new ObjectField
             {
-                BalancingData newData = CreateInstance<BalancingData>();
-                newData.hideFlags = HideFlags.None;
+                objectType = typeof(BalancingData),
+                allowSceneObjects = false,
+                value = _data,
+                style = { minWidth = 260, flexGrow = 1 }
+            };
+            dataField.RegisterValueChangedCallback(evt => SetData(evt.newValue as BalancingData));
+            toolbar.Add(dataField);
 
-                // string path = "Assets/Balance Plugin/SOs/BalancingData.asset";
-                string basePath = "Assets/BalancingData_";
-                string extension = ".asset";
-                string path = basePath + extension;
+            toolbar.Add(new ToolbarButton(CreateNewDataInAssets) { text = "Create" });
+            toolbar.Add(new ToolbarButton(() => _graphView?.FrameAll()) { text = "Frame" });
+            toolbar.Add(new ToolbarButton(() => Selection.activeObject = _data) { text = "Select Data" });
+            rootVisualElement.Add(toolbar);
 
-                int counter = 1;
-                while (AssetDatabase.LoadAssetAtPath<BalancingData>(path) != null)
+            var content = new VisualElement { style = { flexDirection = FlexDirection.Row, flexGrow = 1 } };
+            rootVisualElement.Add(content);
+
+            _graphView = new BalanceGraphView(this)
+            {
+                style = { flexGrow = 1 }
+            };
+            _graphView.NodeSelected += SelectNodeInInspector;
+            _graphView.GraphChanged += RefreshPanels;
+            content.Add(_graphView);
+
+            var rightSplitter = CreateVerticalSplitter();
+            content.Add(rightSplitter);
+
+            _rightPanel = new VisualElement
+            {
+                style =
                 {
-                    path = basePath + counter + extension;
-                    counter++;
+                    width = _rightPanelWidth,
+                    backgroundColor = new Color(0.16f, 0.16f, 0.16f),
+                    borderLeftColor = new Color(0.25f, 0.25f, 0.25f),
+                    borderLeftWidth = 1,
+                    paddingLeft = 10,
+                    paddingRight = 10,
+                    paddingTop = 10,
+                    paddingBottom = 10
                 }
+            };
+            content.Add(_rightPanel);
 
-                AssetDatabase.CreateAsset(newData, path);
-                AssetDatabase.SaveAssets();
+            var bottomSplitter = CreateHorizontalSplitter();
+            rootVisualElement.Add(bottomSplitter);
 
-                _data = newData;
-                _tickCount = _data.TickCount;
-                EditorGUIUtility.PingObject(newData);
+            _bottomPanel = new IMGUIContainer(DrawBottomPanel)
+            {
+                style =
+                {
+                    height = _bottomPanelHeight,
+                    backgroundColor = new Color(0.12f, 0.12f, 0.12f),
+                    borderTopColor = new Color(0.25f, 0.25f, 0.25f),
+                    borderTopWidth = 1
+                }
+            };
+            rootVisualElement.Add(_bottomPanel);
+
+            _emptyState = new Label("Select or create Balance Data")
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    left = 18,
+                    top = 48,
+                    fontSize = 16,
+                    color = new Color(0.75f, 0.75f, 0.75f)
+                }
+            };
+            _graphView.Add(_emptyState);
+
+            RebuildRightPanel();
+            SetData(_data);
+        }
+
+        private VisualElement CreateVerticalSplitter()
+        {
+            var splitter = new VisualElement
+            {
+                style =
+                {
+                    width = 5,
+                    backgroundColor = new Color(0.1f, 0.1f, 0.1f)
+                }
+            };
+
+            bool dragging = false;
+            splitter.RegisterCallback<MouseDownEvent>(evt =>
+            {
+                if (evt.button != 0)
+                    return;
+                dragging = true;
+                splitter.CaptureMouse();
+                evt.StopPropagation();
+            });
+            splitter.RegisterCallback<MouseMoveEvent>(evt =>
+            {
+                if (!dragging)
+                    return;
+                _rightPanelWidth = Mathf.Clamp(_rightPanelWidth - evt.mouseDelta.x, MinRightPanelWidth, MaxRightPanelWidth);
+                _rightPanel.style.width = _rightPanelWidth;
+                evt.StopPropagation();
+            });
+            splitter.RegisterCallback<MouseUpEvent>(evt =>
+            {
+                dragging = false;
+                splitter.ReleaseMouse();
+                evt.StopPropagation();
+            });
+            return splitter;
+        }
+
+        private VisualElement CreateHorizontalSplitter()
+        {
+            var splitter = new VisualElement
+            {
+                style =
+                {
+                    height = 5,
+                    backgroundColor = new Color(0.1f, 0.1f, 0.1f)
+                }
+            };
+
+            bool dragging = false;
+            splitter.RegisterCallback<MouseDownEvent>(evt =>
+            {
+                if (evt.button != 0)
+                    return;
+                dragging = true;
+                splitter.CaptureMouse();
+                evt.StopPropagation();
+            });
+            splitter.RegisterCallback<MouseMoveEvent>(evt =>
+            {
+                if (!dragging)
+                    return;
+                _bottomPanelHeight = Mathf.Clamp(_bottomPanelHeight - evt.mouseDelta.y, MinBottomPanelHeight, MaxBottomPanelHeight);
+                _bottomPanel.style.height = _bottomPanelHeight;
+                evt.StopPropagation();
+            });
+            splitter.RegisterCallback<MouseUpEvent>(evt =>
+            {
+                dragging = false;
+                splitter.ReleaseMouse();
+                evt.StopPropagation();
+            });
+            return splitter;
+        }
+
+        private void SetData(BalancingData data)
+        {
+            _graphView?.SaveNodePositions();
+            _data = data;
+
+            if (_data != null)
+            {
+                _tickCount = Mathf.Max(1, _data.TickCount);
                 LoadNodesFromAsset();
             }
-            catch (System.Exception ex)
-            {
-                UnityEngine.Debug.LogError("CreateNewData: " + ex.Message + "\n" + ex.StackTrace);
-            }
+
+            _graphView?.Populate(_data);
+            RefreshPanels();
         }
 
         private void LoadNodesFromAsset()
@@ -150,850 +228,684 @@ namespace BalancePlugin
             if (_data == null)
                 return;
 
-            if (_data.Nodes == null)
-                _data.Nodes = new System.Collections.Generic.List<BalancingNode>();
-            if (_data.Connections == null)
-                _data.Connections = new System.Collections.Generic.List<NodeConnection>();
+            _data.Nodes ??= new List<BalancingNode>();
+            _data.Connections ??= new List<NodeConnection>();
 
-            UnityEngine.Object[] allSubAssets = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(_data));
+            string path = AssetDatabase.GetAssetPath(_data);
+            if (string.IsNullOrEmpty(path))
+                return;
 
-            var validNodes = new System.Collections.Generic.List<BalancingNode>();
-            foreach (var obj in allSubAssets)
+            var subAssetNodes = AssetDatabase.LoadAllAssetsAtPath(path)
+                .OfType<BalancingNode>()
+                .Where(node => node != null)
+                .ToList();
+
+            if (subAssetNodes.Count > 0)
+                _data.Nodes = subAssetNodes;
+
+            PruneInvalidConnections();
+            EditorUtility.SetDirty(_data);
+        }
+
+        private void PruneInvalidConnections()
+        {
+            if (_data == null)
+                return;
+
+            var nodeIds = new HashSet<string>(_data.Nodes.Where(n => n != null).Select(n => n.NodeId));
+            _data.Connections.RemoveAll(c => c == null || !nodeIds.Contains(c.FromNodeId) || !nodeIds.Contains(c.ToNodeId));
+
+            foreach (BalancingNode node in _data.Nodes)
             {
-                if (obj is BalancingNode node && obj != _data)
-                {
-                    validNodes.Add(node);
-                }
-            }
-
-            if (validNodes.Count > 0)
-            {
-                _data.Nodes = validNodes;
-                AssetDatabase.SaveAssets();
+                if (node == null)
+                    continue;
+                node.InputNodeIds.RemoveAll(id => !nodeIds.Contains(id));
+                node.OutputNodeIds.RemoveAll(id => !nodeIds.Contains(id));
             }
         }
 
-        private void ProcessInput(Event e)
+        private void RebuildRightPanel()
         {
-            switch (e.type)
+            _rightPanel.Clear();
+
+            AddPanelTitle(_rightPanel, "Nodes");
+            AddNodeButton("Source", () => CreateNodeAtGraphCenter<SourceNode>());
+            AddNodeButton("Drain", () => CreateNodeAtGraphCenter<DrainNode>());
+            AddNodeButton("Converter", () => CreateNodeAtGraphCenter<ConverterNode>());
+            AddNodeButton("Pool", () => CreateNodeAtGraphCenter<PoolNode>());
+
+            var spacer = new VisualElement { style = { height = 12 } };
+            _rightPanel.Add(spacer);
+
+            AddPanelTitle(_rightPanel, "Currencies");
+            var addCurrency = new Button(AddCurrency) { text = "+ Add Currency" };
+            addCurrency.style.marginBottom = 8;
+            _rightPanel.Add(addCurrency);
+
+            _currencyList = new ScrollView { style = { flexGrow = 1 } };
+            _rightPanel.Add(_currencyList);
+            RefreshCurrencyList();
+        }
+
+        private void AddPanelTitle(VisualElement parent, string text)
+        {
+            parent.Add(new Label(text)
             {
-                case EventType.ScrollWheel:
-                    if (e.delta.y != 0)
-                    {
-                        _zoom = Mathf.Clamp(_zoom - e.delta.y * 0.1f, 0.1f, 3f);
-                        e.Use();
-                    }
-                    break;
+                style =
+                {
+                    unityFontStyleAndWeight = FontStyle.Bold,
+                    fontSize = 13,
+                    marginBottom = 6,
+                    color = new Color(0.88f, 0.88f, 0.88f)
+                }
+            });
+        }
 
-                case EventType.MouseDrag:
-                    if (e.button == 0)
-                    {
-                        if (_draggedNode != null)
-                        {
-                            Vector2 mouseWorld = (e.mousePosition + _scrollOffset) / _zoom;
-                            _draggedNode.Position = mouseWorld - _dragOffset;
-                            GUI.changed = true;
-                            Repaint();
-                            EditorUtility.SetDirty(_data);
-                            e.Use();
-                        }
-                        else if (_isDraggingConnection)
-                        {
-                            _connectionEndPoint = e.mousePosition;
-                            GUI.changed = true;
-                            Repaint();
-                            e.Use();
-                        }
-                        else if (_isConnectingViaNode)
-                        {
-                            _connectionEndPoint = e.mousePosition;
-                            GUI.changed = true;
-                            Repaint();
-                            e.Use();
-                        }
-                    }
-                    else if (_isPanning)
-                    {
-                        Vector2 delta = e.mousePosition - _lastMousePos;
-                        _scrollOffset -= delta;
-                        _lastMousePos = e.mousePosition;
-                        Repaint();
-                        e.Use();
-                    }
-                    break;
+        private void AddNodeButton(string label, System.Action onClick)
+        {
+            var button = new Button(onClick) { text = label };
+            button.style.height = 28;
+            button.style.marginBottom = 4;
+            _rightPanel.Add(button);
+        }
 
-                case EventType.MouseDown:
-                    if (_data != null)
-                    {
-                        if (e.button == 0)
-                        {
-                            BalancingNode clickedNode = GetNodeAtMouse();
-                            if (clickedNode != null)
-                            {
-                                if (_currentMode == EditorMode.Connect)
-                                {
-                                    if (clickedNode.CanHaveOutput)
-                                    {
-                                        _isConnectingViaNode = true;
-                                        _connectionStartNode = clickedNode;
-                                        _connectionEndPoint = e.mousePosition;
-                                    }
-                                }
-                                else
-                                {
-                                    _draggedNode = clickedNode;
-                                    _dragOffset = (e.mousePosition + _scrollOffset) / _zoom - clickedNode.Position;
-                                    _selectedNode = clickedNode;
-                                    _inspectorWindow?.SetNode(_selectedNode);
-                                    OpenInspector();
-                                }
-                            }
-                            else if (_currentMode == EditorMode.Select && GetConnectionPointAtMouse() != null)
-                            {
-                                _isDraggingConnection = true;
-                                _connectionFromNode = GetConnectionPointAtMouse();
-                                _connectionEndPoint = e.mousePosition;
-                            }
-                            else
-                            {
-                                _selectedNode = null;
-                                _inspectorWindow?.SetNode(null);
-                            }
-                            e.Use();
-                        }
-                        else if (e.button == 1)
-                        {
-                            Vector2 mousePos = e.mousePosition / _zoom;
-                            BalancingNode clickedNode = GetNodeAtMouse();
-                            if (clickedNode != null)
-                            {
-                                ShowNodeContextMenu(clickedNode);
-                            }
-                            else
-                            {
-                                NodeConnection clickedConn = GetConnectionAtMouse();
-                                if (clickedConn != null)
-                                {
-                                    ShowConnectionContextMenu(clickedConn);
-                                }
-                                else
-                                {
-                                    ShowCreateNodeMenu(mousePos);
-                                }
-                            }
-                            e.Use();
-                        }
-                        else if (e.button == 2)
-                        {
-                            _isPanning = true;
-                            _lastMousePos = e.mousePosition;
-                            e.Use();
-                        }
-                    }
-                    break;
+        private void RefreshPanels()
+        {
+            if (_emptyState != null)
+                _emptyState.style.display = _data == null ? DisplayStyle.Flex : DisplayStyle.None;
+            RefreshCurrencyList();
+            _bottomPanel?.MarkDirtyRepaint();
+        }
 
+        private void RefreshCurrencyList()
+        {
+            if (_currencyList == null)
+                return;
 
+            _currencyList.Clear();
+            if (_data == null)
+            {
+                _currencyList.Add(new Label("No Balance Data selected."));
+                return;
+            }
 
-                case EventType.MouseUp:
-                    if (e.button == 0)
+            for (int i = 0; i < _data.Currencies.Count; i++)
+            {
+                int index = i;
+                CurrencyInfo currency = _data.Currencies[index];
+                var row = new VisualElement
+                {
+                    style =
                     {
-                        if (_isDraggingConnection && _data != null)
-                        {
-                            BalancingNode targetNode = GetNodeAtMouse();
-                            if (targetNode != null && targetNode != _connectionFromNode && targetNode.CanHaveInput)
-                            {
-                                CreateConnection(_connectionFromNode, targetNode);
-                            }
-                            _isDraggingConnection = false;
-                            _connectionFromNode = null;
-                        }
-                        else if (_isConnectingViaNode && _connectionStartNode != null && _data != null)
-                        {
-                            BalancingNode targetNode = GetNodeAtMouse();
-                            if (targetNode != null && targetNode != _connectionStartNode && targetNode.CanHaveInput)
-                            {
-                                CreateConnection(_connectionStartNode, targetNode);
-                            }
-                            _isConnectingViaNode = false;
-                            _connectionStartNode = null;
-                        }
-                        _draggedNode = null;
-                        e.Use();
+                        flexDirection = FlexDirection.Row,
+                        alignItems = Align.Center,
+                        marginBottom = 5
                     }
-                    else if (e.button == 2)
-                    {
-                        _isPanning = false;
-                        e.Use();
-                    }
-                    break;
+                };
 
-                case EventType.KeyDown:
-                    if (e.keyCode == KeyCode.Delete && _selectedNode != null && _data != null)
-                    {
-                        string deletedNodeId = _selectedNode.NodeId;
-                        foreach (var node in _data.Nodes)
-                        {
-                            if (node == null)
-                                continue;
-                            node.InputNodeIds.Remove(deletedNodeId);
-                            node.OutputNodeIds.Remove(deletedNodeId);
-                        }
-                        _data.Nodes.Remove(_selectedNode);
-                        AssetDatabase.RemoveObjectFromAsset(_selectedNode);
-                        _data.Connections.RemoveAll(c => c.FromNodeId == deletedNodeId || c.ToNodeId == deletedNodeId);
-                        AssetDatabase.SaveAssets();
-                        _selectedNode = null;
-                        e.Use();
-                    }
-                    break;
+                var color = new ColorField { value = currency.Color, style = { width = 44 } };
+                color.RegisterValueChangedCallback(evt =>
+                {
+                    currency.Color = evt.newValue;
+                    MarkDataDirty();
+                });
+                row.Add(color);
+
+                var name = new TextField { value = currency.Name, style = { flexGrow = 1, marginLeft = 4 } };
+                name.RegisterValueChangedCallback(evt =>
+                {
+                    currency.Name = string.IsNullOrWhiteSpace(evt.newValue) ? "Currency" : evt.newValue;
+                    MarkDataDirty();
+                    _bottomPanel?.MarkDirtyRepaint();
+                });
+                row.Add(name);
+
+                var remove = new Button(() => RemoveCurrency(index)) { text = "X", style = { width = 28, marginLeft = 4 } };
+                row.Add(remove);
+                _currencyList.Add(row);
             }
         }
 
-        private Vector2 GetMouseWorldPosition()
+        private void AddCurrency()
         {
-            return (Event.current.mousePosition + _scrollOffset) / _zoom;
+            if (_data == null)
+                return;
+            _data.Currencies.Add(new CurrencyInfo { Name = "NewCurrency", Color = GetRandomCurrencyColor() });
+            MarkDataDirty();
+            RefreshPanels();
         }
 
-        private void DrawGrid()
+        private void RemoveCurrency(int index)
         {
-            Handles.BeginGUI();
-            Handles.color = new Color(0.3f, 0.3f, 0.3f, 0.5f);
+            if (_data == null || index < 0 || index >= _data.Currencies.Count)
+                return;
 
-            float scaledGridSize = GridSize * _zoom;
-            Vector2 gridOffset = -_scrollOffset * _zoom;
-            gridOffset.x = gridOffset.x % scaledGridSize;
-            gridOffset.y = gridOffset.y % scaledGridSize;
-
-            for (float x = gridOffset.x; x < position.width - SidebarWidth; x += scaledGridSize)
+            _data.Currencies.RemoveAt(index);
+            foreach (BalancingNode node in _data.Nodes)
             {
-                Handles.DrawLine(new Vector2(x, 0), new Vector2(x, position.height));
+                if (node != null && node.CurrencyIndex >= _data.Currencies.Count)
+                    node.CurrencyIndex = Mathf.Max(0, _data.Currencies.Count - 1);
             }
-            for (float y = gridOffset.y; y < position.height - BottomPanelHeight; y += scaledGridSize)
-            {
-                Handles.DrawLine(new Vector2(0, y), new Vector2(position.width - SidebarWidth, y));
-            }
-
-            Handles.EndGUI();
-        }
-
-        private void DrawSidebar()
-        {
-            float toolbarHeight = 35f;
-            float sidebarX = position.width - SidebarWidth;
-            float sidebarHeight = position.height - toolbarHeight - BottomPanelHeight;
-            Rect sidebarRect = new Rect(sidebarX, toolbarHeight, SidebarWidth, sidebarHeight);
-            EditorGUI.DrawRect(sidebarRect, new Color(0.15f, 0.15f, 0.15f));
-
-            float padding = 10f;
-            float sectionGap = 8f;
-            float halfHeight = (sidebarHeight - padding * 2 - sectionGap) / 2;
-
-            float y = toolbarHeight + padding;
-
-            GUI.Label(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 20), "Nodes");
-            y += 22f;
-
-            float nodeButtonSize = (SidebarWidth - padding * 2 - 4f) / 2;
-            string[] nodeTypes = new string[] { "Source", "Drain", "Converter", "Pool" };
-            for (int i = 0; i < nodeTypes.Length; i++)
-            {
-                float btnX = sidebarX + padding + (i % 2) * (nodeButtonSize + 4f);
-                float btnY = y + (i / 2) * (nodeButtonSize + 4f);
-
-                if (GUI.Button(new Rect(btnX, btnY, nodeButtonSize, nodeButtonSize), nodeTypes[i]))
-                {
-                    CreateNodeByType(nodeTypes[i]);
-                }
-            }
-
-            y += nodeButtonSize * 2 + 4f;
-
-            if (GUI.Button(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 28), _currentMode == EditorMode.Select ? "Connection Mode" : "Select Mode"))
-            {
-                _currentMode = _currentMode == EditorMode.Select ? EditorMode.Connect : EditorMode.Select;
-            }
-
-            y += 32f + sectionGap;
-            GUI.Label(new Rect(sidebarX + padding, y, SidebarWidth - padding * 2, 20), "Currencies");
-            y += 22f;
-
-            if (_data != null)
-            {
-                if (GUI.Button(new Rect(sidebarX + padding, y, 30, 20), "+"))
-                {
-                    _data.Currencies.Add(new CurrencyInfo { Name = "NewCurrency", Color = GetRandomCurrencyColor() });
-                    _inspectorWindow?.SetData(_data);
-                }
-                y += 24f;
-
-                float listHeight = sidebarHeight - (y - toolbarHeight) - padding;
-                Rect scrollRect = new Rect(sidebarX + 5, y, SidebarWidth - 10, listHeight);
-                _currencyScrollOffset = GUI.BeginScrollView(scrollRect, _currencyScrollOffset, new Rect(0, 0, SidebarWidth - 30, _data.Currencies.Count * 56));
-
-                for (int i = 0; i < _data.Currencies.Count; i++)
-                {
-                    float itemY = i * 56;
-                    _data.Currencies[i].Name = GUI.TextField(new Rect(0, itemY, SidebarWidth - 60, 20), _data.Currencies[i].Name);
-                    Color newColor = EditorGUI.ColorField(new Rect(SidebarWidth - 32, itemY - 2, 30, 16), _data.Currencies[i].Color);
-                    if (newColor != _data.Currencies[i].Color)
-                        _data.Currencies[i].Color = newColor;
-                    if (GUI.Button(new Rect(SidebarWidth - 60, itemY, 25, 20), "X"))
-                    {
-                        _data.Currencies.RemoveAt(i);
-                        foreach (var node in _data.Nodes)
-                        {
-                            if (node.CurrencyIndex >= _data.Currencies.Count)
-                                node.CurrencyIndex = Mathf.Max(0, _data.Currencies.Count - 1);
-                        }
-                        _inspectorWindow?.SetData(_data);
-                        break;
-                    }
-                }
-
-                GUI.EndScrollView();
-            }
+            MarkDataDirty();
+            RefreshPanels();
         }
 
         private Color GetRandomCurrencyColor()
         {
-            Color[] presetColors = new Color[]
+            Color[] presetColors =
             {
-                Color.red,
-                new Color(1f, 0.5f, 0f),
-                Color.yellow,
-                Color.green,
-                new Color(0f, 1f, 0.5f),
-                Color.cyan,
-                Color.blue,
-                new Color(0.5f, 0f, 1f),
-                new Color(1f, 0f, 0.5f),
-                new Color(1f, 0.5f, 0.5f)
+                new Color(0.95f, 0.25f, 0.2f),
+                new Color(1f, 0.58f, 0.16f),
+                new Color(0.95f, 0.78f, 0.18f),
+                new Color(0.23f, 0.73f, 0.34f),
+                new Color(0.1f, 0.72f, 0.85f),
+                new Color(0.28f, 0.45f, 1f),
+                new Color(0.72f, 0.35f, 0.95f)
             };
             return presetColors[Random.Range(0, presetColors.Length)];
         }
 
         private void DrawBottomPanel()
         {
-            float panelY = position.height - BottomPanelHeight;
-            Rect panelRect = new Rect(0, panelY, position.width - SidebarWidth, BottomPanelHeight);
-            EditorGUI.DrawRect(panelRect, new Color(0.12f, 0.12f, 0.12f));
-
-            float padding = 10f;
-            float controlPanelWidth = (position.width - SidebarWidth) / 4;
-            float controlPanelHeight = BottomPanelHeight - padding * 2;
-
-            Rect controlBoxRect = new Rect(padding, panelY + padding, controlPanelWidth - padding, controlPanelHeight);
-            EditorGUI.DrawRect(controlBoxRect, new Color(0.2f, 0.2f, 0.2f));
-
-            float innerPadding = 8f;
-            float ctrlInnerY = panelY + padding + innerPadding;
-
-            GUI.Label(new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 16), "Ticks:");
-            ctrlInnerY += 18f;
-
-            if (_data != null)
+            if (_data == null)
             {
-                _tickCount = EditorGUI.IntField(new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 18), _tickCount);
-                ctrlInnerY += 24f;
-
-                if (GUI.Button(new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 22), "Predict"))
-                {
-                    _data.TickCount = _tickCount;
-                    _data.CalculateStatistics(_debugValues);
-                }
-                ctrlInnerY += 26f;
-
-                _debugValues = GUI.Toggle(new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 16), _debugValues, "Debug values");
-                ctrlInnerY += 26f;
-
-                if (_data.Currencies.Count > 0)
-                {
-                    string[] currencyNames = _data.Currencies.Select(c => c.Name).ToArray();
-                    _exportCurrencyIndex = EditorGUI.Popup(
-                        new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 18),
-                        _exportCurrencyIndex, currencyNames
-                    );
-                    ctrlInnerY += 22f;
-
-                    _exportFolderPath = EditorGUI.TextField(
-                        new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 18),
-                        _exportFolderPath
-                    );
-                    ctrlInnerY += 22f;
-
-                    if (GUI.Button(new Rect(padding + innerPadding, ctrlInnerY, controlPanelWidth - innerPadding * 2, 22), $"Export {currencyNames[_exportCurrencyIndex]}"))
-                    {
-                        _data.CreateGraphSO(currencyNames[_exportCurrencyIndex], _exportFolderPath);
-                    }
-                    ctrlInnerY += 26f;
-                }
+                EditorGUILayout.HelpBox("Select or create Balance Data to run simulation and export graphs.", MessageType.Info);
+                return;
             }
 
-            float graphX = padding + controlPanelWidth;
-            float graphWidth = position.width - SidebarWidth - controlPanelWidth - padding * 2;
-            Rect graphRect = new Rect(graphX, panelY + padding, graphWidth, controlPanelHeight);
-            EditorGUI.DrawRect(graphRect, new Color(0.18f, 0.18f, 0.18f));
+            EditorGUILayout.BeginHorizontal();
 
-            if (_data != null && _data.TickInfos != null && _data.TickInfos.Count > 1)
+            EditorGUILayout.BeginVertical(GUILayout.Width(280));
+            EditorGUILayout.LabelField("Simulation", EditorStyles.boldLabel);
+            _tickCount = Mathf.Max(1, EditorGUILayout.IntField("Ticks", _tickCount));
+            _debugValues = EditorGUILayout.Toggle("Debug Values", _debugValues);
+
+            if (GUILayout.Button("Predict", GUILayout.Height(26)))
             {
-                DrawGraph(graphX, graphY: panelY + padding, graphWidth, controlPanelHeight);
+                _data.TickCount = _tickCount;
+                _data.CalculateStatistics(_debugValues);
+                MarkDataDirty();
+            }
+
+            EditorGUILayout.Space(8);
+            EditorGUILayout.LabelField("Export", EditorStyles.boldLabel);
+
+            if (_data.Currencies.Count > 0)
+            {
+                _exportCurrencyIndex = Mathf.Clamp(_exportCurrencyIndex, 0, _data.Currencies.Count - 1);
+                _exportCurrencyIndex = EditorGUILayout.Popup("Currency", _exportCurrencyIndex, _data.Currencies.Select(c => c.Name).ToArray());
+                _exportFolderPath = EditorGUILayout.TextField("Folder", _exportFolderPath);
+
+                if (GUILayout.Button("Export Graph", GUILayout.Height(24)))
+                {
+                    _data.CreateGraphSO(_data.Currencies[_exportCurrencyIndex].Name, _exportFolderPath);
+                }
             }
             else
             {
-                GUI.Label(new Rect(graphX + 10, panelY + BottomPanelHeight / 2 - 8, graphWidth - 20, 16), "Graph (run Predict)");
+                EditorGUILayout.HelpBox("Add at least one currency before exporting.", MessageType.None);
             }
+
+            EditorGUILayout.EndVertical();
+
+            Rect graphRect = GUILayoutUtility.GetRect(10, 10000, 100, 10000, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            DrawGraphPanel(graphRect);
+
+            EditorGUILayout.EndHorizontal();
         }
 
-        private void DrawGraph(float graphX, float graphY, float graphWidth, float graphHeight)
+        private void DrawGraphPanel(Rect rect)
         {
-            var tickInfos = _data.TickInfos;
+            EditorGUI.DrawRect(rect, new Color(0.17f, 0.17f, 0.17f));
+
+            if (_data.TickInfos == null || _data.TickInfos.Count <= 1)
+            {
+                GUI.Label(rect, "Graph (run Predict)", CenteredLabelStyle());
+                return;
+            }
+
+            DrawGraph(rect);
+        }
+
+        private GUIStyle CenteredLabelStyle()
+        {
+            return new GUIStyle(EditorStyles.label)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = new Color(0.72f, 0.72f, 0.72f) }
+            };
+        }
+
+        private void DrawGraph(Rect rect)
+        {
+            List<TickInfo> tickInfos = _data.TickInfos;
             int tickCount = tickInfos.Count - 1;
             if (tickCount <= 0)
                 return;
 
-            float padding = 30f;
-            float labelHeight = 20f;
-            float drawWidth = graphWidth - padding * 2;
-            float drawHeight = graphHeight - labelHeight - padding;
+            float padding = 34f;
+            float drawWidth = Mathf.Max(1, rect.width - padding * 2);
+            float drawHeight = Mathf.Max(1, rect.height - padding * 1.6f);
 
             int currencyCount = _data.Currencies.Count;
             var allValues = new List<List<float>>();
             for (int c = 0; c < currencyCount; c++)
-            {
-                var values = new List<float>();
-                foreach (var info in tickInfos)
-                {
-                    values.Add(info.Resources.ContainsKey(c) ? info.Resources[c] : 0f);
-                }
-                allValues.Add(values);
-            }
+                allValues.Add(tickInfos.Select(info => info.Resources.TryGetValue(c, out int value) ? (float)value : 0f).ToList());
 
-            float minValue = 0f;
-            float maxValue = 0f;
-            for (int c = 0; c < currencyCount; c++)
-            {
-                float currencyMax = allValues[c].Max();
-                float currencyMin = allValues[c].Min();
-                if (currencyMax > maxValue)
-                    maxValue = currencyMax;
-                if (currencyMin < minValue && currencyMin < 0)
-                    minValue = currencyMin;
-            }
+            float minValue = Mathf.Min(0f, allValues.SelectMany(values => values).DefaultIfEmpty(0f).Min());
+            float maxValue = Mathf.Max(1f, allValues.SelectMany(values => values).DefaultIfEmpty(0f).Max());
+            float valueRange = Mathf.Max(0.001f, maxValue - minValue);
 
-            if (minValue >= 0)
-                minValue = 0;
-
-            float valueRange = maxValue - minValue;
-            if (valueRange < 0.001f)
-                valueRange = 1f;
+            Vector2 origin = new Vector2(rect.x + padding, rect.y + padding * 0.55f);
 
             Handles.BeginGUI();
-
-            Handles.color = new Color(0.5f, 0.5f, 0.5f, 0.3f);
-            Handles.DrawLine(new Vector2(graphX + padding, graphY + padding + drawHeight), new Vector2(graphX + padding + drawWidth, graphY + padding + drawHeight));
-            Handles.DrawLine(new Vector2(graphX + padding, graphY + padding), new Vector2(graphX + padding, graphY + padding + drawHeight));
-
-            for (int i = 1; i < 10; i++)
+            Handles.color = new Color(0.55f, 0.55f, 0.55f, 0.25f);
+            for (int i = 0; i <= 10; i++)
             {
-                float x = graphX + padding + (float)i / 10 * drawWidth;
-                Handles.DrawLine(new Vector2(x, graphY + padding), new Vector2(x, graphY + padding + drawHeight));
+                float x = origin.x + i / 10f * drawWidth;
+                Handles.DrawLine(new Vector2(x, origin.y), new Vector2(x, origin.y + drawHeight));
             }
 
-            for (int i = 1; i < 4; i++)
+            for (int i = 0; i <= 4; i++)
             {
-                float y = graphY + padding + drawHeight - (float)i / 4 * drawHeight;
-                Handles.DrawLine(new Vector2(graphX + padding, y), new Vector2(graphX + padding + drawWidth, y));
+                float y = origin.y + i / 4f * drawHeight;
+                Handles.DrawLine(new Vector2(origin.x, y), new Vector2(origin.x + drawWidth, y));
             }
 
             for (int c = 0; c < currencyCount; c++)
             {
-                var values = allValues[c];
-                Color lineColor = _data.Currencies[c].Color;
-                Handles.color = lineColor;
-
+                Handles.color = _data.Currencies[c].Color;
+                List<float> values = allValues[c];
                 for (int t = 0; t < tickCount; t++)
                 {
-                    float x1 = graphX + padding + (float)t / tickCount * drawWidth;
-                    float y1 = graphY + padding + drawHeight - (values[t] - minValue) / valueRange * drawHeight;
-                    float x2 = graphX + padding + (float)(t + 1) / tickCount * drawWidth;
-                    float y2 = graphY + padding + drawHeight - (values[t + 1] - minValue) / valueRange * drawHeight;
-
-                    Handles.DrawLine(new Vector2(x1, y1), new Vector2(x2, y2));
+                    Vector2 a = GraphPoint(origin, drawWidth, drawHeight, tickCount, t, values[t], minValue, valueRange);
+                    Vector2 b = GraphPoint(origin, drawWidth, drawHeight, tickCount, t + 1, values[t + 1], minValue, valueRange);
+                    Handles.DrawAAPolyLine(2.2f, a, b);
                 }
             }
-
             Handles.EndGUI();
 
-            GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
-            labelStyle.fontSize = 10;
-            labelStyle.normal.textColor = Color.white;
-
-            GUI.Label(new Rect(graphX + padding, graphY + graphHeight - 12, 30, 16), "0", labelStyle);
-            GUI.Label(new Rect(graphX + graphWidth - padding - 20, graphY + graphHeight - 12, 30, 16), tickCount.ToString(), labelStyle);
-
-            string maxLabel = maxValue.ToString("F0");
-            GUI.Label(new Rect(graphX + 2, graphY + padding, 25, 16), maxLabel, labelStyle);
-
-            GUIStyle tickLabelStyle = new GUIStyle(GUI.skin.label);
-            tickLabelStyle.fontSize = 9;
-            tickLabelStyle.normal.textColor = new Color(0.7f, 0.7f, 0.7f);
-
-            for (int i = 1; i < 10; i++)
-            {
-                float x = graphX + padding + (float)i / 10 * drawWidth;
-                string xLabel = Mathf.RoundToInt((float)i / 10 * tickCount).ToString();
-                GUI.Label(new Rect(x - 10, graphY + graphHeight - 12, 20, 14), xLabel, tickLabelStyle);
-            }
-
-            for (int i = 1; i < 4; i++)
-            {
-                float y = graphY + padding + drawHeight - (float)i / 4 * drawHeight;
-                float yValue = minValue + (float)i / 4 * valueRange;
-                string yLabel = yValue.ToString("F0");
-                GUI.Label(new Rect(graphX + 2, y - 6, 25, 14), yLabel, tickLabelStyle);
-            }
+            GUIStyle label = new GUIStyle(EditorStyles.miniLabel) { normal = { textColor = new Color(0.75f, 0.75f, 0.75f) } };
+            GUI.Label(new Rect(rect.x + 6, origin.y - 6, 34, 14), maxValue.ToString("F0"), label);
+            GUI.Label(new Rect(rect.x + 6, origin.y + drawHeight - 8, 34, 14), minValue.ToString("F0"), label);
+            GUI.Label(new Rect(origin.x, rect.yMax - 18, 40, 14), "0", label);
+            GUI.Label(new Rect(origin.x + drawWidth - 40, rect.yMax - 18, 40, 14), tickCount.ToString(), label);
         }
 
-        private void CreateNodeByType(string nodeType)
+        private Vector2 GraphPoint(Vector2 origin, float width, float height, int tickCount, int tick, float value, float min, float range)
+        {
+            return new Vector2(
+                origin.x + tick / (float)tickCount * width,
+                origin.y + height - (value - min) / range * height);
+        }
+
+        private void CreateNewDataInAssets()
+        {
+            BalancingData newData = CreateInstance<BalancingData>();
+            string path = AssetDatabase.GenerateUniqueAssetPath("Assets/BalancingData.asset");
+            AssetDatabase.CreateAsset(newData, path);
+            AssetDatabase.SaveAssets();
+            EditorGUIUtility.PingObject(newData);
+            SetData(newData);
+            Selection.activeObject = newData;
+        }
+
+        private void CreateNodeAtGraphCenter<T>() where T : BalancingNode
         {
             if (_data == null)
-                return;
+                CreateNewDataInAssets();
 
-            float centerX = (position.width - SidebarWidth) / 2;
-            float centerY = (position.height - BottomPanelHeight) / 2;
-            Vector2 spawnPos = new Vector2(centerX, centerY);
-            spawnPos = (spawnPos - _scrollOffset) / _zoom;
-
-            switch (nodeType)
-            {
-                case "Source":
-                    CreateNode<SourceNode>(spawnPos);
-                    break;
-                case "Drain":
-                    CreateNode<DrainNode>(spawnPos);
-                    break;
-                case "Pool":
-                    CreateNode<PoolNode>(spawnPos);
-                    break;
-                case "Converter":
-                    CreateNode<ConverterNode>(spawnPos);
-                    break;
-            }
+            Vector2 center = _graphView != null
+                ? _graphView.GetGraphCenterPosition()
+                : new Vector2(120, 120);
+            CreateNode<T>(center);
         }
 
-        private void DrawNodes()
+        private BalancingNode CreateNode(System.Type nodeType, Vector2 graphPosition)
         {
-            if (_data == null || _data.Nodes == null)
-            {
-                _selectedNode = null;
-                _inspectorWindow?.SetNode(null);
-            }
-
-            foreach (var node in _data.Nodes)
-            {
-                if (node == null)
-                    continue;
-
-                Vector2 pos = (node.Position - _scrollOffset) * _zoom;
-                Rect nodeRect = new Rect(pos.x, pos.y, NodeWidth * _zoom, NodeHeight * _zoom);
-
-                Color nodeColor = node.NodeColor;
-                Color borderColor = node == _selectedNode ? Color.white : nodeColor;
-                float borderWidth = node == _selectedNode ? 3f : 2f;
-
-                DrawNodeBackground(nodeRect, borderColor, borderWidth);
-
-                GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
-                labelStyle.alignment = TextAnchor.MiddleCenter;
-                labelStyle.fontSize = Mathf.RoundToInt(12 * _zoom);
-                labelStyle.normal.textColor = Color.white;
-
-                GUI.Label(nodeRect, node.DisplayName, labelStyle);
-
-                Vector2 inputDotPos = new Vector2(pos.x, pos.y + NodeHeight * _zoom / 2);
-                Vector2 outputDotPos = new Vector2(pos.x + NodeWidth * _zoom, pos.y + NodeHeight * _zoom / 2);
-
-                Handles.BeginGUI();
-                if (_currentMode == EditorMode.Connect)
-                {
-                    Handles.color = node == _connectionStartNode ? Color.green : Color.yellow;
-                }
-                else
-                {
-                    Handles.color = nodeColor;
-                }
-
-                if (node.CanHaveInput)
-                    Handles.DrawSolidDisc(inputDotPos, Vector3.forward, ConnectionPointRadius * _zoom);
-                if (node.CanHaveOutput)
-                {
-                    Handles.color = nodeColor;
-                    Handles.DrawSolidDisc(outputDotPos, Vector3.forward, ConnectionPointRadius * _zoom);
-                }
-                Handles.EndGUI();
-            }
-        }
-
-        private void DrawNodeBackground(Rect rect, Color borderColor, float borderWidth)
-        {
-            EditorGUI.DrawRect(rect, new Color(0.1f, 0.1f, 0.1f));
-            EditorGUI.DrawRect(new Rect(rect.x - borderWidth, rect.y - borderWidth, rect.width + borderWidth * 2, borderWidth), borderColor);
-            EditorGUI.DrawRect(new Rect(rect.x - borderWidth, rect.y + rect.height, rect.width + borderWidth * 2, borderWidth), borderColor);
-            EditorGUI.DrawRect(new Rect(rect.x - borderWidth, rect.y, borderWidth, rect.height), borderColor);
-            EditorGUI.DrawRect(new Rect(rect.x + rect.width, rect.y, borderWidth, rect.height), borderColor);
-        }
-
-        private void CreateConnection(BalancingNode fromNode, BalancingNode toNode)
-        {
-            if (!fromNode.CanHaveOutput || !toNode.CanHaveInput)
-                return;
-
-            if (fromNode.OutputNodeIds.Contains(toNode.NodeId))
-                return;
-
-            fromNode.OutputNodeIds.Add(toNode.NodeId);
-            toNode.InputNodeIds.Add(fromNode.NodeId);
-
-            _data.Connections.Add(new NodeConnection
-            {
-                FromNodeId = fromNode.NodeId,
-                ToNodeId = toNode.NodeId
-            });
-        }
-
-        private void DrawConnections()
-        {
-            if (_data == null || _data.Connections == null || _data.Nodes == null)
-                return;
-
-            Handles.BeginGUI();
-
-            foreach (var conn in _data.Connections)
-            {
-                if (string.IsNullOrEmpty(conn.FromNodeId) || string.IsNullOrEmpty(conn.ToNodeId))
-                    continue;
-
-                BalancingNode fromNode = _data.Nodes.Find(n => n != null && n.NodeId == conn.FromNodeId);
-                BalancingNode toNode = _data.Nodes.Find(n => n != null && n.NodeId == conn.ToNodeId);
-
-                if (fromNode == null || toNode == null) continue;
-
-                Vector2 fromPos = (fromNode.Position - _scrollOffset + new Vector2(NodeWidth, NodeHeight / 2)) * _zoom;
-                Vector2 toPos = (toNode.Position - _scrollOffset + new Vector2(0, NodeHeight / 2)) * _zoom;
-
-                DrawArrow(fromPos, toPos);
-            }
-
-            if (_isDraggingConnection && _connectionFromNode != null)
-            {
-                Vector2 fromPos = (_connectionFromNode.Position - _scrollOffset + new Vector2(NodeWidth, NodeHeight / 2)) * _zoom;
-                DrawArrow(fromPos, _connectionEndPoint);
-            }
-
-            if (_isConnectingViaNode && _connectionStartNode != null)
-            {
-                Vector2 fromPos = (_connectionStartNode.Position - _scrollOffset + new Vector2(0, NodeHeight / 2)) * _zoom;
-                DrawArrow(fromPos, _connectionEndPoint);
-            }
-
-            Handles.EndGUI();
-        }
-
-        private void DrawArrow(Vector2 from, Vector2 to)
-        {
-            Handles.color = Color.white;
-            Handles.DrawLine(from, to);
-
-            Vector2 dir = (to - from);
-            if (dir.sqrMagnitude < 0.001f)
-                return;
-
-            dir = dir.normalized;
-            Vector2 perpendicular = new Vector2(-dir.y, dir.x);
-            float arrowSize = 10f * _zoom;
-
-            Handles.DrawLine(to, to - dir * arrowSize + perpendicular * arrowSize * 0.5f);
-            Handles.DrawLine(to, to - dir * arrowSize - perpendicular * arrowSize * 0.5f);
-        }
-
-        private BalancingNode GetNodeAtMouse()
-        {
-            if (_data == null || _data.Nodes == null)
+            if (_data == null || !typeof(BalancingNode).IsAssignableFrom(nodeType))
                 return null;
 
-            Vector2 mousePos = (Event.current.mousePosition + _scrollOffset) / _zoom;
-            foreach (var node in _data.Nodes)
-            {
-                if (node == null)
-                    continue;
-                Rect nodeRect = new Rect(node.Position.x, node.Position.y, NodeWidth, NodeHeight);
-                if (nodeRect.Contains(mousePos))
-                    return node;
-            }
-            return null;
-        }
-
-        private BalancingNode GetConnectionPointAtMouse()
-        {
-            if (_data == null || _data.Nodes == null)
+            BalancingNode node = CreateInstance(nodeType) as BalancingNode;
+            if (node == null)
                 return null;
 
-            Vector2 mousePos = (Event.current.mousePosition + _scrollOffset) / _zoom;
-
-            foreach (var n in _data.Nodes)
-            {
-                if (n == null)
-                    continue;
-                if (!n.CanHaveOutput)
-                    continue;
-
-                Vector2 outputPos = n.Position + new Vector2(NodeWidth, NodeHeight / 2);
-
-                if (Vector2.Distance(mousePos, outputPos) < ConnectionPointRadius + 5)
-                {
-                    return n;
-                }
-            }
-            return null;
-        }
-
-        private NodeConnection GetConnectionAtMouse()
-        {
-            if (_data == null || _data.Connections == null || _data.Nodes == null)
-                return null;
-
-            Vector2 mousePos = (Event.current.mousePosition + _scrollOffset) / _zoom;
-
-            foreach (var conn in _data.Connections)
-            {
-                BalancingNode fromNode = _data.Nodes.Find(n => n != null && n.NodeId == conn.FromNodeId);
-                BalancingNode toNode = _data.Nodes.Find(n => n != null && n.NodeId == conn.ToNodeId);
-
-                if (fromNode == null || toNode == null)
-                    continue;
-
-                Vector2 fromPos = fromNode.Position + new Vector2(NodeWidth, NodeHeight / 2);
-                Vector2 toPos = toNode.Position + new Vector2(0, NodeHeight / 2);
-
-                if (DistanceToSegment(mousePos, fromPos, toPos) < 10f)
-                    return conn;
-            }
-            return null;
-        }
-
-        private float DistanceToSegment(Vector2 point, Vector2 a, Vector2 b)
-        {
-            Vector2 pa = point - a, ba = b - a;
-            float h = Mathf.Clamp01(Vector2.Dot(pa, ba) / Vector2.Dot(ba, ba));
-            return (pa - ba * h).magnitude;
-        }
-
-        private void ShowConnectionContextMenu(NodeConnection conn)
-        {
-            GenericMenu menu = new GenericMenu();
-            menu.AddItem(new GUIContent("Delete Connection"), false, () =>
-            {
-                var fromNode = _data.Nodes.Find(n => n.NodeId == conn.FromNodeId);
-                var toNode = _data.Nodes.Find(n => n.NodeId == conn.ToNodeId);
-
-                if (fromNode != null)
-                {
-                    fromNode.OutputNodeIds.Remove(conn.ToNodeId);
-                }
-                if (toNode != null)
-                {
-                    toNode.InputNodeIds.Remove(conn.FromNodeId);
-                }
-
-                _data.Connections.Remove(conn);
-            });
-            menu.ShowAsContext();
-        }
-
-        private void ShowCreateNodeMenu(Vector2 worldPos)
-        {
-            GenericMenu menu = new GenericMenu();
-            menu.AddItem(new GUIContent("Source"), false, () => CreateNode<SourceNode>(worldPos));
-            menu.AddItem(new GUIContent("Drain"), false, () => CreateNode<DrainNode>(worldPos));
-            menu.AddItem(new GUIContent("Pool"), false, () => CreateNode<PoolNode>(worldPos));
-            menu.AddItem(new GUIContent("Converter"), false, () => CreateNode<ConverterNode>(worldPos));
-            menu.ShowAsContext();
-        }
-
-        private void CreateNode<T>(Vector2 worldPos) where T : BalancingNode
-        {
-            T node = CreateInstance<T>();
             node.hideFlags = HideFlags.None;
-            node.DisplayName = typeof(T).Name.Replace("Node", "");
-            node.Position = worldPos;
+            node.DisplayName = nodeType.Name.Replace("Node", "");
+            node.Position = graphPosition;
             _data.Nodes.Add(node);
             AssetDatabase.AddObjectToAsset(node, _data);
             AssetDatabase.SaveAssets();
+            MarkDataDirty();
+            _graphView.Populate(_data);
+            Selection.activeObject = node;
+            return node;
         }
 
-        private void ShowNodeContextMenu(BalancingNode node)
+        private T CreateNode<T>(Vector2 graphPosition) where T : BalancingNode
         {
-            GenericMenu menu = new GenericMenu();
-            menu.AddItem(new GUIContent("Delete Node"), false, () =>
-            {
-                string deletedNodeId = node.NodeId;
-                foreach (var n in _data.Nodes)
-                {
-                    if (n == null)
-                        continue;
-                    n.InputNodeIds.Remove(deletedNodeId);
-                    n.OutputNodeIds.Remove(deletedNodeId);
-                }
-                _data.Nodes.Remove(node);
-                AssetDatabase.RemoveObjectFromAsset(node);
-                _data.Connections.RemoveAll(c => c.FromNodeId == deletedNodeId || c.ToNodeId == deletedNodeId);
-                AssetDatabase.SaveAssets();
-            });
+            return CreateNode(typeof(T), graphPosition) as T;
+        }
 
-            if (node.OutputNodeIds.Count > 0)
+        private void SelectNodeInInspector(BalancingNode node)
+        {
+            if (node == null)
+                return;
+            Selection.activeObject = node;
+            EditorGUIUtility.PingObject(node);
+        }
+
+        private void MarkDataDirty()
+        {
+            if (_data == null)
+                return;
+            EditorUtility.SetDirty(_data);
+            foreach (BalancingNode node in _data.Nodes)
             {
-                menu.AddItem(new GUIContent("Delete All Connections"), false, () =>
+                if (node != null)
+                    EditorUtility.SetDirty(node);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
+        private sealed class BalanceGraphView : GraphView
+        {
+            private readonly BalancingWindow _window;
+            private readonly Dictionary<string, BalanceNodeView> _nodeViews = new Dictionary<string, BalanceNodeView>();
+            private BalancingData _data;
+            private bool _isPopulating;
+            private bool _isBackgroundPanning;
+            private Vector2 _lastMousePosition;
+
+            public event System.Action<BalancingNode> NodeSelected;
+            public event System.Action GraphChanged;
+
+            public BalanceGraphView(BalancingWindow window)
+            {
+                _window = window;
+                graphViewChanged = OnGraphViewChanged;
+
+                Insert(0, new GridBackground());
+                this.StretchToParentSize();
+                SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
+                UnityEngine.UIElements.VisualElementExtensions.AddManipulator(this, new ContentDragger());
+                UnityEngine.UIElements.VisualElementExtensions.AddManipulator(this, new SelectionDragger());
+                UnityEngine.UIElements.VisualElementExtensions.AddManipulator(this, new RectangleSelector());
+
+                RegisterCallback<MouseDownEvent>(OnMouseDown, TrickleDown.TrickleDown);
+                RegisterCallback<MouseMoveEvent>(OnMouseMove, TrickleDown.TrickleDown);
+                RegisterCallback<MouseUpEvent>(OnMouseUp, TrickleDown.TrickleDown);
+            }
+
+            public void Populate(BalancingData data)
+            {
+                SaveNodePositions();
+                _data = data;
+
+                _isPopulating = true;
+                DeleteElements(graphElements.ToList());
+                _isPopulating = false;
+                _nodeViews.Clear();
+
+                if (_data == null)
+                    return;
+
+                foreach (BalancingNode node in _data.Nodes.Where(n => n != null))
                 {
-                    string nodeId = node.NodeId;
-                    foreach (var targetId in node.OutputNodeIds)
+                    var view = new BalanceNodeView(node);
+                    _nodeViews[node.NodeId] = view;
+                    AddElement(view);
+                }
+
+                foreach (NodeConnection connection in _data.Connections.ToList())
+                {
+                    if (!_nodeViews.TryGetValue(connection.FromNodeId, out BalanceNodeView from) ||
+                        !_nodeViews.TryGetValue(connection.ToNodeId, out BalanceNodeView to) ||
+                        from.OutputPort == null ||
+                        to.InputPort == null)
+                        continue;
+
+                    Edge edge = from.OutputPort.ConnectTo(to.InputPort);
+                    AddElement(edge);
+                }
+            }
+
+            public override void AddToSelection(ISelectable selectable)
+            {
+                base.AddToSelection(selectable);
+                if (selectable is BalanceNodeView nodeView)
+                    NodeSelected?.Invoke(nodeView.Node);
+            }
+
+            public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+            {
+                return ports
+                    .Where(port => port != startPort &&
+                                   port.node != startPort.node &&
+                                   port.direction != startPort.direction)
+                    .ToList();
+            }
+
+            public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+            {
+                base.BuildContextualMenu(evt);
+
+                if (_data == null)
+                    return;
+
+                Vector2 graphPosition = this.ChangeCoordinatesTo(contentViewContainer, evt.localMousePosition);
+                evt.menu.AppendSeparator();
+                evt.menu.AppendAction("Create/Source", _ => _window.CreateNode<SourceNode>(graphPosition));
+                evt.menu.AppendAction("Create/Drain", _ => _window.CreateNode<DrainNode>(graphPosition));
+                evt.menu.AppendAction("Create/Converter", _ => _window.CreateNode<ConverterNode>(graphPosition));
+                evt.menu.AppendAction("Create/Pool", _ => _window.CreateNode<PoolNode>(graphPosition));
+            }
+
+            public Vector2 GetGraphCenterPosition()
+            {
+                return contentViewContainer.WorldToLocal(worldBound.center);
+            }
+
+            public void SaveNodePositions()
+            {
+                if (_data == null)
+                    return;
+
+                foreach (BalanceNodeView view in _nodeViews.Values)
+                {
+                    if (view?.Node == null)
+                        continue;
+                    view.Node.Position = view.GetPosition().position;
+                    EditorUtility.SetDirty(view.Node);
+                }
+                EditorUtility.SetDirty(_data);
+            }
+
+            private GraphViewChange OnGraphViewChanged(GraphViewChange change)
+            {
+                if (_data == null)
+                    return change;
+
+                if (_isPopulating)
+                    return change;
+
+                if (change.movedElements != null)
+                {
+                    foreach (GraphElement element in change.movedElements)
                     {
-                        var targetNode = _data.Nodes.Find(n => n != null && n.NodeId == targetId);
-                        if (targetNode != null)
+                        if (element is BalanceNodeView nodeView)
                         {
-                            targetNode.InputNodeIds.Remove(nodeId);
+                            nodeView.Node.Position = nodeView.GetPosition().position;
+                            EditorUtility.SetDirty(nodeView.Node);
                         }
                     }
-                    node.OutputNodeIds.Clear();
-                    _data.Connections.RemoveAll(c => c.FromNodeId == nodeId);
-                    AssetDatabase.SaveAssets();
-                });
+                }
+
+                if (change.edgesToCreate != null)
+                {
+                    var validEdges = new List<Edge>();
+                    foreach (Edge edge in change.edgesToCreate)
+                    {
+                        if (edge.output?.node is BalanceNodeView from && edge.input?.node is BalanceNodeView to)
+                        {
+                            if (AddConnection(from.Node, to.Node))
+                                validEdges.Add(edge);
+                        }
+                    }
+                    change.edgesToCreate = validEdges;
+                }
+
+                if (change.elementsToRemove != null)
+                {
+                    foreach (GraphElement element in change.elementsToRemove)
+                    {
+                        if (element is Edge edge &&
+                            edge.output?.node is BalanceNodeView from &&
+                            edge.input?.node is BalanceNodeView to)
+                        {
+                            RemoveConnection(from.Node, to.Node);
+                        }
+                        else if (element is BalanceNodeView nodeView)
+                        {
+                            DeleteNode(nodeView.Node);
+                        }
+                    }
+                }
+
+                EditorUtility.SetDirty(_data);
+                AssetDatabase.SaveAssets();
+                GraphChanged?.Invoke();
+                return change;
             }
 
-            menu.ShowAsContext();
-        }
-
-        private void Update()
-        {
-            if (_inspectorWindow != null)
-                Repaint();
-        }
-
-        public void OpenInspector()
-        {
-            if (_inspectorWindow == null)
+            private bool AddConnection(BalancingNode from, BalancingNode to)
             {
-                _inspectorWindow = GetWindow<NodeInspectorWindow>("Node Inspector");
-                _inspectorWindow.SetParentWindow(this);
+                if (from == null || to == null || !from.CanHaveOutput || !to.CanHaveInput)
+                    return false;
+
+                bool exists = _data.Connections.Any(c => c.FromNodeId == from.NodeId && c.ToNodeId == to.NodeId);
+                if (exists)
+                    return false;
+
+                from.OutputNodeIds.Add(to.NodeId);
+                to.InputNodeIds.Add(from.NodeId);
+                _data.Connections.Add(new NodeConnection { FromNodeId = from.NodeId, ToNodeId = to.NodeId });
+                EditorUtility.SetDirty(from);
+                EditorUtility.SetDirty(to);
+                return true;
             }
-            _inspectorWindow.SetData(_data);
-            _inspectorWindow.SetNode(_selectedNode);
-            _inspectorWindow.SetCurrentTick(_tickCount);
-            _inspectorWindow.Focus();
+
+            private void RemoveConnection(BalancingNode from, BalancingNode to)
+            {
+                if (from == null || to == null)
+                    return;
+
+                from.OutputNodeIds.Remove(to.NodeId);
+                to.InputNodeIds.Remove(from.NodeId);
+                _data.Connections.RemoveAll(c => c.FromNodeId == from.NodeId && c.ToNodeId == to.NodeId);
+                EditorUtility.SetDirty(from);
+                EditorUtility.SetDirty(to);
+            }
+
+            private void DeleteNode(BalancingNode node)
+            {
+                if (node == null)
+                    return;
+
+                string nodeId = node.NodeId;
+                foreach (BalancingNode other in _data.Nodes)
+                {
+                    if (other == null)
+                        continue;
+                    other.InputNodeIds.Remove(nodeId);
+                    other.OutputNodeIds.Remove(nodeId);
+                    EditorUtility.SetDirty(other);
+                }
+
+                _data.Connections.RemoveAll(c => c.FromNodeId == nodeId || c.ToNodeId == nodeId);
+                _data.Nodes.Remove(node);
+                AssetDatabase.RemoveObjectFromAsset(node);
+                DestroyImmediate(node, true);
+            }
+
+            private void OnMouseDown(MouseDownEvent evt)
+            {
+                if (evt.button != 0 || (evt.target != this && !(evt.target is GridBackground)))
+                    return;
+
+                ClearSelection();
+                _isBackgroundPanning = true;
+                _lastMousePosition = evt.mousePosition;
+                evt.StopPropagation();
+            }
+
+            private void OnMouseMove(MouseMoveEvent evt)
+            {
+                if (!_isBackgroundPanning)
+                    return;
+
+                Vector2 delta = evt.mousePosition - _lastMousePosition;
+                _lastMousePosition = evt.mousePosition;
+                UpdateViewTransform(viewTransform.position + (Vector3)delta, viewTransform.scale);
+                evt.StopPropagation();
+            }
+
+            private void OnMouseUp(MouseUpEvent evt)
+            {
+                if (!_isBackgroundPanning || evt.button != 0)
+                    return;
+
+                _isBackgroundPanning = false;
+                evt.StopPropagation();
+            }
         }
 
-        public static void OpenInspectorWindow()
+        private sealed class BalanceNodeView : Node
         {
-            GetWindow<NodeInspectorWindow>("Node Inspector");
+            private static readonly Vector2 NodeSize = new Vector2(170, 70);
+
+            public BalancingNode Node { get; }
+            public Port InputPort { get; }
+            public Port OutputPort { get; }
+
+            public BalanceNodeView(BalancingNode node)
+            {
+                Node = node;
+                title = string.IsNullOrWhiteSpace(node.DisplayName) ? node.NodeType : node.DisplayName;
+                viewDataKey = node.NodeId;
+                capabilities |= Capabilities.Movable | Capabilities.Deletable | Capabilities.Selectable;
+
+                titleContainer.style.backgroundColor = node.NodeColor * 0.75f;
+
+                if (node.CanHaveInput)
+                {
+                    InputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(float));
+                    InputPort.portName = "In";
+                    inputContainer.Add(InputPort);
+                }
+
+                if (node.CanHaveOutput)
+                {
+                    OutputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(float));
+                    OutputPort.portName = "Out";
+                    outputContainer.Add(OutputPort);
+                }
+
+                var typeLabel = new Label(node.NodeType)
+                {
+                    style =
+                    {
+                        unityTextAlign = TextAnchor.MiddleCenter,
+                        color = new Color(0.8f, 0.8f, 0.8f),
+                        marginTop = 4
+                    }
+                };
+                mainContainer.Add(typeLabel);
+
+                SetPosition(new Rect(node.Position, NodeSize));
+                RefreshExpandedState();
+                RefreshPorts();
+            }
         }
     }
 }
