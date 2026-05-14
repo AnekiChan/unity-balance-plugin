@@ -67,7 +67,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 56297537-5730-4b0c-9cf6-08b79a8ca02d
   DisplayName: Converter
-  Position: {x: 589, y: 115}
+  Position: {x: 589, y: 96}
   InputNodeIds:
   - c07acaad-8378-45d3-977f-55404efcda14
   OutputNodeIds:
@@ -96,11 +96,11 @@ MonoBehaviour:
   - Name: Gem
     Color: {r: 0, g: 1, b: 0, a: 1}
   Nodes:
+  - {fileID: 8160663312115862930}
+  - {fileID: -4100903886359840317}
   - {fileID: -5574955690540403210}
   - {fileID: -3238084182884107214}
   - {fileID: 7213885663186602774}
-  - {fileID: -4100903886359840317}
-  - {fileID: 8160663312115862930}
   Connections:
   - FromNodeId: 56297537-5730-4b0c-9cf6-08b79a8ca02d
     ToNodeId: 0550ddff-ac4e-408f-9242-74278585307e
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 0550ddff-ac4e-408f-9242-74278585307e
   DisplayName: Pool
-  Position: {x: 762, y: 115}
+  Position: {x: 754, y: 96}
   InputNodeIds:
   - 56297537-5730-4b0c-9cf6-08b79a8ca02d
   OutputNodeIds: []
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: c07acaad-8378-45d3-977f-55404efcda14
   DisplayName: Pool
-  Position: {x: 436, y: 115}
+  Position: {x: 436, y: 96}
   InputNodeIds:
   - 22767ce4-e595-4127-bfce-8522c7133f26
   OutputNodeIds:
