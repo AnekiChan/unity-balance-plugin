@@ -81,6 +81,12 @@ namespace BalancePlugin
                 DrawCurrencySelector("Output Currency");
                 DrawOutputAmountFields(converterNode.OutputAmountType, converterNode, "Output");
             }
+            else if (_currentNode is GateNode gateNode)
+            {
+                DrawCurrencySelector("Output Currency");
+                DrawOutputAmountFields(gateNode.OutputAmountType, gateNode, "Output");
+                DrawGateChancesList(gateNode);
+            }
         }
 
         private void DrawOutputAmountFields(OutputAmountType amountType, BalancingNode node, string prefix)
@@ -222,7 +228,7 @@ namespace BalancePlugin
             }
         }
 
-        private void DrawCurrencySelector(string label)
+private void DrawCurrencySelector(string label)
         {
             if (_data != null && _data.Currencies != null && _data.Currencies.Count > 0)
             {
@@ -236,6 +242,42 @@ namespace BalancePlugin
             else
             {
                 EditorGUILayout.LabelField(label, "No currencies available");
+            }
+        }
+
+        private void DrawGateChancesList(GateNode gate)
+        {
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Output Chances", EditorStyles.boldLabel);
+
+            if (_data == null)
+                return;
+
+            int count = gate.OutputNodeIds.Count;
+
+            while (gate.OutputChances.Count < count)
+                gate.OutputChances.Add(0f);
+            while (gate.OutputChances.Count > count)
+                gate.OutputChances.RemoveAt(gate.OutputChances.Count - 1);
+
+            if (count == 0)
+            {
+                EditorGUILayout.HelpBox("Connect outputs to configure chances.", MessageType.Info);
+                return;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                string nodeId = gate.OutputNodeIds[i];
+                BalancingNode targetNode = _data.GetNode(nodeId);
+                string label = targetNode != null
+                    ? $"{targetNode.DisplayName} ({targetNode.NodeType})"
+                    : nodeId;
+
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.PrefixLabel(label);
+                gate.OutputChances[i] = EditorGUILayout.Slider(gate.OutputChances[i], 0f, 100f);
+                EditorGUILayout.EndHorizontal();
             }
         }
     }

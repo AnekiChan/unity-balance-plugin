@@ -48,6 +48,11 @@ namespace BalancePlugin
             {
                 DrawOutputFields("Output");
             }
+            else if (node is GateNode)
+            {
+                DrawOutputFields("Output");
+                DrawProperty("OutputChances");
+            }
 
             EditorGUILayout.Space();
             using (new EditorGUI.DisabledScope(true))
