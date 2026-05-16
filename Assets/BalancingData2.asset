@@ -96,11 +96,11 @@ MonoBehaviour:
   - Name: Gem
     Color: {r: 0, g: 1, b: 0, a: 1}
   Nodes:
-  - {fileID: 8160663312115862930}
-  - {fileID: -4100903886359840317}
   - {fileID: -5574955690540403210}
+  - {fileID: -4100903886359840317}
   - {fileID: -3238084182884107214}
   - {fileID: 7213885663186602774}
+  - {fileID: 8160663312115862930}
   Connections:
   - FromNodeId: 56297537-5730-4b0c-9cf6-08b79a8ca02d
     ToNodeId: 0550ddff-ac4e-408f-9242-74278585307e

@@ -9,7 +9,8 @@ namespace BalancePlugin
     {
         Number,
         Formula,
-        Random
+        Random,
+        RandomRange
     }
 
     public static class FormulaEvaluator

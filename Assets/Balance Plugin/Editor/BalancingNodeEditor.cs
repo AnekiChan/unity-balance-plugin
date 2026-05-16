@@ -99,6 +99,10 @@ namespace BalancePlugin
                     DrawProperty(prefix + "RandomAmount");
                     DrawProperty(prefix + "RandomChance");
                     break;
+                case OutputAmountType.RandomRange:
+                    DrawProperty(prefix + "RandomRangeMin", "Random Range Min");
+                    DrawProperty(prefix + "RandomRangeMax", "Random Range Max");
+                    break;
             }
         }
 

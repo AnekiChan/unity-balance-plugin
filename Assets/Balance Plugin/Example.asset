@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-2404363256233108502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d21edcf200ebb9c49870c3c69acddaf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 882cd8ee-b6f7-4429-8dbb-b0bd4b59095b
+  DisplayName: Wonka bars
+  Position: {x: 295, y: 131}
+  InputNodeIds: []
+  OutputNodeIds:
+  - 7315bfcd-bf3a-4414-96cc-bfb6bf6303c4
+  CurrencyIndex: 0
+  OutputAmountType: 3
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 0
+  OutputRandomRangeMax: 5
+  SendInterval: 1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8b2b5d5e722a6c4bb85647efda313bd, type: 3}
+  m_Name: Example
+  m_EditorClassIdentifier: 
+  Currencies:
+  - Name: Coin
+    Color: {r: 1, g: 0, b: 0, a: 1}
+  Nodes:
+  - {fileID: 5088163685096042097}
+  - {fileID: -2404363256233108502}
+  Connections:
+  - FromNodeId: 882cd8ee-b6f7-4429-8dbb-b0bd4b59095b
+    ToNodeId: 7315bfcd-bf3a-4414-96cc-bfb6bf6303c4
+  TickCount: 100
+--- !u!114 &5088163685096042097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 7315bfcd-bf3a-4414-96cc-bfb6bf6303c4
+  DisplayName: Pool
+  Position: {x: 499, y: 131}
+  InputNodeIds:
+  - 882cd8ee-b6f7-4429-8dbb-b0bd4b59095b
+  OutputNodeIds: []
+  CurrencyIndex: 0
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  StartAmount: 0
+  StoredAmount: 247
+  SendInterval: 1

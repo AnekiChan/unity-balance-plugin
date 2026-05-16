@@ -525,11 +525,81 @@ namespace BalancePlugin
             }
             Handles.EndGUI();
 
-            GUIStyle label = new GUIStyle(EditorStyles.miniLabel) { normal = { textColor = new Color(0.75f, 0.75f, 0.75f) } };
-            GUI.Label(new Rect(rect.x + 6, origin.y - 6, 34, 14), maxValue.ToString("F0"), label);
-            GUI.Label(new Rect(rect.x + 6, origin.y + drawHeight - 8, 34, 14), minValue.ToString("F0"), label);
-            GUI.Label(new Rect(origin.x, rect.yMax - 18, 40, 14), "0", label);
-            GUI.Label(new Rect(origin.x + drawWidth - 40, rect.yMax - 18, 40, 14), tickCount.ToString(), label);
+            GUIStyle label = new GUIStyle(EditorStyles.miniLabel)
+            {
+                normal = { textColor = new Color(0.75f, 0.75f, 0.75f) },
+                alignment = TextAnchor.MiddleCenter
+            };
+
+            for (int i = 0; i <= 4; i++)
+            {
+                float y = origin.y + i / 4f * drawHeight;
+                float value = maxValue - i / 4f * valueRange;
+                GUI.Label(new Rect(rect.x + 4, y - 7, 38, 14), value.ToString("F0"), label);
+            }
+
+            for (int i = 0; i <= 10; i++)
+            {
+                float x = origin.x + i / 10f * drawWidth;
+                int tickVal = Mathf.RoundToInt(i / 10f * tickCount);
+                GUI.Label(new Rect(x - 17, rect.yMax - 18, 34, 14), tickVal.ToString(), label);
+            }
+
+            Event evt = Event.current;
+            if (evt.type != EventType.Repaint)
+                return;
+
+            Vector2 mousePos = evt.mousePosition;
+            Rect graphArea = new Rect(origin.x, origin.y, drawWidth, drawHeight);
+
+            if (!graphArea.Contains(mousePos))
+                return;
+
+            float tickF = (mousePos.x - origin.x) / drawWidth * tickCount;
+            int tickIndex = Mathf.RoundToInt(tickF);
+            tickIndex = Mathf.Clamp(tickIndex, 0, tickCount);
+
+            float bestDist = float.MaxValue;
+            int bestCurrency = -1;
+            float bestValue = 0;
+
+            for (int c = 0; c < currencyCount; c++)
+            {
+                List<float> values = allValues[c];
+                float value = values[tickIndex];
+                Vector2 point = GraphPoint(origin, drawWidth, drawHeight, tickCount, tickIndex, value, minValue, valueRange);
+                float dist = Vector2.Distance(mousePos, point);
+
+                if (dist < bestDist)
+                {
+                    bestDist = dist;
+                    bestCurrency = c;
+                    bestValue = value;
+                }
+            }
+
+            if (bestCurrency < 0 || bestDist >= 30f)
+                return;
+
+            string tooltipText = $"{_data.Currencies[bestCurrency].Name}   X:{tickIndex}   Y:{bestValue:F0}";
+
+            GUIStyle tooltipStyle = new GUIStyle(EditorStyles.helpBox)
+            {
+                fontSize = 11,
+                normal = { textColor = Color.white },
+                alignment = TextAnchor.MiddleCenter
+            };
+            tooltipStyle.padding = new RectOffset(10, 10, 4, 4);
+
+            GUIContent tooltipContent = new GUIContent(tooltipText);
+            Vector2 tooltipSize = tooltipStyle.CalcSize(tooltipContent);
+            tooltipSize.x = Mathf.Max(tooltipSize.x, 200f);
+
+            Vector2 tooltipPos = mousePos + new Vector2(14, -tooltipSize.y - 8);
+            tooltipPos.x = Mathf.Clamp(tooltipPos.x, rect.x, rect.xMax - tooltipSize.x);
+            tooltipPos.y = Mathf.Max(tooltipPos.y, rect.y);
+
+            GUI.Box(new Rect(tooltipPos, tooltipSize), tooltipContent, tooltipStyle);
         }
 
         private Vector2 GraphPoint(Vector2 origin, float width, float height, int tickCount, int tick, float value, float min, float range)

@@ -111,6 +111,10 @@ namespace BalancePlugin
                     case OutputAmountType.Random:
                         DrawRandomFields(nodeType, node, prefix);
                         break;
+
+                    case OutputAmountType.RandomRange:
+                        DrawRandomRangeFields(nodeType, node, prefix);
+                        break;
                 }
             }
         }
@@ -193,6 +197,28 @@ namespace BalancePlugin
                     chanceField.SetValue(node, newChance);
                     EditorUtility.SetDirty(node);
                 }
+            }
+        }
+
+        private void DrawRandomRangeFields(Type nodeType, BalancingNode node, string prefix)
+        {
+            System.Reflection.FieldInfo minField = nodeType.GetField(prefix + "RandomRangeMin");
+            System.Reflection.FieldInfo maxField = nodeType.GetField(prefix + "RandomRangeMax");
+
+            if (minField == null || maxField == null)
+                return;
+
+            int currentMin = (int)minField.GetValue(node);
+            int currentMax = (int)maxField.GetValue(node);
+
+            int newMin = EditorGUILayout.IntField(prefix + " Min", currentMin);
+            int newMax = EditorGUILayout.IntField(prefix + " Max", currentMax);
+
+            if (newMin != currentMin || newMax != currentMax)
+            {
+                minField.SetValue(node, newMin);
+                maxField.SetValue(node, newMax);
+                EditorUtility.SetDirty(node);
             }
         }
 

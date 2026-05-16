@@ -15,6 +15,8 @@ namespace BalancePlugin
         public string OutputFormula = "x";
         public int OutputRandomAmount = 1;
         [Range(0, 100)] public float OutputRandomChance = 50f;
+        public int OutputRandomRangeMin = 1;
+        public int OutputRandomRangeMax = 10;
         [Min(1)] public int SendInterval = 1;
 
         public override void Initialize()
@@ -35,6 +37,11 @@ namespace BalancePlugin
                     if (UnityEngine.Random.value * 100f < OutputRandomChance)
                         return OutputRandomAmount;
                     return 0;
+
+                case OutputAmountType.RandomRange:
+                    int min = Mathf.Min(OutputRandomRangeMin, OutputRandomRangeMax);
+                    int max = Mathf.Max(OutputRandomRangeMin, OutputRandomRangeMax);
+                    return UnityEngine.Random.Range(min, max + 1);
 
                 default:
                     return OutputAmount;
