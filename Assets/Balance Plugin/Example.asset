@@ -55,36 +55,6 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 5
   SendInterval: 1
---- !u!114 &-6200481010711971700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d39a91973cc6f64429985602188291c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeId: 5c262a95-4b6f-4d63-b107-32545a2be718
-  DisplayName: Converter
-  Position: {x: 1337, y: 317}
-  InputNodeIds:
-  - 63c6579d-8f0e-4cd9-b995-ccbf76af891d
-  - df57d2ea-3cf3-4861-8252-a0131c76d10f
-  - 472ce673-b459-4a49-b314-edc9fca8852d
-  OutputNodeIds:
-  - 2a02cd4b-dda9-4e22-b1d8-d50dd405df0a
-  CurrencyIndex: 4
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
-  SendInterval: 0
 --- !u!114 &-3765585981864888521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,17 +73,17 @@ MonoBehaviour:
   InputNodeIds:
   - 3dfd22a3-73e0-46b8-aaf7-4fc6d3d98785
   OutputNodeIds:
-  - 5c262a95-4b6f-4d63-b107-32545a2be718
+  - 2aeaaa8b-7303-4370-b9b4-fcbef516a761
   CurrencyIndex: 3
   OutputAmountType: 0
-  OutputAmount: 1
+  OutputAmount: 2
   OutputFormula: x
   OutputRandomAmount: 1
   OutputRandomChance: 50
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 0
+  StoredAmount: 34
   SendInterval: 0
 --- !u!114 &-2877309964583737448
 MonoBehaviour:
@@ -133,17 +103,17 @@ MonoBehaviour:
   InputNodeIds:
   - 761909e6-843b-4a04-aa2a-02e007f6b068
   OutputNodeIds:
-  - 5c262a95-4b6f-4d63-b107-32545a2be718
+  - 2aeaaa8b-7303-4370-b9b4-fcbef516a761
   CurrencyIndex: 2
   OutputAmountType: 0
-  OutputAmount: 1
+  OutputAmount: 4
   OutputFormula: x
   OutputRandomAmount: 1
   OutputRandomChance: 50
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 0
+  StoredAmount: 6
   SendInterval: 0
 --- !u!114 &-2599234685207421811
 MonoBehaviour:
@@ -197,17 +167,17 @@ MonoBehaviour:
   InputNodeIds:
   - 0e435878-3636-45bd-b67a-4eb9322026ed
   OutputNodeIds:
-  - 5c262a95-4b6f-4d63-b107-32545a2be718
+  - 2aeaaa8b-7303-4370-b9b4-fcbef516a761
   CurrencyIndex: 1
   OutputAmountType: 0
-  OutputAmount: 1
+  OutputAmount: 6
   OutputFormula: x
   OutputRandomAmount: 1
   OutputRandomChance: 50
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 0
+  StoredAmount: 4
   SendInterval: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -238,8 +208,8 @@ MonoBehaviour:
     Color: {r: 0.58302945, g: 1, b: 0.41037738, a: 1}
     Visible: 1
   Nodes:
-  - {fileID: -6200481010711971700}
-  - {fileID: 4286718384561595139}
+  - {fileID: 4238120780651981097}
+  - {fileID: 8972297572698551924}
   - {fileID: 398892031364789561}
   - {fileID: -7800858615708648609}
   - {fileID: 8065141507291406317}
@@ -261,17 +231,17 @@ MonoBehaviour:
     ToNodeId: 3dfd22a3-73e0-46b8-aaf7-4fc6d3d98785
   - FromNodeId: 3dfd22a3-73e0-46b8-aaf7-4fc6d3d98785
     ToNodeId: 472ce673-b459-4a49-b314-edc9fca8852d
-  - FromNodeId: 63c6579d-8f0e-4cd9-b995-ccbf76af891d
-    ToNodeId: 5c262a95-4b6f-4d63-b107-32545a2be718
-  - FromNodeId: df57d2ea-3cf3-4861-8252-a0131c76d10f
-    ToNodeId: 5c262a95-4b6f-4d63-b107-32545a2be718
-  - FromNodeId: 472ce673-b459-4a49-b314-edc9fca8852d
-    ToNodeId: 5c262a95-4b6f-4d63-b107-32545a2be718
-  - FromNodeId: 5c262a95-4b6f-4d63-b107-32545a2be718
-    ToNodeId: 2a02cd4b-dda9-4e22-b1d8-d50dd405df0a
   - FromNodeId: 2ef291a4-9fef-4d71-a5e1-98c38c8fcfcb
     ToNodeId: b51476f5-7d17-47e3-ab1f-bf7e98cae2b4
-  TickCount: 10
+  - FromNodeId: 2aeaaa8b-7303-4370-b9b4-fcbef516a761
+    ToNodeId: 2d9ada19-a77f-4e28-aeea-471e6f096a3c
+  - FromNodeId: 63c6579d-8f0e-4cd9-b995-ccbf76af891d
+    ToNodeId: 2aeaaa8b-7303-4370-b9b4-fcbef516a761
+  - FromNodeId: df57d2ea-3cf3-4861-8252-a0131c76d10f
+    ToNodeId: 2aeaaa8b-7303-4370-b9b4-fcbef516a761
+  - FromNodeId: 472ce673-b459-4a49-b314-edc9fca8852d
+    ToNodeId: 2aeaaa8b-7303-4370-b9b4-fcbef516a761
+  TickCount: 100
 --- !u!114 &398892031364789561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,7 +270,7 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   SendInterval: 0
---- !u!114 &4286718384561595139
+--- !u!114 &4238120780651981097
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -312,11 +282,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodeId: 2a02cd4b-dda9-4e22-b1d8-d50dd405df0a
-  DisplayName: bows
-  Position: {x: 1510, y: 317}
+  NodeId: 2d9ada19-a77f-4e28-aeea-471e6f096a3c
+  DisplayName: Pool
+  Position: {x: 1503, y: 290}
   InputNodeIds:
-  - 5c262a95-4b6f-4d63-b107-32545a2be718
+  - 2aeaaa8b-7303-4370-b9b4-fcbef516a761
   OutputNodeIds: []
   CurrencyIndex: 4
   OutputAmountType: 0
@@ -327,8 +297,8 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 10
-  SendInterval: 1
+  StoredAmount: 278
+  SendInterval: 0
 --- !u!114 &8065141507291406317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,6 +319,36 @@ MonoBehaviour:
   OutputNodeIds:
   - 63c6579d-8f0e-4cd9-b995-ccbf76af891d
   CurrencyIndex: 1
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  SendInterval: 0
+--- !u!114 &8972297572698551924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d39a91973cc6f64429985602188291c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 2aeaaa8b-7303-4370-b9b4-fcbef516a761
+  DisplayName: Converter
+  Position: {x: 1335, y: 290}
+  InputNodeIds:
+  - 63c6579d-8f0e-4cd9-b995-ccbf76af891d
+  - df57d2ea-3cf3-4861-8252-a0131c76d10f
+  - 472ce673-b459-4a49-b314-edc9fca8852d
+  OutputNodeIds:
+  - 2d9ada19-a77f-4e28-aeea-471e6f096a3c
+  CurrencyIndex: 4
   OutputAmountType: 0
   OutputAmount: 1
   OutputFormula: x

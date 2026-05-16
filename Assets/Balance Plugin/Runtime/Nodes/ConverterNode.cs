@@ -27,7 +27,7 @@ public OutputAmountType OutputAmountType = OutputAmountType.Number;
             switch (OutputAmountType)
             {
                 case OutputAmountType.Number:
-                    return OutputAmount;
+                    return s;
 
                 case OutputAmountType.Formula:
                     return FormulaEvaluator.EvaluateSingle(OutputFormula, tick, s);
@@ -43,7 +43,7 @@ public OutputAmountType OutputAmountType = OutputAmountType.Number;
                     return UnityEngine.Random.Range(min, max + 1);
 
                 default:
-                    return OutputAmount;
+                    return s;
             }
         }
 

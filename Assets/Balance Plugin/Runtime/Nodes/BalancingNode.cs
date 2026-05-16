@@ -5,7 +5,8 @@ namespace BalancePlugin
 {
     public abstract class BalancingNode : ScriptableObject
     {
-        public string NodeId = System.Guid.NewGuid().ToString();
+        public string NodeId = "";
+
         public string DisplayName = "Node";
         public Vector2 Position;
         public List<string> InputNodeIds = new List<string>();
@@ -19,6 +20,12 @@ namespace BalancePlugin
 
         public abstract void Initialize();
         public abstract void ProcessResources(BalancingData data, int tick, int SendCurrencyIndex, int SendAmount);
+
+        private void OnEnable()
+        {
+            if (string.IsNullOrEmpty(NodeId))
+                NodeId = System.Guid.NewGuid().ToString();
+        }
 
         public string GetCurrency(BalancingData data)
         {

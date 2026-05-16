@@ -56,22 +56,37 @@ namespace BalancePlugin
 
         public override void ProcessResources(BalancingData data, int tick, int SendCurrencyIndex, int SendAmount)
         {
-            if (CurrencyIndex == SendCurrencyIndex)
-                StoredAmount += SendAmount;
-
             int outputAmount = GetOutputAmount(tick, SendAmount);
 
             bool shouldFire = SendInterval <= 0 || tick % SendInterval == 0;
-            if (prevTick != tick && shouldFire && OutputNodeIds.Count > 0 && StoredAmount >= outputAmount && outputAmount > 0)
+            if (prevTick != tick && shouldFire)
             {
-                StoredAmount -= outputAmount;
-                prevTick = tick;
-
                 foreach (string nodeName in OutputNodeIds)
                 {
-                    data.GetNode(nodeName)?.ProcessResources(data, tick, CurrencyIndex, outputAmount);
+                    BalancingNode target = data.GetNode(nodeName);
+                    if (target == null)
+                        continue;
+
+                    if (target is DrainNode drain)
+                    {
+                        int drainAmount = Mathf.Min(StoredAmount, drain.DrainAmount);
+                        if (drainAmount > 0)
+                        {
+                            StoredAmount -= drainAmount;
+                            drain.ProcessResources(data, tick, CurrencyIndex, drainAmount);
+                        }
+                    }
+                    else if (outputAmount > 0 && StoredAmount >= outputAmount)
+                    {
+                        StoredAmount -= outputAmount;
+                        target.ProcessResources(data, tick, CurrencyIndex, outputAmount);
+                    }
                 }
+                prevTick = tick;
             }
+
+            if (CurrencyIndex == SendCurrencyIndex)
+                StoredAmount += SendAmount;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace BalancePlugin
             switch (OutputAmountType)
             {
                 case OutputAmountType.Number:
-                    return OutputAmount;
+                    return s;
 
                 case OutputAmountType.Formula:
                     return FormulaEvaluator.EvaluateSingle(OutputFormula, tick, s);
@@ -46,7 +46,7 @@ namespace BalancePlugin
                     return UnityEngine.Random.Range(min, max + 1);
 
                 default:
-                    return OutputAmount;
+                    return s;
             }
         }
 
