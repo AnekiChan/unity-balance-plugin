@@ -34,11 +34,6 @@ namespace BalancePlugin
             GetWindow<BalancingWindow>("Balance");
         }
 
-        public static void OpenInspectorWindow()
-        {
-            NodeInspectorWindow.ShowWindow();
-        }
-
         private void OnEnable()
         {
             BuildWindow();
