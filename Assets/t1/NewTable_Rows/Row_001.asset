@@ -18,23 +18,35 @@ MonoBehaviour:
     floatValue: 0
     stringValue: 
     spriteValue: {fileID: 0}
+    formulaString: 
+    formulaResult: 
   - intValue: 0
     floatValue: 0
     stringValue: 
     spriteValue: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  - intValue: 0
+    formulaString: 
+    formulaResult: 
+  - intValue: 2
     floatValue: 0
     stringValue: 
     spriteValue: {fileID: 0}
+    formulaString: 
+    formulaResult: 
   - intValue: 0
-    floatValue: 0
+    floatValue: 5.5
     stringValue: "\u044B\u0432\u0430"
     spriteValue: {fileID: 0}
+    formulaString: 
+    formulaResult: 
   - intValue: 34
     floatValue: 0
     stringValue: 
     spriteValue: {fileID: 0}
+    formulaString: sqrt(attack*health)
+    formulaResult: 3.316625
   - intValue: 0
     floatValue: 0
     stringValue: "\u044B\u0430"
     spriteValue: {fileID: 0}
+    formulaString: 
+    formulaResult: 

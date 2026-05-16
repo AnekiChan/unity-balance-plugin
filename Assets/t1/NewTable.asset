@@ -19,8 +19,10 @@ MonoBehaviour:
     Type: 3
   - Name: attack
     Type: 0
-  - Name: description
-    Type: 2
+  - Name: health
+    Type: 1
+  - Name: points
+    Type: 4
   rows:
   - {fileID: 11400000, guid: 6dbe66eb09e651f448e6bd4a9156b5fe, type: 2}
   - {fileID: 11400000, guid: 8be715b0260e96a4d8854c16c1f38cc5, type: 2}

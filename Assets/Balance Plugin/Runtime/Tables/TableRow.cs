@@ -89,6 +89,58 @@ namespace BalancePlugin
             return GetCell(columnName)?.spriteValue;
         }
 
+        public double GetDouble(int columnIndex)
+        {
+            if (ParentTable == null || columnIndex < 0 || columnIndex >= ParentTable.ColumnCount)
+                return 0;
+            var cell = GetCell(columnIndex);
+            if (cell == null) return 0;
+            var type = ParentTable.GetColumnType(columnIndex);
+
+            return type switch
+            {
+                ColumnType.Integer => cell.intValue,
+                ColumnType.Float => cell.floatValue,
+                ColumnType.String => double.TryParse(cell.stringValue,
+                    System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out double dv) ? dv : 0,
+                ColumnType.Formula => EvaluateFormula(columnIndex),
+                _ => 0
+            };
+        }
+
+        public double GetDouble(string columnName)
+        {
+            if (ParentTable == null) return 0;
+            int index = ParentTable.GetColumnIndex(columnName);
+            return index >= 0 ? GetDouble(index) : 0;
+        }
+
+        public double EvaluateFormula(int columnIndex)
+        {
+            var cell = GetCell(columnIndex);
+            if (cell == null || string.IsNullOrEmpty(cell.formulaString))
+                return 0;
+            var (success, resultStr) = TableFormulaEvaluator.Evaluate(cell.formulaString, this);
+            if (success && double.TryParse(resultStr, System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out double val))
+                return val;
+            return 0;
+        }
+
+        public void RecalculateFormulas()
+        {
+            if (ParentTable == null) return;
+            for (int i = 0; i < ParentTable.ColumnCount; i++)
+            {
+                if (ParentTable.GetColumnType(i) != ColumnType.Formula) continue;
+                var cell = GetCell(i);
+                if (cell == null) continue;
+                var (success, resultStr) = TableFormulaEvaluator.Evaluate(cell.formulaString, this);
+                cell.formulaResult = success ? resultStr : "ERR: " + resultStr;
+            }
+        }
+
         public void SetCellValue(int columnIndex, object value)
         {
             if (ParentTable == null || columnIndex < 0 || columnIndex >= ParentTable.ColumnCount)

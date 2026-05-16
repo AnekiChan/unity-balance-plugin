@@ -5,6 +5,7 @@ namespace BalancePlugin
         Integer,
         Float,
         String,
-        Sprite
+        Sprite,
+        Formula
     }
 }

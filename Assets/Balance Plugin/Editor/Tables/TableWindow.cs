@@ -149,6 +149,7 @@ namespace BalancePlugin
             menu.AddItem(new GUIContent("Float"), false, () => AddColumn("NewColumn", ColumnType.Float));
             menu.AddItem(new GUIContent("String"), false, () => AddColumn("NewColumn", ColumnType.String));
             menu.AddItem(new GUIContent("Sprite"), false, () => AddColumn("NewColumn", ColumnType.Sprite));
+            menu.AddItem(new GUIContent("Formula"), false, () => AddColumn("NewColumn", ColumnType.Formula));
             menu.ShowAsContext();
         }
 
@@ -253,6 +254,20 @@ namespace BalancePlugin
                 if (colType == ColumnType.Sprite)
                 {
                     maxHeight = Mathf.Max(maxHeight, SpriteColumnWidth);
+                    continue;
+                }
+                if (colType == ColumnType.Formula)
+                {
+                    var formulaCell = row?.GetCell(c);
+                    float formulaH = MinRowHeight * 2f + 4;
+                    if (formulaCell != null && !string.IsNullOrEmpty(formulaCell.formulaString))
+                    {
+                        float extraH = EditorStyles.textField.CalcHeight(
+                            new GUIContent(formulaCell.formulaString), GetColumnWidth(c) - 4);
+                        if (extraH > MinRowHeight)
+                            formulaH = extraH + MinRowHeight + 6;
+                    }
+                    maxHeight = Mathf.Max(maxHeight, formulaH);
                     continue;
                 }
                 if (colType != ColumnType.String)
@@ -375,6 +390,28 @@ namespace BalancePlugin
                             cell.SetValue(ColumnType.Sprite, sprite);
                     }
                     break;
+
+                case ColumnType.Formula:
+                    {
+                        float halfH = (rect.height - 2) * 0.5f;
+                        Rect formulaRect = new Rect(rect.x, rect.y, rect.width, halfH);
+                        Rect resultRect = new Rect(rect.x, rect.y + halfH + 2, rect.width, halfH);
+
+                        string newFormula = EditorGUI.TextField(formulaRect, cell.formulaString);
+                        if (newFormula != cell.formulaString)
+                        {
+                            cell.formulaString = newFormula;
+                            var (success, res) = TableFormulaEvaluator.Evaluate(newFormula, row);
+                            cell.formulaResult = success ? res : "ERR: " + res;
+                        }
+
+                        Color prevColor = GUI.color;
+                        bool isError = cell.formulaResult.StartsWith("ERR:");
+                        GUI.color = isError ? Color.red : Color.white;
+                        EditorGUI.LabelField(resultRect, cell.formulaResult, EditorStyles.miniLabel);
+                        GUI.color = prevColor;
+                    }
+                    break;
             }
         }
 
@@ -426,6 +463,7 @@ namespace BalancePlugin
                         dstCell.SetValue(_currentTable.GetColumnType(c), srcCell.GetValue(_currentTable.GetColumnType(c)));
                     }
                 }
+                newRow.RecalculateFormulas();
                 SaveRowAsset(newRow, _currentTable.RowCount - 1);
                 EditorUtility.SetDirty(newRow);
                 MarkDirty();

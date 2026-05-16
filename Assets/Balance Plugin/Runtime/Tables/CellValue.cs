@@ -10,6 +10,8 @@ namespace BalancePlugin
         public float floatValue;
         public string stringValue = "";
         public Sprite spriteValue;
+        public string formulaString = "";
+        public string formulaResult = "";
 
         public object GetValue(ColumnType type)
         {
@@ -19,6 +21,7 @@ namespace BalancePlugin
                 ColumnType.Float => floatValue,
                 ColumnType.String => stringValue,
                 ColumnType.Sprite => spriteValue,
+                ColumnType.Formula => formulaString,
                 _ => null
             };
         }
@@ -38,6 +41,9 @@ namespace BalancePlugin
                     break;
                 case ColumnType.Sprite:
                     spriteValue = value as Sprite;
+                    break;
+                case ColumnType.Formula:
+                    formulaString = value as string ?? "";
                     break;
             }
         }
