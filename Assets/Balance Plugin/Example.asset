@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 761909e6-843b-4a04-aa2a-02e007f6b068
   DisplayName: Converter
-  Position: {x: 985, y: 290}
+  Position: {x: 988, y: 290}
   InputNodeIds:
   - b51476f5-7d17-47e3-ab1f-bf7e98cae2b4
   OutputNodeIds:
@@ -159,7 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: b51476f5-7d17-47e3-ab1f-bf7e98cae2b4
   DisplayName: Gate
-  Position: {x: 786, y: 255}
+  Position: {x: 784, y: 255}
   InputNodeIds:
   - 2ef291a4-9fef-4d71-a5e1-98c38c8fcfcb
   OutputNodeIds:
@@ -224,16 +224,16 @@ MonoBehaviour:
   Currencies:
   - Name: Loot
     Color: {r: 0.72, g: 0.35, b: 0.95, a: 1}
-    Visible: 0
+    Visible: 1
   - Name: iron
     Color: {r: 0.28, g: 0.45, b: 1, a: 1}
-    Visible: 0
+    Visible: 1
   - Name: wire
     Color: {r: 0.4009434, g: 0.8941723, b: 1, a: 1}
-    Visible: 0
+    Visible: 1
   - Name: wood
     Color: {r: 0.7169812, g: 0.37151098, b: 0.21306516, a: 1}
-    Visible: 0
+    Visible: 1
   - Name: bow
     Color: {r: 0.58302945, g: 1, b: 0.41037738, a: 1}
     Visible: 1

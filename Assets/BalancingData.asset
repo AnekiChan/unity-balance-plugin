@@ -55,7 +55,7 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 1
+  StoredAmount: 2
   SendInterval: 0
 --- !u!114 &-1192188692808475818
 MonoBehaviour:
@@ -144,16 +144,16 @@ MonoBehaviour:
     Color: {r: 1, g: 0.1607843, b: 0.81044346, a: 1}
     Visible: 1
   Nodes:
+  - {fileID: 1558651656314045546}
+  - {fileID: -1168172656411539944}
+  - {fileID: 3671489524986941169}
+  - {fileID: -2224030653817408529}
+  - {fileID: 1665881442669630275}
   - {fileID: 8889532273671071716}
   - {fileID: 3087361984619838075}
   - {fileID: -1192188692808475818}
   - {fileID: 1089488118459540303}
   - {fileID: -5201836439896649415}
-  - {fileID: 1665881442669630275}
-  - {fileID: -2224030653817408529}
-  - {fileID: 3671489524986941169}
-  - {fileID: -1168172656411539944}
-  - {fileID: 1558651656314045546}
   Connections:
   - FromNodeId: bf4b3c75-ec14-48d8-8607-0d464400c851
     ToNodeId: f020000e-1863-456a-ac21-559fd844bb4c
@@ -239,7 +239,7 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 26
+  StoredAmount: 23
   SendInterval: 0
 --- !u!114 &1665881442669630275
 MonoBehaviour:
@@ -327,7 +327,7 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 0
+  StoredAmount: 1
   SendInterval: 0
 --- !u!114 &8889532273671071716
 MonoBehaviour:

@@ -21,21 +21,10 @@ MonoBehaviour:
     Type: 0
   - Name: description
     Type: 2
-  - Name: "4\u0443"
-    Type: 0
-  - Name: "\u044B\u0430"
-    Type: 2
-  - Name: NewColumn
-    Type: 0
-  - Name: NewColumn
-    Type: 0
-  - Name: NewColumn
-    Type: 0
   rows:
   - {fileID: 11400000, guid: 6dbe66eb09e651f448e6bd4a9156b5fe, type: 2}
   - {fileID: 11400000, guid: 8be715b0260e96a4d8854c16c1f38cc5, type: 2}
   - {fileID: 11400000, guid: 7083f69cceaaeca4f84cb3f1d3791b20, type: 2}
-  - {fileID: 11400000, guid: d9be285bd49fbe94e903845bc6df5cee, type: 2}
   - {fileID: 11400000, guid: b68b8d862ac59004bb26c77f3ac8c138, type: 2}
   - {fileID: 11400000, guid: 34696c4962c479e49af7b1432ea9a56f, type: 2}
   - {fileID: 11400000, guid: e5fcf8d614b567047b9325bfbeb0bc8f, type: 2}
