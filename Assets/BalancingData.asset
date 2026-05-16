@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: bf4b3c75-ec14-48d8-8607-0d464400c851
   DisplayName: Source
-  Position: {x: 450, y: 236}
+  Position: {x: 0, y: 0}
   InputNodeIds: []
   OutputNodeIds:
   - f020000e-1863-456a-ac21-559fd844bb4c
@@ -41,7 +41,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 966691f8-02c5-488e-b4b2-0af21ce46531
   DisplayName: Pool
-  Position: {x: 1014, y: 236}
+  Position: {x: 0, y: 0}
   InputNodeIds:
   - 5d1bcc78-aa2f-4200-9cae-b5ba7cbe1326
   OutputNodeIds:
@@ -71,7 +71,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: c350c02b-e917-44da-badd-4e02dbc2f8ff
   DisplayName: Converter
-  Position: {x: 873, y: 116}
+  Position: {x: 0, y: 0}
   InputNodeIds:
   - f020000e-1863-456a-ac21-559fd844bb4c
   OutputNodeIds:
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: b5594c4d-0073-4749-8766-ef4346acd108
   DisplayName: Converter
-  Position: {x: 1209, y: 236}
+  Position: {x: 0, y: 0}
   InputNodeIds:
   - 025c1c1a-59ee-4266-91c3-0a0d27ea7bbd
   - 966691f8-02c5-488e-b4b2-0af21ce46531
@@ -192,7 +192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: f020000e-1863-456a-ac21-559fd844bb4c
   DisplayName: Gate
-  Position: {x: 683, y: 236}
+  Position: {x: 0, y: 0}
   InputNodeIds:
   - bf4b3c75-ec14-48d8-8607-0d464400c851
   OutputNodeIds:
@@ -226,7 +226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: d5558792-0280-453b-8ea6-3d3fe8d448a0
   DisplayName: Pool
-  Position: {x: 1398, y: 236}
+  Position: {x: 0, y: 0}
   InputNodeIds:
   - b5594c4d-0073-4749-8766-ef4346acd108
   OutputNodeIds: []
@@ -255,7 +255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 025c1c1a-59ee-4266-91c3-0a0d27ea7bbd
   DisplayName: Pool
-  Position: {x: 1014, y: 116}
+  Position: {x: 0, y: 0}
   InputNodeIds:
   - c350c02b-e917-44da-badd-4e02dbc2f8ff
   OutputNodeIds:
@@ -285,7 +285,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 5d1bcc78-aa2f-4200-9cae-b5ba7cbe1326
   DisplayName: Converter
-  Position: {x: 873, y: 236}
+  Position: {x: 0, y: 0}
   InputNodeIds:
   - f020000e-1863-456a-ac21-559fd844bb4c
   OutputNodeIds:
@@ -313,7 +313,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: e74e6eb3-d650-47ce-9ccd-363ea4cc1461
   DisplayName: Pool
-  Position: {x: 1014, y: 352}
+  Position: {x: 0, y: 0}
   InputNodeIds:
   - 178be2f6-257a-43bb-8823-1d20606afade
   OutputNodeIds:
@@ -343,7 +343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 178be2f6-257a-43bb-8823-1d20606afade
   DisplayName: Converter
-  Position: {x: 873, y: 352}
+  Position: {x: 0, y: 0}
   InputNodeIds:
   - f020000e-1863-456a-ac21-559fd844bb4c
   OutputNodeIds:

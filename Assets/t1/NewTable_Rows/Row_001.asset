@@ -16,7 +16,7 @@ MonoBehaviour:
   cells:
   - intValue: 0
     floatValue: 0
-    stringValue: 
+    stringValue: "\u0432\u0430\u043F\u0430"
     spriteValue: {fileID: 0}
     formulaString: 
     formulaResult: 
@@ -33,7 +33,7 @@ MonoBehaviour:
     formulaString: 
     formulaResult: 
   - intValue: 0
-    floatValue: 5.5
+    floatValue: 2
     stringValue: "\u044B\u0432\u0430"
     spriteValue: {fileID: 0}
     formulaString: 
@@ -43,7 +43,7 @@ MonoBehaviour:
     stringValue: 
     spriteValue: {fileID: 0}
     formulaString: sqrt(attack*health)
-    formulaResult: 3.316625
+    formulaResult: 2
   - intValue: 0
     floatValue: 0
     stringValue: "\u044B\u0430"
