@@ -399,15 +399,13 @@ namespace BalancePlugin
 
                         string newFormula = EditorGUI.TextField(formulaRect, cell.formulaString);
                         if (newFormula != cell.formulaString)
-                        {
                             cell.formulaString = newFormula;
-                            var (success, res) = TableFormulaEvaluator.Evaluate(newFormula, row);
-                            cell.formulaResult = success ? res : "ERR: " + res;
-                        }
+
+                        var (success, res) = TableFormulaEvaluator.Evaluate(cell.formulaString, row);
+                        cell.formulaResult = success ? res : "ERR: " + res;
 
                         Color prevColor = GUI.color;
-                        bool isError = cell.formulaResult.StartsWith("ERR:");
-                        GUI.color = isError ? Color.red : Color.white;
+                        GUI.color = success ? Color.white : Color.red;
                         EditorGUI.LabelField(resultRect, cell.formulaResult, EditorStyles.miniLabel);
                         GUI.color = prevColor;
                     }

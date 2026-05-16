@@ -206,16 +206,12 @@ namespace BalancePlugin
                 case ColumnType.Formula:
                     EditorGUILayout.LabelField(columnName);
                     string newFormula = EditorGUILayout.TextArea(cell.formulaString, GUILayout.MinHeight(40));
-                    if (newFormula != cell.formulaString)
+                    cell.formulaString = newFormula;
                     {
-                        cell.formulaString = newFormula;
-                        var (success, res) = TableFormulaEvaluator.Evaluate(newFormula, _row);
+                        var (success, res) = TableFormulaEvaluator.Evaluate(cell.formulaString, _row);
                         cell.formulaResult = success ? res : "ERR: " + res;
-                    }
-                    {
                         Color prev = GUI.color;
-                        bool isError = cell.formulaResult.StartsWith("ERR:");
-                        GUI.color = isError ? Color.red : Color.green;
+                        GUI.color = success ? Color.green : Color.red;
                         EditorGUILayout.LabelField("  Result: " + cell.formulaResult, EditorStyles.miniLabel);
                         GUI.color = prev;
                     }

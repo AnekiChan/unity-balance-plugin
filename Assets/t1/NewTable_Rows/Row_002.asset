@@ -26,14 +26,14 @@ MonoBehaviour:
     spriteValue: {fileID: 0}
     formulaString: 
     formulaResult: 
-  - intValue: 4
+  - intValue: 10
     floatValue: 0
     stringValue: 
     spriteValue: {fileID: 0}
     formulaString: 
     formulaResult: 
   - intValue: 0
-    floatValue: 4
+    floatValue: 6
     stringValue: 
     spriteValue: {fileID: 0}
     formulaString: 
