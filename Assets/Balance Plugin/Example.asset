@@ -19,7 +19,7 @@ MonoBehaviour:
   - b51476f5-7d17-47e3-ab1f-bf7e98cae2b4
   OutputNodeIds:
   - df57d2ea-3cf3-4861-8252-a0131c76d10f
-  CurrencyIndex: 3
+  CurrencyIndex: 2
   OutputAmountType: 0
   OutputAmount: 1
   OutputFormula: x
@@ -27,6 +27,7 @@ MonoBehaviour:
   OutputRandomChance: 50
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
+  SendInterval: 0
 --- !u!114 &-6785150175318924039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41,11 +42,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 2ef291a4-9fef-4d71-a5e1-98c38c8fcfcb
   DisplayName: Source
-  Position: {x: 436, y: 255}
+  Position: {x: 602, y: 255}
   InputNodeIds: []
   OutputNodeIds:
-  - c21cb937-6e64-4818-937d-d849ebb5d460
-  CurrencyIndex: 1
+  - b51476f5-7d17-47e3-ab1f-bf7e98cae2b4
+  CurrencyIndex: 0
   OutputAmountType: 3
   OutputAmount: 1
   OutputFormula: x
@@ -83,6 +84,7 @@ MonoBehaviour:
   OutputRandomChance: 50
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
+  SendInterval: 0
 --- !u!114 &-3765585981864888521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,17 +104,17 @@ MonoBehaviour:
   - 3dfd22a3-73e0-46b8-aaf7-4fc6d3d98785
   OutputNodeIds:
   - 5c262a95-4b6f-4d63-b107-32545a2be718
-  CurrencyIndex: 4
+  CurrencyIndex: 3
   OutputAmountType: 0
-  OutputAmount: 3
+  OutputAmount: 1
   OutputFormula: x
   OutputRandomAmount: 1
   OutputRandomChance: 50
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 2
-  SendInterval: 1
+  StoredAmount: 1
+  SendInterval: 0
 --- !u!114 &-2877309964583737448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,17 +134,17 @@ MonoBehaviour:
   - 761909e6-843b-4a04-aa2a-02e007f6b068
   OutputNodeIds:
   - 5c262a95-4b6f-4d63-b107-32545a2be718
-  CurrencyIndex: 3
+  CurrencyIndex: 2
   OutputAmountType: 0
-  OutputAmount: 4
+  OutputAmount: 1
   OutputFormula: x
   OutputRandomAmount: 1
   OutputRandomChance: 50
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 3
-  SendInterval: 1
+  StoredAmount: 1
+  SendInterval: 0
 --- !u!114 &-2599234685207421811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,12 +161,12 @@ MonoBehaviour:
   DisplayName: Gate
   Position: {x: 786, y: 255}
   InputNodeIds:
-  - c21cb937-6e64-4818-937d-d849ebb5d460
+  - 2ef291a4-9fef-4d71-a5e1-98c38c8fcfcb
   OutputNodeIds:
   - 0e435878-3636-45bd-b67a-4eb9322026ed
   - 761909e6-843b-4a04-aa2a-02e007f6b068
   - 3dfd22a3-73e0-46b8-aaf7-4fc6d3d98785
-  CurrencyIndex: 1
+  CurrencyIndex: 0
   OutputAmountType: 0
   OutputAmount: 1
   OutputFormula: x
@@ -172,6 +174,7 @@ MonoBehaviour:
   OutputRandomChance: 50
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
+  SendInterval: 0
   OutputChances:
   - 50
   - 30
@@ -195,36 +198,6 @@ MonoBehaviour:
   - 0e435878-3636-45bd-b67a-4eb9322026ed
   OutputNodeIds:
   - 5c262a95-4b6f-4d63-b107-32545a2be718
-  CurrencyIndex: 2
-  OutputAmountType: 0
-  OutputAmount: 6
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
-  StartAmount: 0
-  StoredAmount: 1
-  SendInterval: 1
---- !u!114 &-1557091543714203820
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeId: c21cb937-6e64-4818-937d-d849ebb5d460
-  DisplayName: Pool
-  Position: {x: 607, y: 255}
-  InputNodeIds:
-  - 2ef291a4-9fef-4d71-a5e1-98c38c8fcfcb
-  OutputNodeIds:
-  - b51476f5-7d17-47e3-ab1f-bf7e98cae2b4
   CurrencyIndex: 1
   OutputAmountType: 0
   OutputAmount: 1
@@ -234,8 +207,8 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 180
-  SendInterval: 1
+  StoredAmount: 1
+  SendInterval: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,31 +224,31 @@ MonoBehaviour:
   Currencies:
   - Name: Loot
     Color: {r: 0.72, g: 0.35, b: 0.95, a: 1}
+    Visible: 0
   - Name: iron
     Color: {r: 0.28, g: 0.45, b: 1, a: 1}
+    Visible: 0
   - Name: wire
     Color: {r: 0.4009434, g: 0.8941723, b: 1, a: 1}
+    Visible: 0
   - Name: wood
     Color: {r: 0.7169812, g: 0.37151098, b: 0.21306516, a: 1}
+    Visible: 0
   - Name: bow
     Color: {r: 0.58302945, g: 1, b: 0.41037738, a: 1}
+    Visible: 1
   Nodes:
-  - {fileID: -1557091543714203820}
-  - {fileID: -6785150175318924039}
-  - {fileID: -2599234685207421811}
-  - {fileID: -2197992053041868142}
-  - {fileID: -2877309964583737448}
-  - {fileID: -3765585981864888521}
-  - {fileID: 8065141507291406317}
-  - {fileID: -7800858615708648609}
-  - {fileID: 398892031364789561}
-  - {fileID: 4286718384561595139}
   - {fileID: -6200481010711971700}
+  - {fileID: 4286718384561595139}
+  - {fileID: 398892031364789561}
+  - {fileID: -7800858615708648609}
+  - {fileID: 8065141507291406317}
+  - {fileID: -3765585981864888521}
+  - {fileID: -2877309964583737448}
+  - {fileID: -2197992053041868142}
+  - {fileID: -2599234685207421811}
+  - {fileID: -6785150175318924039}
   Connections:
-  - FromNodeId: 2ef291a4-9fef-4d71-a5e1-98c38c8fcfcb
-    ToNodeId: c21cb937-6e64-4818-937d-d849ebb5d460
-  - FromNodeId: c21cb937-6e64-4818-937d-d849ebb5d460
-    ToNodeId: b51476f5-7d17-47e3-ab1f-bf7e98cae2b4
   - FromNodeId: b51476f5-7d17-47e3-ab1f-bf7e98cae2b4
     ToNodeId: 0e435878-3636-45bd-b67a-4eb9322026ed
   - FromNodeId: 0e435878-3636-45bd-b67a-4eb9322026ed
@@ -296,7 +269,9 @@ MonoBehaviour:
     ToNodeId: 5c262a95-4b6f-4d63-b107-32545a2be718
   - FromNodeId: 5c262a95-4b6f-4d63-b107-32545a2be718
     ToNodeId: 2a02cd4b-dda9-4e22-b1d8-d50dd405df0a
-  TickCount: 100
+  - FromNodeId: 2ef291a4-9fef-4d71-a5e1-98c38c8fcfcb
+    ToNodeId: b51476f5-7d17-47e3-ab1f-bf7e98cae2b4
+  TickCount: 10
 --- !u!114 &398892031364789561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,7 +291,7 @@ MonoBehaviour:
   - b51476f5-7d17-47e3-ab1f-bf7e98cae2b4
   OutputNodeIds:
   - 472ce673-b459-4a49-b314-edc9fca8852d
-  CurrencyIndex: 4
+  CurrencyIndex: 3
   OutputAmountType: 0
   OutputAmount: 1
   OutputFormula: x
@@ -324,6 +299,7 @@ MonoBehaviour:
   OutputRandomChance: 50
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
+  SendInterval: 0
 --- !u!114 &4286718384561595139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -351,7 +327,7 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 20
+  StoredAmount: 1
   SendInterval: 1
 --- !u!114 &8065141507291406317
 MonoBehaviour:
@@ -372,7 +348,7 @@ MonoBehaviour:
   - b51476f5-7d17-47e3-ab1f-bf7e98cae2b4
   OutputNodeIds:
   - 63c6579d-8f0e-4cd9-b995-ccbf76af891d
-  CurrencyIndex: 2
+  CurrencyIndex: 1
   OutputAmountType: 0
   OutputAmount: 1
   OutputFormula: x
@@ -380,3 +356,4 @@ MonoBehaviour:
   OutputRandomChance: 50
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
+  SendInterval: 0

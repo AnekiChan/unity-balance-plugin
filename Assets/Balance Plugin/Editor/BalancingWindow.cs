@@ -352,6 +352,15 @@ namespace BalancePlugin
                 });
                 row.Add(color);
 
+                var toggle = new Toggle { value = currency.Visible, style = { width = 18 } };
+                toggle.RegisterValueChangedCallback(evt =>
+                {
+                    currency.Visible = evt.newValue;
+                    MarkDataDirty();
+                    _bottomPanel?.MarkDirtyRepaint();
+                });
+                row.Add(toggle);
+
                 var name = new TextField { value = currency.Name, style = { flexGrow = 1, marginLeft = 4 } };
                 name.RegisterValueChangedCallback(evt =>
                 {
@@ -489,12 +498,20 @@ namespace BalancePlugin
             float drawHeight = Mathf.Max(1, rect.height - padding * 1.6f);
 
             int currencyCount = _data.Currencies.Count;
+            var visibleIndices = new List<int>();
+            for (int c = 0; c < currencyCount; c++)
+            {
+                if (_data.Currencies[c].Visible)
+                    visibleIndices.Add(c);
+            }
+
             var allValues = new List<List<float>>();
             for (int c = 0; c < currencyCount; c++)
                 allValues.Add(tickInfos.Select(info => info.Resources.TryGetValue(c, out int value) ? (float)value : 0f).ToList());
 
-            float minValue = Mathf.Min(0f, allValues.SelectMany(values => values).DefaultIfEmpty(0f).Min());
-            float maxValue = Mathf.Max(1f, allValues.SelectMany(values => values).DefaultIfEmpty(0f).Max());
+            var visibleValues = visibleIndices.Select(c => allValues[c]).ToList();
+            float minValue = Mathf.Min(0f, visibleValues.SelectMany(values => values).DefaultIfEmpty(0f).Min());
+            float maxValue = Mathf.Max(1f, visibleValues.SelectMany(values => values).DefaultIfEmpty(0f).Max());
             float valueRange = Mathf.Max(0.001f, maxValue - minValue);
 
             Vector2 origin = new Vector2(rect.x + padding, rect.y + padding * 0.55f);
@@ -513,10 +530,11 @@ namespace BalancePlugin
                 Handles.DrawLine(new Vector2(origin.x, y), new Vector2(origin.x + drawWidth, y));
             }
 
-            for (int c = 0; c < currencyCount; c++)
+            for (int c = 0; c < visibleIndices.Count; c++)
             {
-                Handles.color = _data.Currencies[c].Color;
-                List<float> values = allValues[c];
+                int ci = visibleIndices[c];
+                Handles.color = _data.Currencies[ci].Color;
+                List<float> values = allValues[ci];
                 for (int t = 0; t < tickCount; t++)
                 {
                     Vector2 a = GraphPoint(origin, drawWidth, drawHeight, tickCount, t, values[t], minValue, valueRange);
@@ -564,9 +582,10 @@ namespace BalancePlugin
             int bestCurrency = -1;
             float bestValue = 0;
 
-            for (int c = 0; c < currencyCount; c++)
+            for (int c = 0; c < visibleIndices.Count; c++)
             {
-                List<float> values = allValues[c];
+                int ci = visibleIndices[c];
+                List<float> values = allValues[ci];
                 float value = values[tickIndex];
                 Vector2 point = GraphPoint(origin, drawWidth, drawHeight, tickCount, tickIndex, value, minValue, valueRange);
                 float dist = Vector2.Distance(mousePos, point);
@@ -574,7 +593,7 @@ namespace BalancePlugin
                 if (dist < bestDist)
                 {
                     bestDist = dist;
-                    bestCurrency = c;
+                    bestCurrency = ci;
                     bestValue = value;
                 }
             }

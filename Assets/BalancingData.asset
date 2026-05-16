@@ -1,0 +1,359 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5201836439896649415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d21edcf200ebb9c49870c3c69acddaf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: bf4b3c75-ec14-48d8-8607-0d464400c851
+  DisplayName: Source
+  Position: {x: 450, y: 236}
+  InputNodeIds: []
+  OutputNodeIds:
+  - f020000e-1863-456a-ac21-559fd844bb4c
+  CurrencyIndex: 0
+  OutputAmountType: 3
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 5
+  SendInterval: 0
+--- !u!114 &-2224030653817408529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 966691f8-02c5-488e-b4b2-0af21ce46531
+  DisplayName: Pool
+  Position: {x: 1014, y: 236}
+  InputNodeIds:
+  - 5d1bcc78-aa2f-4200-9cae-b5ba7cbe1326
+  OutputNodeIds:
+  - b5594c4d-0073-4749-8766-ef4346acd108
+  CurrencyIndex: 2
+  OutputAmountType: 0
+  OutputAmount: 4
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  StartAmount: 0
+  StoredAmount: 1
+  SendInterval: 0
+--- !u!114 &-1192188692808475818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d39a91973cc6f64429985602188291c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: c350c02b-e917-44da-badd-4e02dbc2f8ff
+  DisplayName: Converter
+  Position: {x: 873, y: 116}
+  InputNodeIds:
+  - f020000e-1863-456a-ac21-559fd844bb4c
+  OutputNodeIds:
+  - 025c1c1a-59ee-4266-91c3-0a0d27ea7bbd
+  CurrencyIndex: 1
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  SendInterval: 0
+--- !u!114 &-1168172656411539944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d39a91973cc6f64429985602188291c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: b5594c4d-0073-4749-8766-ef4346acd108
+  DisplayName: Converter
+  Position: {x: 1209, y: 236}
+  InputNodeIds:
+  - 025c1c1a-59ee-4266-91c3-0a0d27ea7bbd
+  - 966691f8-02c5-488e-b4b2-0af21ce46531
+  - e74e6eb3-d650-47ce-9ccd-363ea4cc1461
+  OutputNodeIds:
+  - d5558792-0280-453b-8ea6-3d3fe8d448a0
+  CurrencyIndex: 4
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  SendInterval: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8b2b5d5e722a6c4bb85647efda313bd, type: 3}
+  m_Name: BalancingData
+  m_EditorClassIdentifier: 
+  Currencies:
+  - Name: Coin
+    Color: {r: 1, g: 0, b: 0, a: 1}
+    Visible: 1
+  - Name: 1
+    Color: {r: 0.1, g: 0.72, b: 0.85, a: 1}
+    Visible: 1
+  - Name: 2
+    Color: {r: 1, g: 0.58, b: 0.16, a: 1}
+    Visible: 1
+  - Name: 3
+    Color: {r: 0.23, g: 0.73, b: 0.34, a: 1}
+    Visible: 1
+  - Name: bow
+    Color: {r: 1, g: 0.1607843, b: 0.81044346, a: 1}
+    Visible: 1
+  Nodes:
+  - {fileID: 8889532273671071716}
+  - {fileID: 3087361984619838075}
+  - {fileID: -1192188692808475818}
+  - {fileID: 1089488118459540303}
+  - {fileID: -5201836439896649415}
+  - {fileID: 1665881442669630275}
+  - {fileID: -2224030653817408529}
+  - {fileID: 3671489524986941169}
+  - {fileID: -1168172656411539944}
+  - {fileID: 1558651656314045546}
+  Connections:
+  - FromNodeId: bf4b3c75-ec14-48d8-8607-0d464400c851
+    ToNodeId: f020000e-1863-456a-ac21-559fd844bb4c
+  - FromNodeId: f020000e-1863-456a-ac21-559fd844bb4c
+    ToNodeId: c350c02b-e917-44da-badd-4e02dbc2f8ff
+  - FromNodeId: f020000e-1863-456a-ac21-559fd844bb4c
+    ToNodeId: 5d1bcc78-aa2f-4200-9cae-b5ba7cbe1326
+  - FromNodeId: f020000e-1863-456a-ac21-559fd844bb4c
+    ToNodeId: 178be2f6-257a-43bb-8823-1d20606afade
+  - FromNodeId: c350c02b-e917-44da-badd-4e02dbc2f8ff
+    ToNodeId: 025c1c1a-59ee-4266-91c3-0a0d27ea7bbd
+  - FromNodeId: 5d1bcc78-aa2f-4200-9cae-b5ba7cbe1326
+    ToNodeId: 966691f8-02c5-488e-b4b2-0af21ce46531
+  - FromNodeId: 178be2f6-257a-43bb-8823-1d20606afade
+    ToNodeId: e74e6eb3-d650-47ce-9ccd-363ea4cc1461
+  - FromNodeId: 025c1c1a-59ee-4266-91c3-0a0d27ea7bbd
+    ToNodeId: b5594c4d-0073-4749-8766-ef4346acd108
+  - FromNodeId: 966691f8-02c5-488e-b4b2-0af21ce46531
+    ToNodeId: b5594c4d-0073-4749-8766-ef4346acd108
+  - FromNodeId: e74e6eb3-d650-47ce-9ccd-363ea4cc1461
+    ToNodeId: b5594c4d-0073-4749-8766-ef4346acd108
+  - FromNodeId: b5594c4d-0073-4749-8766-ef4346acd108
+    ToNodeId: d5558792-0280-453b-8ea6-3d3fe8d448a0
+  TickCount: 100
+--- !u!114 &1089488118459540303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5c7e338b6727fe4db787f26e5be7535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: f020000e-1863-456a-ac21-559fd844bb4c
+  DisplayName: Gate
+  Position: {x: 683, y: 236}
+  InputNodeIds:
+  - bf4b3c75-ec14-48d8-8607-0d464400c851
+  OutputNodeIds:
+  - c350c02b-e917-44da-badd-4e02dbc2f8ff
+  - 5d1bcc78-aa2f-4200-9cae-b5ba7cbe1326
+  - 178be2f6-257a-43bb-8823-1d20606afade
+  CurrencyIndex: 0
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  SendInterval: 0
+  OutputChances:
+  - 50
+  - 30
+  - 20
+--- !u!114 &1558651656314045546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: d5558792-0280-453b-8ea6-3d3fe8d448a0
+  DisplayName: Pool
+  Position: {x: 1398, y: 236}
+  InputNodeIds:
+  - b5594c4d-0073-4749-8766-ef4346acd108
+  OutputNodeIds: []
+  CurrencyIndex: 4
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  StartAmount: 0
+  StoredAmount: 26
+  SendInterval: 0
+--- !u!114 &1665881442669630275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 025c1c1a-59ee-4266-91c3-0a0d27ea7bbd
+  DisplayName: Pool
+  Position: {x: 1014, y: 116}
+  InputNodeIds:
+  - c350c02b-e917-44da-badd-4e02dbc2f8ff
+  OutputNodeIds:
+  - b5594c4d-0073-4749-8766-ef4346acd108
+  CurrencyIndex: 1
+  OutputAmountType: 0
+  OutputAmount: 6
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  StartAmount: 0
+  StoredAmount: 1
+  SendInterval: 0
+--- !u!114 &3087361984619838075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d39a91973cc6f64429985602188291c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 5d1bcc78-aa2f-4200-9cae-b5ba7cbe1326
+  DisplayName: Converter
+  Position: {x: 873, y: 236}
+  InputNodeIds:
+  - f020000e-1863-456a-ac21-559fd844bb4c
+  OutputNodeIds:
+  - 966691f8-02c5-488e-b4b2-0af21ce46531
+  CurrencyIndex: 2
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  SendInterval: 0
+--- !u!114 &3671489524986941169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: e74e6eb3-d650-47ce-9ccd-363ea4cc1461
+  DisplayName: Pool
+  Position: {x: 1014, y: 352}
+  InputNodeIds:
+  - 178be2f6-257a-43bb-8823-1d20606afade
+  OutputNodeIds:
+  - b5594c4d-0073-4749-8766-ef4346acd108
+  CurrencyIndex: 3
+  OutputAmountType: 0
+  OutputAmount: 2
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  StartAmount: 0
+  StoredAmount: 0
+  SendInterval: 0
+--- !u!114 &8889532273671071716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d39a91973cc6f64429985602188291c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 178be2f6-257a-43bb-8823-1d20606afade
+  DisplayName: Converter
+  Position: {x: 873, y: 352}
+  InputNodeIds:
+  - f020000e-1863-456a-ac21-559fd844bb4c
+  OutputNodeIds:
+  - e74e6eb3-d650-47ce-9ccd-363ea4cc1461
+  CurrencyIndex: 3
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  SendInterval: 0

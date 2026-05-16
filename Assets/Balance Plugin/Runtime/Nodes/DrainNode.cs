@@ -10,6 +10,7 @@ namespace BalancePlugin
         public override bool CanHaveOutput => false;
 
         [Min(1)] public int DrainAmount = 1;
+        [Min(0)] public int SendInterval = 0;
 
         public override void Initialize()
         {

@@ -43,7 +43,7 @@ namespace BalancePlugin
             CalculateTick(0);
             for (int i = 1; i <= TickCount; i++)
             {
-                List<BalancingNode> startNodes = Nodes.FindAll(x => x != null && x.InputNodeIds.Count == 0);
+                List<BalancingNode> startNodes = Nodes.FindAll(x => x != null && x.NodeType == "Source" && x.InputNodeIds.Count == 0);
                 foreach (BalancingNode node in startNodes)
                 {
                     node.ProcessResources(this, i, -1, -1);
@@ -161,5 +161,6 @@ namespace BalancePlugin
     {
         public string Name = "NewCurrency";
         public Color Color = Color.red;
+        public bool Visible = true;
     }
 }

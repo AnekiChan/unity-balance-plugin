@@ -25,6 +25,8 @@ MonoBehaviour:
   OutputFormula: x
   OutputRandomAmount: 1
   OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
   SendInterval: 1
 --- !u!114 &-4100903886359840317
 MonoBehaviour:
@@ -50,6 +52,8 @@ MonoBehaviour:
   OutputFormula: x
   OutputRandomAmount: 1
   OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
   StartAmount: 0
   StoredAmount: 100
   SendInterval: 1
@@ -78,6 +82,9 @@ MonoBehaviour:
   OutputFormula: 1
   OutputRandomAmount: 1
   OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  SendInterval: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,8 +100,10 @@ MonoBehaviour:
   Currencies:
   - Name: Coin
     Color: {r: 1, g: 0, b: 0, a: 1}
+    Visible: 1
   - Name: Gem
     Color: {r: 0, g: 1, b: 0, a: 1}
+    Visible: 1
   Nodes:
   - {fileID: -5574955690540403210}
   - {fileID: -4100903886359840317}
@@ -135,8 +144,10 @@ MonoBehaviour:
   OutputFormula: x
   OutputRandomAmount: 1
   OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 49
+  StoredAmount: 50
   SendInterval: 1
 --- !u!114 &8160663312115862930
 MonoBehaviour:
@@ -163,6 +174,8 @@ MonoBehaviour:
   OutputFormula: x
   OutputRandomAmount: 1
   OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 2
+  StoredAmount: 0
   SendInterval: 1

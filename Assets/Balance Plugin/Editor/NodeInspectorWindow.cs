@@ -79,11 +79,13 @@ namespace BalancePlugin
             else if (_currentNode is ConverterNode converterNode)
             {
                 DrawCurrencySelector("Output Currency");
+                converterNode.SendInterval = EditorGUILayout.IntField("Send Interval (ticks)", converterNode.SendInterval);
                 DrawOutputAmountFields(converterNode.OutputAmountType, converterNode, "Output");
             }
             else if (_currentNode is GateNode gateNode)
             {
                 DrawCurrencySelector("Output Currency");
+                gateNode.SendInterval = EditorGUILayout.IntField("Send Interval (ticks)", gateNode.SendInterval);
                 DrawOutputAmountFields(gateNode.OutputAmountType, gateNode, "Output");
                 DrawGateChancesList(gateNode);
             }

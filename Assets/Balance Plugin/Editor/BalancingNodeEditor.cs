@@ -43,13 +43,16 @@ namespace BalancePlugin
             else if (node is DrainNode)
             {
                 DrawProperty("DrainAmount");
+                DrawProperty("SendInterval");
             }
             else if (node is ConverterNode)
             {
+                DrawProperty("SendInterval");
                 DrawOutputFields("Output");
             }
             else if (node is GateNode)
             {
+                DrawProperty("SendInterval");
                 DrawOutputFields("Output");
                 DrawProperty("OutputChances");
             }

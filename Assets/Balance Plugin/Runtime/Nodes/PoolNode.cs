@@ -19,7 +19,7 @@ namespace BalancePlugin
 
         public int StartAmount = 0;
         public int StoredAmount = 0;
-        [Min(1)] public int SendInterval = 1;
+        [Min(0)] public int SendInterval = 0;
 
         private int prevTick = 0;
 
@@ -56,21 +56,21 @@ namespace BalancePlugin
 
         public override void ProcessResources(BalancingData data, int tick, int SendCurrencyIndex, int SendAmount)
         {
+            if (CurrencyIndex == SendCurrencyIndex)
+                StoredAmount += SendAmount;
+
             int outputAmount = GetOutputAmount(tick, SendAmount);
 
-            if (prevTick != tick && (tick % SendInterval == 0) && StoredAmount >= outputAmount && outputAmount > 0)
+            bool shouldFire = SendInterval <= 0 || tick % SendInterval == 0;
+            if (prevTick != tick && shouldFire && OutputNodeIds.Count > 0 && StoredAmount >= outputAmount && outputAmount > 0)
             {
+                StoredAmount -= outputAmount;
+                prevTick = tick;
+
                 foreach (string nodeName in OutputNodeIds)
                 {
-                    BalancingNode node = data.GetNode(nodeName);
-                    node?.ProcessResources(data, tick, CurrencyIndex, outputAmount);
-                    StoredAmount -= outputAmount;
-                    prevTick = tick;
+                    data.GetNode(nodeName)?.ProcessResources(data, tick, CurrencyIndex, outputAmount);
                 }
-            }
-            if (CurrencyIndex == SendCurrencyIndex)
-            {
-                StoredAmount += SendAmount;
             }
         }
     }

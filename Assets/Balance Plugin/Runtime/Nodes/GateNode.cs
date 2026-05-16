@@ -17,6 +17,7 @@ namespace BalancePlugin
         [Range(0, 100)] public float OutputRandomChance = 50f;
         public int OutputRandomRangeMin = 1;
         public int OutputRandomRangeMax = 10;
+        [Min(0)] public int SendInterval = 0;
 
         public List<float> OutputChances = new List<float>();
 
@@ -51,6 +52,8 @@ namespace BalancePlugin
 
         public override void ProcessResources(BalancingData data, int tick, int SendCurrencyIndex, int SendAmount)
         {
+            if (SendInterval > 0 && tick % SendInterval != 0) return;
+
             int amount = GetOutputAmount(tick, SendAmount);
             if (amount <= 0) return;
             if (OutputNodeIds == null || OutputNodeIds.Count == 0) return;
