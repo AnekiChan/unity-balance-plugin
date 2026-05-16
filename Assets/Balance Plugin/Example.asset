@@ -1,5 +1,57 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6953108347941759050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d39a91973cc6f64429985602188291c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 2f0d5873-8201-4529-841c-c2e550d35a0d
+  DisplayName: Converter
+  Position: {x: 769, y: 144}
+  InputNodeIds: []
+  OutputNodeIds: []
+  CurrencyIndex: 0
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+--- !u!114 &-6785150175318924039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d21edcf200ebb9c49870c3c69acddaf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 2ef291a4-9fef-4d71-a5e1-98c38c8fcfcb
+  DisplayName: Source
+  Position: {x: 436, y: 255}
+  InputNodeIds: []
+  OutputNodeIds:
+  - c21cb937-6e64-4818-937d-d849ebb5d460
+  CurrencyIndex: 1
+  OutputAmountType: 3
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 5
+  SendInterval: 1
 --- !u!114 &-2404363256233108502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13,19 +65,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeId: 882cd8ee-b6f7-4429-8dbb-b0bd4b59095b
-  DisplayName: Wonka bars
-  Position: {x: 295, y: 131}
+  DisplayName: Enemy
+  Position: {x: 249, y: 144}
   InputNodeIds: []
   OutputNodeIds:
   - 7315bfcd-bf3a-4414-96cc-bfb6bf6303c4
   CurrencyIndex: 0
-  OutputAmountType: 3
+  OutputAmountType: 0
   OutputAmount: 1
   OutputFormula: x
   OutputRandomAmount: 1
   OutputRandomChance: 50
   OutputRandomRangeMin: 0
   OutputRandomRangeMax: 5
+  SendInterval: 1
+--- !u!114 &-1557091543714203820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: c21cb937-6e64-4818-937d-d849ebb5d460
+  DisplayName: Pool
+  Position: {x: 607, y: 255}
+  InputNodeIds:
+  - 2ef291a4-9fef-4d71-a5e1-98c38c8fcfcb
+  OutputNodeIds: []
+  CurrencyIndex: 1
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  StartAmount: 0
+  StoredAmount: 302
   SendInterval: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -40,14 +121,21 @@ MonoBehaviour:
   m_Name: Example
   m_EditorClassIdentifier: 
   Currencies:
-  - Name: Coin
+  - Name: Enemy
     Color: {r: 1, g: 0, b: 0, a: 1}
+  - Name: Loot
+    Color: {r: 0.72, g: 0.35, b: 0.95, a: 1}
   Nodes:
   - {fileID: 5088163685096042097}
   - {fileID: -2404363256233108502}
+  - {fileID: -6785150175318924039}
+  - {fileID: -1557091543714203820}
+  - {fileID: -6953108347941759050}
   Connections:
   - FromNodeId: 882cd8ee-b6f7-4429-8dbb-b0bd4b59095b
     ToNodeId: 7315bfcd-bf3a-4414-96cc-bfb6bf6303c4
+  - FromNodeId: 2ef291a4-9fef-4d71-a5e1-98c38c8fcfcb
+    ToNodeId: c21cb937-6e64-4818-937d-d849ebb5d460
   TickCount: 100
 --- !u!114 &5088163685096042097
 MonoBehaviour:
@@ -62,8 +150,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeId: 7315bfcd-bf3a-4414-96cc-bfb6bf6303c4
-  DisplayName: Pool
-  Position: {x: 499, y: 131}
+  DisplayName: Killed enemy
+  Position: {x: 403, y: 144}
   InputNodeIds:
   - 882cd8ee-b6f7-4429-8dbb-b0bd4b59095b
   OutputNodeIds: []
@@ -76,5 +164,5 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 247
+  StoredAmount: 100
   SendInterval: 1

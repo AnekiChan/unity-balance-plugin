@@ -581,7 +581,7 @@ namespace BalancePlugin
             if (bestCurrency < 0 || bestDist >= 30f)
                 return;
 
-            string tooltipText = $"{_data.Currencies[bestCurrency].Name}   X:{tickIndex}   Y:{bestValue:F0}";
+            string tooltipText = $"{_data.Currencies[bestCurrency].Name}\nX:{tickIndex}   Y:{bestValue:F0}";
 
             GUIStyle tooltipStyle = new GUIStyle(EditorStyles.helpBox)
             {
@@ -593,7 +593,7 @@ namespace BalancePlugin
 
             GUIContent tooltipContent = new GUIContent(tooltipText);
             Vector2 tooltipSize = tooltipStyle.CalcSize(tooltipContent);
-            tooltipSize.x = Mathf.Max(tooltipSize.x, 200f);
+            tooltipSize.x = Mathf.Max(tooltipSize.x * 2, 150f);
 
             Vector2 tooltipPos = mousePos + new Vector2(14, -tooltipSize.y - 8);
             tooltipPos.x = Mathf.Clamp(tooltipPos.x, rect.x, rect.xMax - tooltipSize.x);
