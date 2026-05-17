@@ -19,13 +19,7 @@ MonoBehaviour:
   OutputNodeIds:
   - f020000e-1863-456a-ac21-559fd844bb4c
   CurrencyIndex: 0
-  OutputAmountType: 3
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 5
+  Outputs: []
   SendInterval: 0
 --- !u!114 &-2224030653817408529
 MonoBehaviour:
@@ -47,13 +41,7 @@ MonoBehaviour:
   OutputNodeIds:
   - b5594c4d-0073-4749-8766-ef4346acd108
   CurrencyIndex: 2
-  OutputAmountType: 0
-  OutputAmount: 4
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+  Outputs: []
   StartAmount: 0
   StoredAmount: 2
   SendInterval: 0
@@ -77,13 +65,7 @@ MonoBehaviour:
   OutputNodeIds:
   - 025c1c1a-59ee-4266-91c3-0a0d27ea7bbd
   CurrencyIndex: 1
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+  Outputs: []
   SendInterval: 0
 --- !u!114 &-1168172656411539944
 MonoBehaviour:
@@ -107,13 +89,7 @@ MonoBehaviour:
   OutputNodeIds:
   - d5558792-0280-453b-8ea6-3d3fe8d448a0
   CurrencyIndex: 4
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+  Outputs: []
   SendInterval: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -200,13 +176,7 @@ MonoBehaviour:
   - 5d1bcc78-aa2f-4200-9cae-b5ba7cbe1326
   - 178be2f6-257a-43bb-8823-1d20606afade
   CurrencyIndex: 0
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+  Outputs: []
   SendInterval: 0
   OutputChances:
   - 50
@@ -231,13 +201,7 @@ MonoBehaviour:
   - b5594c4d-0073-4749-8766-ef4346acd108
   OutputNodeIds: []
   CurrencyIndex: 4
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+  Outputs: []
   StartAmount: 0
   StoredAmount: 23
   SendInterval: 0
@@ -261,13 +225,7 @@ MonoBehaviour:
   OutputNodeIds:
   - b5594c4d-0073-4749-8766-ef4346acd108
   CurrencyIndex: 1
-  OutputAmountType: 0
-  OutputAmount: 6
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+  Outputs: []
   StartAmount: 0
   StoredAmount: 1
   SendInterval: 0
@@ -291,13 +249,7 @@ MonoBehaviour:
   OutputNodeIds:
   - 966691f8-02c5-488e-b4b2-0af21ce46531
   CurrencyIndex: 2
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+  Outputs: []
   SendInterval: 0
 --- !u!114 &3671489524986941169
 MonoBehaviour:
@@ -319,13 +271,7 @@ MonoBehaviour:
   OutputNodeIds:
   - b5594c4d-0073-4749-8766-ef4346acd108
   CurrencyIndex: 3
-  OutputAmountType: 0
-  OutputAmount: 2
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+  Outputs: []
   StartAmount: 0
   StoredAmount: 1
   SendInterval: 0
@@ -349,11 +295,5 @@ MonoBehaviour:
   OutputNodeIds:
   - e74e6eb3-d650-47ce-9ccd-363ea4cc1461
   CurrencyIndex: 3
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+  Outputs: []
   SendInterval: 0

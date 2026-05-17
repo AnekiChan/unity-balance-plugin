@@ -31,14 +31,14 @@ namespace BalancePlugin
             if (node is SourceNode)
             {
                 DrawProperty("SendInterval");
-                DrawOutputFields("Output");
+                DrawProperty("Outputs");
             }
             else if (node is PoolNode)
             {
                 DrawProperty("StartAmount");
                 DrawProperty("StoredAmount");
                 DrawProperty("SendInterval");
-                DrawOutputFields("Output");
+                DrawProperty("Outputs");
             }
             else if (node is DrainNode)
             {
@@ -48,12 +48,12 @@ namespace BalancePlugin
             else if (node is ConverterNode)
             {
                 DrawProperty("SendInterval");
-                DrawOutputFields("Output");
+                DrawProperty("Outputs");
             }
             else if (node is GateNode)
             {
                 DrawProperty("SendInterval");
-                DrawOutputFields("Output");
+                DrawProperty("Outputs");
                 DrawProperty("OutputChances");
             }
 
@@ -84,34 +84,6 @@ namespace BalancePlugin
                 currencyNames[i] = _data.Currencies[i].Name;
 
             currencyIndex.intValue = EditorGUILayout.Popup("Currency", Mathf.Clamp(currencyIndex.intValue, 0, currencyNames.Length - 1), currencyNames);
-        }
-
-        private void DrawOutputFields(string prefix)
-        {
-            SerializedProperty amountType = serializedObject.FindProperty(prefix + "AmountType");
-            if (amountType == null)
-                return;
-
-            EditorGUILayout.PropertyField(amountType);
-            OutputAmountType type = (OutputAmountType)amountType.enumValueIndex;
-
-            switch (type)
-            {
-                case OutputAmountType.Number:
-                    DrawProperty(prefix + "Amount");
-                    break;
-                case OutputAmountType.Formula:
-                    DrawProperty(prefix + "Formula");
-                    break;
-                case OutputAmountType.Random:
-                    DrawProperty(prefix + "RandomAmount");
-                    DrawProperty(prefix + "RandomChance");
-                    break;
-                case OutputAmountType.RandomRange:
-                    DrawProperty(prefix + "RandomRangeMin", "Random Range Min");
-                    DrawProperty(prefix + "RandomRangeMax", "Random Range Max");
-                    break;
-            }
         }
 
         private void DrawProperty(string propertyName, string label = null)

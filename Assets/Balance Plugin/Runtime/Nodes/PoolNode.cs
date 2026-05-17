@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BalancePlugin
@@ -9,13 +10,7 @@ namespace BalancePlugin
         public override bool CanHaveInput => true;
         public override bool CanHaveOutput => true;
 
-        public OutputAmountType OutputAmountType = OutputAmountType.Number;
-        public int OutputAmount = 1;
-        public string OutputFormula = "x";
-        public int OutputRandomAmount = 1;
-        [Range(0, 100)] public float OutputRandomChance = 50f;
-        public int OutputRandomRangeMin = 1;
-        public int OutputRandomRangeMax = 10;
+        public List<NodeOutput> Outputs = new List<NodeOutput>();
 
         public int StartAmount = 0;
         public int StoredAmount = 0;
@@ -29,43 +24,25 @@ namespace BalancePlugin
             prevTick = 0;
         }
 
-        public int GetOutputAmount(int tick, int s = 0)
+        private int GetOutputAmount(int index, int tick, int s = 0)
         {
-            switch (OutputAmountType)
-            {
-                case OutputAmountType.Number:
-                    return OutputAmount;
-
-                case OutputAmountType.Formula:
-                    return FormulaEvaluator.EvaluateSingle(OutputFormula, tick, s);
-
-                case OutputAmountType.Random:
-                    if (UnityEngine.Random.value * 100f < OutputRandomChance)
-                        return OutputRandomAmount;
-                    return 0;
-
-                case OutputAmountType.RandomRange:
-                    int min = Mathf.Min(OutputRandomRangeMin, OutputRandomRangeMax);
-                    int max = Mathf.Max(OutputRandomRangeMin, OutputRandomRangeMax);
-                    return UnityEngine.Random.Range(min, max + 1);
-
-                default:
-                    return OutputAmount;
-            }
+            if (index < Outputs.Count)
+                return Outputs[index].GetAmount(tick, s);
+            return 1;
         }
 
         public override void ProcessResources(BalancingData data, int tick, int SendCurrencyIndex, int SendAmount)
         {
-            int outputAmount = GetOutputAmount(tick, SendAmount);
+            if (CurrencyIndex == SendCurrencyIndex)
+                StoredAmount += SendAmount;
 
             bool shouldFire = SendInterval <= 0 || tick % SendInterval == 0;
-            if (prevTick != tick && shouldFire)
+            if (prevTick != tick && shouldFire && OutputNodeIds.Count > 0)
             {
-                foreach (string nodeName in OutputNodeIds)
+                for (int i = 0; i < OutputNodeIds.Count; i++)
                 {
-                    BalancingNode target = data.GetNode(nodeName);
-                    if (target == null)
-                        continue;
+                    BalancingNode target = data.GetNode(OutputNodeIds[i]);
+                    if (target == null) continue;
 
                     if (target is DrainNode drain)
                     {
@@ -76,17 +53,18 @@ namespace BalancePlugin
                             drain.ProcessResources(data, tick, CurrencyIndex, drainAmount);
                         }
                     }
-                    else if (outputAmount > 0 && StoredAmount >= outputAmount)
+                    else
                     {
-                        StoredAmount -= outputAmount;
-                        target.ProcessResources(data, tick, CurrencyIndex, outputAmount);
+                        int outputAmount = GetOutputAmount(i, tick, SendAmount);
+                        if (outputAmount > 0 && StoredAmount >= outputAmount)
+                        {
+                            StoredAmount -= outputAmount;
+                            target.ProcessResources(data, tick, CurrencyIndex, outputAmount);
+                        }
                     }
                 }
                 prevTick = tick;
             }
-
-            if (CurrencyIndex == SendCurrencyIndex)
-                StoredAmount += SendAmount;
         }
     }
 }

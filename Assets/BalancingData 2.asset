@@ -18,13 +18,7 @@ MonoBehaviour:
   InputNodeIds: []
   OutputNodeIds: []
   CurrencyIndex: 0
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+  Outputs: []
   StartAmount: 0
   StoredAmount: 0
   SendInterval: 0
@@ -46,13 +40,7 @@ MonoBehaviour:
   InputNodeIds: []
   OutputNodeIds: []
   CurrencyIndex: 0
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+  Outputs: []
   SendInterval: 0
 --- !u!114 &-2802115748813457416
 MonoBehaviour:
@@ -72,13 +60,7 @@ MonoBehaviour:
   InputNodeIds: []
   OutputNodeIds: []
   CurrencyIndex: 0
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+  Outputs: []
   SendInterval: 0
 --- !u!114 &-1007046894146559043
 MonoBehaviour:
@@ -98,13 +80,7 @@ MonoBehaviour:
   InputNodeIds: []
   OutputNodeIds: []
   CurrencyIndex: 0
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+  Outputs: []
   SendInterval: 0
   OutputChances: []
 --- !u!114 &11400000
