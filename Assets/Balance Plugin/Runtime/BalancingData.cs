@@ -14,7 +14,7 @@ namespace BalancePlugin
         [HideInInspector]
         public List<BalancingNode> Nodes = new List<BalancingNode>();
         [HideInInspector]
-        public List<NodeConnection> Connections = new List<NodeConnection>();
+        public List<Arrow> Arrows = new List<Arrow>();
 
         [Header("Simulation")]
         [Min(1)] public int TickCount = 1;
@@ -27,8 +27,8 @@ namespace BalancePlugin
         {
             if (Nodes == null)
                 Nodes = new List<BalancingNode>();
-            if (Connections == null)
-                Connections = new List<NodeConnection>();
+            if (Arrows == null)
+                Arrows = new List<Arrow>();
         }
 
         public void CalculateStatistics(bool debugValues = true)
@@ -43,38 +43,48 @@ namespace BalancePlugin
             CalculateTick(0);
             for (int i = 1; i <= TickCount; i++)
             {
-                List<BalancingNode> startNodes = Nodes.FindAll(x => x != null && x.NodeType == "Source" && x.InputNodeIds.Count == 0);
-                foreach (BalancingNode node in startNodes)
+                foreach (Arrow arrow in Arrows)
                 {
-                    node.ProcessResources(this, i, -1, -1);
+                    if (arrow != null)
+                        arrow.FiredThisTick = false;
                 }
+
+                bool changed;
+                do
+                {
+                    changed = false;
+                    foreach (Arrow arrow in Arrows)
+                    {
+                        if (arrow == null || arrow.FiredThisTick)
+                            continue;
+                        int result = arrow.Process(this, i);
+                        if (result > 0)
+                            changed = true;
+                    }
+                } while (changed);
+
                 CalculateTick(i);
             }
             if (debugValues)
                 DebugTicks();
         }
 
-        private void ClearNodes()
-        {
-            List<BalancingNode> poolNodes = Nodes.FindAll(x => x.NodeType == "Pool");
-            foreach (BalancingNode node in poolNodes)
-            {
-                (node as PoolNode).StoredAmount = 0;
-            }
-        }
-
         private void CalculateTick(int tick)
         {
             List<BalancingNode> poolNodes = Nodes.FindAll(x => x != null && x.NodeType == "Pool");
-            Dictionary<int, int> resourses = new Dictionary<int, int>();
+            Dictionary<int, int> resources = new Dictionary<int, int>();
             foreach (BalancingNode node in poolNodes)
             {
-                if (resourses.ContainsKey(node.CurrencyIndex))
-                    resourses[node.CurrencyIndex] += (node as PoolNode).StoredAmount;
-                else
-                    resourses.Add(node.CurrencyIndex, (node as PoolNode).StoredAmount);
+                PoolNode pool = node as PoolNode;
+                foreach (var kv in pool.StoredByCurrency)
+                {
+                    if (resources.ContainsKey(kv.Key))
+                        resources[kv.Key] += kv.Value;
+                    else
+                        resources[kv.Key] = kv.Value;
+                }
             }
-            _tickInfos.Add(new TickInfo() { Tick = tick, Resources = resourses });
+            _tickInfos.Add(new TickInfo() { Tick = tick, Resources = resources });
         }
 
         private void DebugTicks()
@@ -85,7 +95,8 @@ namespace BalancePlugin
                 debugString += "Tick: " + info.Tick + " Resources: ";
                 foreach (var res in info.Resources)
                 {
-                    debugString += Currencies[res.Key].Name + ": " + res.Value + " ";
+                    string currencyName = res.Key < Currencies.Count ? Currencies[res.Key].Name : "???";
+                    debugString += currencyName + ": " + res.Value + " ";
                 }
                 debugString += "\n";
             }
@@ -95,6 +106,11 @@ namespace BalancePlugin
         public BalancingNode GetNode(string id)
         {
             return Nodes.Find(n => n != null && n.NodeId == id);
+        }
+
+        public Arrow GetArrowByEndpoints(string fromNodeId, string toNodeId)
+        {
+            return Arrows.Find(a => a != null && a.FromNodeId == fromNodeId && a.ToNodeId == toNodeId);
         }
 
 #if UNITY_EDITOR
@@ -140,13 +156,6 @@ namespace BalancePlugin
             EditorGUIUtility.PingObject(currencyGraph);
         }
 #endif
-    }
-
-    [System.Serializable]
-    public class NodeConnection
-    {
-        public string FromNodeId;
-        public string ToNodeId;
     }
 
     [System.Serializable]

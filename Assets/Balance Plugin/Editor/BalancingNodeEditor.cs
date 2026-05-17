@@ -28,33 +28,14 @@ namespace BalancePlugin
             DrawCurrency(node);
             EditorGUILayout.Space();
 
-            if (node is SourceNode)
-            {
-                DrawProperty("SendInterval");
-                DrawProperty("Outputs");
-            }
-            else if (node is PoolNode)
+            if (node is PoolNode)
             {
                 DrawProperty("StartAmount");
-                DrawProperty("StoredAmount");
-                DrawProperty("SendInterval");
-                DrawProperty("Outputs");
+                DrawMultiCurrencyInfo(node as PoolNode);
             }
             else if (node is DrainNode)
             {
                 DrawProperty("DrainAmount");
-                DrawProperty("SendInterval");
-            }
-            else if (node is ConverterNode)
-            {
-                DrawProperty("SendInterval");
-                DrawProperty("Outputs");
-            }
-            else if (node is GateNode)
-            {
-                DrawProperty("SendInterval");
-                DrawProperty("Outputs");
-                DrawProperty("OutputChances");
             }
 
             EditorGUILayout.Space();
@@ -65,6 +46,27 @@ namespace BalancePlugin
             }
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private void DrawMultiCurrencyInfo(PoolNode pool)
+        {
+            if (_data == null || _data.TickInfos == null || _data.TickInfos.Count <= 1)
+                return;
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Stored Resources (last tick)", EditorStyles.boldLabel);
+
+            if (pool.StoredByCurrency.Count == 0)
+            {
+                EditorGUILayout.LabelField("  (empty)");
+                return;
+            }
+
+            foreach (var kv in pool.StoredByCurrency)
+            {
+                string currencyName = kv.Key < _data.Currencies.Count ? _data.Currencies[kv.Key].Name : $"Currency {kv.Key}";
+                EditorGUILayout.LabelField($"  {currencyName}", kv.Value.ToString());
+            }
         }
 
         private void DrawCurrency(BalancingNode node)

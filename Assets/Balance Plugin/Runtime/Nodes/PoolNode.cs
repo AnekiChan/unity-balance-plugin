@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace BalancePlugin
 {
@@ -10,61 +10,58 @@ namespace BalancePlugin
         public override bool CanHaveInput => true;
         public override bool CanHaveOutput => true;
 
-        public List<NodeOutput> Outputs = new List<NodeOutput>();
-
         public int StartAmount = 0;
         public int StoredAmount = 0;
-        [Min(0)] public int SendInterval = 0;
+        public Dictionary<int, int> StoredByCurrency = new Dictionary<int, int>();
 
-        private int prevTick = 0;
+        private int _lastWithdrawTick;
 
         public override void Initialize()
         {
             StoredAmount = StartAmount;
-            prevTick = 0;
+            StoredByCurrency.Clear();
+            if (StartAmount != 0 && CurrencyIndex >= 0)
+                StoredByCurrency[CurrencyIndex] = StartAmount;
+            _lastWithdrawTick = -1;
         }
 
-        private int GetOutputAmount(int index, int tick, int s = 0)
+        public override bool CanSend(BalancingData data, int tick, int currencyIndex, int amount)
         {
-            if (index < Outputs.Count)
-                return Outputs[index].GetAmount(tick, s);
-            return 1;
+            return GetStored(currencyIndex) >= amount;
         }
 
-        public override void ProcessResources(BalancingData data, int tick, int SendCurrencyIndex, int SendAmount)
+        public override void BeforeSend(BalancingData data, int tick, int currencyIndex, int amount)
         {
-            if (CurrencyIndex == SendCurrencyIndex)
-                StoredAmount += SendAmount;
-
-            bool shouldFire = SendInterval <= 0 || tick % SendInterval == 0;
-            if (prevTick != tick && shouldFire && OutputNodeIds.Count > 0)
+            if (_lastWithdrawTick != tick)
             {
-                for (int i = 0; i < OutputNodeIds.Count; i++)
-                {
-                    BalancingNode target = data.GetNode(OutputNodeIds[i]);
-                    if (target == null) continue;
-
-                    if (target is DrainNode drain)
-                    {
-                        int drainAmount = Mathf.Min(StoredAmount, drain.DrainAmount);
-                        if (drainAmount > 0)
-                        {
-                            StoredAmount -= drainAmount;
-                            drain.ProcessResources(data, tick, CurrencyIndex, drainAmount);
-                        }
-                    }
-                    else
-                    {
-                        int outputAmount = GetOutputAmount(i, tick, SendAmount);
-                        if (outputAmount > 0 && StoredAmount >= outputAmount)
-                        {
-                            StoredAmount -= outputAmount;
-                            target.ProcessResources(data, tick, CurrencyIndex, outputAmount);
-                        }
-                    }
-                }
-                prevTick = tick;
+                _lastWithdrawTick = tick;
             }
+
+            int stored = GetStored(currencyIndex);
+            StoredByCurrency[currencyIndex] = Mathf.Max(0, stored - amount);
+            UpdateTotalStored();
+        }
+
+        public override void ReceiveResource(BalancingData data, int tick, int currencyIndex, int amount)
+        {
+            if (StoredByCurrency.ContainsKey(currencyIndex))
+                StoredByCurrency[currencyIndex] += amount;
+            else
+                StoredByCurrency[currencyIndex] = amount;
+            UpdateTotalStored();
+        }
+
+        public int GetStored(int currencyIndex)
+        {
+            StoredByCurrency.TryGetValue(currencyIndex, out int val);
+            return val;
+        }
+
+        private void UpdateTotalStored()
+        {
+            StoredAmount = 0;
+            foreach (var kv in StoredByCurrency)
+                StoredAmount += kv.Value;
         }
     }
 }

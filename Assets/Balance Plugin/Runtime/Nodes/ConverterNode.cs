@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BalancePlugin
@@ -10,24 +9,56 @@ namespace BalancePlugin
         public override bool CanHaveInput => true;
         public override bool CanHaveOutput => true;
 
-        public List<NodeOutput> Outputs = new List<NodeOutput>();
-        [Min(0)] public int SendInterval = 0;
+        [System.NonSerialized] public int TotalReceived;
+        [System.NonSerialized] public int ReceivedCount;
+
+        private int _lastReceiveTick;
+        private bool _hasSentThisTick;
 
         public override void Initialize()
         {
+            TotalReceived = 0;
+            ReceivedCount = 0;
+            _lastReceiveTick = -1;
+            _hasSentThisTick = false;
         }
 
-        public override void ProcessResources(BalancingData data, int tick, int SendCurrencyIndex, int SendAmount)
+        public override bool CanSend(BalancingData data, int tick, int currencyIndex, int amount)
         {
-            if (SendInterval > 0 && tick % SendInterval != 0) return;
-            if (OutputNodeIds == null || OutputNodeIds.Count == 0) return;
+            if (_hasSentThisTick)
+                return false;
 
-            for (int i = 0; i < OutputNodeIds.Count; i++)
+            int incomingCount = 0;
+            int firedCount = 0;
+            foreach (Arrow arrow in data.Arrows)
             {
-                int amount = i < Outputs.Count ? Outputs[i].GetAmount(tick, SendAmount) : SendAmount;
-                if (amount <= 0) continue;
-                data.GetNode(OutputNodeIds[i])?.ProcessResources(data, tick, CurrencyIndex, amount);
+                if (arrow == null || arrow.ToNodeId != NodeId)
+                    continue;
+                incomingCount++;
+                if (arrow.FiredThisTick)
+                    firedCount++;
             }
+
+            return incomingCount == 0 || firedCount >= incomingCount;
+        }
+
+        public override void BeforeSend(BalancingData data, int tick, int currencyIndex, int amount)
+        {
+            _hasSentThisTick = true;
+        }
+
+        public override void ReceiveResource(BalancingData data, int tick, int currencyIndex, int amount)
+        {
+            if (_lastReceiveTick != tick)
+            {
+                _lastReceiveTick = tick;
+                TotalReceived = 0;
+                ReceivedCount = 0;
+                _hasSentThisTick = false;
+            }
+
+            TotalReceived += amount;
+            ReceivedCount++;
         }
     }
 }

@@ -224,7 +224,7 @@ namespace BalancePlugin
                 return;
 
             _data.Nodes ??= new List<BalancingNode>();
-            _data.Connections ??= new List<NodeConnection>();
+            _data.Arrows ??= new List<Arrow>();
 
             string path = AssetDatabase.GetAssetPath(_data);
             if (string.IsNullOrEmpty(path))
@@ -238,8 +238,36 @@ namespace BalancePlugin
             if (subAssetNodes.Count > 0)
                 _data.Nodes = subAssetNodes;
 
+            var subAssetArrows = AssetDatabase.LoadAllAssetsAtPath(path)
+                .OfType<Arrow>()
+                .Where(arrow => arrow != null)
+                .ToList();
+
+            if (subAssetArrows.Count > 0)
+                _data.Arrows = subAssetArrows;
+
             PruneInvalidConnections();
+            SyncNodeConnectionLists();
             EditorUtility.SetDirty(_data);
+        }
+
+        private void SyncNodeConnectionLists()
+        {
+            foreach (BalancingNode node in _data.Nodes)
+            {
+                if (node == null) continue;
+                node.InputNodeIds.Clear();
+                node.OutputNodeIds.Clear();
+            }
+
+            foreach (Arrow arrow in _data.Arrows)
+            {
+                if (arrow == null) continue;
+                BalancingNode from = _data.GetNode(arrow.FromNodeId);
+                BalancingNode to = _data.GetNode(arrow.ToNodeId);
+                if (from != null) from.OutputNodeIds.Add(arrow.ToNodeId);
+                if (to != null) to.InputNodeIds.Add(arrow.FromNodeId);
+            }
         }
 
         private void PruneInvalidConnections()
@@ -248,15 +276,7 @@ namespace BalancePlugin
                 return;
 
             var nodeIds = new HashSet<string>(_data.Nodes.Where(n => n != null).Select(n => n.NodeId));
-            _data.Connections.RemoveAll(c => c == null || !nodeIds.Contains(c.FromNodeId) || !nodeIds.Contains(c.ToNodeId));
-
-            foreach (BalancingNode node in _data.Nodes)
-            {
-                if (node == null)
-                    continue;
-                node.InputNodeIds.RemoveAll(id => !nodeIds.Contains(id));
-                node.OutputNodeIds.RemoveAll(id => !nodeIds.Contains(id));
-            }
+            _data.Arrows.RemoveAll(a => a == null || !nodeIds.Contains(a.FromNodeId) || !nodeIds.Contains(a.ToNodeId));
         }
 
         private void RebuildRightPanel()
@@ -268,7 +288,6 @@ namespace BalancePlugin
             AddNodeButton("Drain", () => CreateNodeAtGraphCenter<DrainNode>());
             AddNodeButton("Converter", () => CreateNodeAtGraphCenter<ConverterNode>());
             AddNodeButton("Pool", () => CreateNodeAtGraphCenter<PoolNode>());
-            AddNodeButton("Gate", () => CreateNodeAtGraphCenter<GateNode>());
 
             var spacer = new VisualElement { style = { height = 12 } };
             _rightPanel.Add(spacer);
@@ -386,10 +405,16 @@ namespace BalancePlugin
                 return;
 
             _data.Currencies.RemoveAt(index);
+            int maxIndex = Mathf.Max(0, _data.Currencies.Count - 1);
             foreach (BalancingNode node in _data.Nodes)
             {
-                if (node != null && node.CurrencyIndex >= _data.Currencies.Count)
-                    node.CurrencyIndex = Mathf.Max(0, _data.Currencies.Count - 1);
+                if (node != null && node.CurrencyIndex > maxIndex)
+                    node.CurrencyIndex = maxIndex;
+            }
+            foreach (Arrow arrow in _data.Arrows)
+            {
+                if (arrow != null && arrow.CurrencyIndex > maxIndex)
+                    arrow.CurrencyIndex = maxIndex;
             }
             MarkDataDirty();
             RefreshPanels();
@@ -690,6 +715,11 @@ namespace BalancePlugin
                 if (node != null)
                     EditorUtility.SetDirty(node);
             }
+            foreach (Arrow arrow in _data.Arrows)
+            {
+                if (arrow != null)
+                    EditorUtility.SetDirty(arrow);
+            }
             AssetDatabase.SaveAssets();
         }
 
@@ -742,15 +772,17 @@ namespace BalancePlugin
                     AddElement(view);
                 }
 
-                foreach (NodeConnection connection in _data.Connections.ToList())
+                foreach (Arrow arrow in _data.Arrows.ToList())
                 {
-                    if (!_nodeViews.TryGetValue(connection.FromNodeId, out BalanceNodeView from) ||
-                        !_nodeViews.TryGetValue(connection.ToNodeId, out BalanceNodeView to) ||
+                    if (arrow == null) continue;
+                    if (!_nodeViews.TryGetValue(arrow.FromNodeId, out BalanceNodeView from) ||
+                        !_nodeViews.TryGetValue(arrow.ToNodeId, out BalanceNodeView to) ||
                         from.OutputPort == null ||
                         to.InputPort == null)
                         continue;
 
                     Edge edge = from.OutputPort.ConnectTo(to.InputPort);
+                    edge.userData = arrow;
                     AddElement(edge);
                 }
             }
@@ -760,6 +792,8 @@ namespace BalancePlugin
                 base.AddToSelection(selectable);
                 if (selectable is BalanceNodeView nodeView)
                     NodeSelected?.Invoke(nodeView.Node);
+                else if (selectable is Edge edge && edge.userData is Arrow arrow)
+                    Selection.activeObject = arrow;
             }
 
             public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -784,7 +818,6 @@ namespace BalancePlugin
                 evt.menu.AppendAction("Create/Drain", _ => _window.CreateNode<DrainNode>(graphPosition));
                 evt.menu.AppendAction("Create/Converter", _ => _window.CreateNode<ConverterNode>(graphPosition));
                 evt.menu.AppendAction("Create/Pool", _ => _window.CreateNode<PoolNode>(graphPosition));
-                evt.menu.AppendAction("Create/Gate", _ => _window.CreateNode<GateNode>(graphPosition));
             }
 
             public Vector2 GetGraphCenterPosition()
@@ -834,8 +867,12 @@ namespace BalancePlugin
                     {
                         if (edge.output?.node is BalanceNodeView from && edge.input?.node is BalanceNodeView to)
                         {
-                            if (AddConnection(from.Node, to.Node))
+                            Arrow arrow = AddArrow(from.Node, to.Node);
+                            if (arrow != null)
+                            {
+                                edge.userData = arrow;
                                 validEdges.Add(edge);
+                            }
                         }
                     }
                     change.edgesToCreate = validEdges;
@@ -849,7 +886,7 @@ namespace BalancePlugin
                             edge.output?.node is BalanceNodeView from &&
                             edge.input?.node is BalanceNodeView to)
                         {
-                            RemoveConnection(from.Node, to.Node);
+                            RemoveArrow(from.Node, to.Node);
                         }
                         else if (element is BalanceNodeView nodeView)
                         {
@@ -860,35 +897,47 @@ namespace BalancePlugin
 
                 EditorUtility.SetDirty(_data);
                 AssetDatabase.SaveAssets();
+                _window.SyncNodeConnectionLists();
                 GraphChanged?.Invoke();
                 return change;
             }
 
-            private bool AddConnection(BalancingNode from, BalancingNode to)
+            private Arrow AddArrow(BalancingNode from, BalancingNode to)
             {
                 if (from == null || to == null || !from.CanHaveOutput || !to.CanHaveInput)
-                    return false;
+                    return null;
 
-                bool exists = _data.Connections.Any(c => c.FromNodeId == from.NodeId && c.ToNodeId == to.NodeId);
+                bool exists = _data.Arrows.Any(a => a != null && a.FromNodeId == from.NodeId && a.ToNodeId == to.NodeId);
                 if (exists)
-                    return false;
+                    return null;
 
-                from.OutputNodeIds.Add(to.NodeId);
-                to.InputNodeIds.Add(from.NodeId);
-                _data.Connections.Add(new NodeConnection { FromNodeId = from.NodeId, ToNodeId = to.NodeId });
+                Arrow arrow = ScriptableObject.CreateInstance<Arrow>();
+                arrow.FromNodeId = from.NodeId;
+                arrow.ToNodeId = to.NodeId;
+                arrow.CurrencyIndex = from.CurrencyIndex;
+                arrow.hideFlags = HideFlags.None;
+                _data.Arrows.Add(arrow);
+                AssetDatabase.AddObjectToAsset(arrow, _data);
                 EditorUtility.SetDirty(from);
                 EditorUtility.SetDirty(to);
-                return true;
+                EditorUtility.SetDirty(arrow);
+                AssetDatabase.SaveAssets();
+                return arrow;
             }
 
-            private void RemoveConnection(BalancingNode from, BalancingNode to)
+            private void RemoveArrow(BalancingNode from, BalancingNode to)
             {
                 if (from == null || to == null)
                     return;
 
-                from.OutputNodeIds.Remove(to.NodeId);
-                to.InputNodeIds.Remove(from.NodeId);
-                _data.Connections.RemoveAll(c => c.FromNodeId == from.NodeId && c.ToNodeId == to.NodeId);
+                Arrow arrow = _data.Arrows.Find(a => a != null && a.FromNodeId == from.NodeId && a.ToNodeId == to.NodeId);
+                if (arrow != null)
+                {
+                    _data.Arrows.Remove(arrow);
+                    AssetDatabase.RemoveObjectFromAsset(arrow);
+                    DestroyImmediate(arrow, true);
+                }
+
                 EditorUtility.SetDirty(from);
                 EditorUtility.SetDirty(to);
             }
@@ -899,16 +948,15 @@ namespace BalancePlugin
                     return;
 
                 string nodeId = node.NodeId;
-                foreach (BalancingNode other in _data.Nodes)
+
+                var arrowsToRemove = _data.Arrows.Where(a => a != null && (a.FromNodeId == nodeId || a.ToNodeId == nodeId)).ToList();
+                foreach (Arrow arrow in arrowsToRemove)
                 {
-                    if (other == null)
-                        continue;
-                    other.InputNodeIds.Remove(nodeId);
-                    other.OutputNodeIds.Remove(nodeId);
-                    EditorUtility.SetDirty(other);
+                    _data.Arrows.Remove(arrow);
+                    AssetDatabase.RemoveObjectFromAsset(arrow);
+                    DestroyImmediate(arrow, true);
                 }
 
-                _data.Connections.RemoveAll(c => c.FromNodeId == nodeId || c.ToNodeId == nodeId);
                 _data.Nodes.Remove(node);
                 AssetDatabase.RemoveObjectFromAsset(node);
                 DestroyImmediate(node, true);
@@ -977,16 +1025,44 @@ namespace BalancePlugin
                     outputContainer.Add(OutputPort);
                 }
 
+                var infoContainer = new VisualElement
+                {
+                    style =
+                    {
+                        flexDirection = FlexDirection.Column,
+                        alignItems = Align.Center,
+                        marginTop = 2
+                    }
+                };
+
                 var typeLabel = new Label(node.NodeType)
                 {
                     style =
                     {
                         unityTextAlign = TextAnchor.MiddleCenter,
                         color = new Color(0.8f, 0.8f, 0.8f),
-                        marginTop = 4
+                        fontSize = 11
                     }
                 };
-                mainContainer.Add(typeLabel);
+                infoContainer.Add(typeLabel);
+
+                if (node is PoolNode pool)
+                {
+                    var poolInfo = new Label("")
+                    {
+                        style =
+                        {
+                            unityTextAlign = TextAnchor.MiddleCenter,
+                            color = new Color(0.6f, 0.8f, 1f),
+                            fontSize = 9,
+                            marginTop = 1
+                        }
+                    };
+                    poolInfo.name = "pool-info";
+                    infoContainer.Add(poolInfo);
+                }
+
+                mainContainer.Add(infoContainer);
 
                 SetPosition(new Rect(node.Position, NodeSize));
                 RefreshExpandedState();

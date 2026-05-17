@@ -1,5 +1,55 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7761525243088328178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: dfe82e96-a176-4353-b1fd-0dd83cf7ff3f
+  FromNodeId: de1355c7-5656-4869-a4c7-d77e4acd87bf
+  ToNodeId: 7c92efd6-64e6-4afa-a34a-328c71563999
+  CurrencyIndex: 4
+  SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 3
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
+--- !u!114 &-7420980210316314564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: 031b1624-0beb-4717-a9c3-5880d3056ba8
+  FromNodeId: b5f4c0ff-4530-4770-b2b9-5c76b90e5573
+  ToNodeId: 3130f909-fc3b-4685-befc-6ec16f856f5d
+  CurrencyIndex: 2
+  SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 1
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
 --- !u!114 &-7106954843128510259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20,17 +70,8 @@ MonoBehaviour:
   OutputNodeIds:
   - 3130f909-fc3b-4685-befc-6ec16f856f5d
   CurrencyIndex: 2
-  Outputs:
-  - AmountType: 0
-    Amount: 1
-    Formula: 
-    RandomAmount: 0
-    RandomChance: 0
-    RandomRangeMin: 0
-    RandomRangeMax: 0
   StartAmount: 0
   StoredAmount: 0
-  SendInterval: 0
 --- !u!114 &-6851925455004852428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,15 +86,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 2dca5965-280d-43cc-8c15-489b3c2e7bea
   DisplayName: "\u0421\u0442\u0440\u0435\u043B\u044B"
-  Position: {x: 1172, y: 35}
+  Position: {x: 1165, y: 33}
   InputNodeIds:
   - 3130f909-fc3b-4685-befc-6ec16f856f5d
   OutputNodeIds: []
   CurrencyIndex: 3
-  Outputs: []
   StartAmount: 0
-  StoredAmount: 54
+  StoredAmount: 0
+--- !u!114 &-6819451817793882092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: 9ce9582f-bf3e-44f6-b820-ec3cc8950c28
+  FromNodeId: f0bdf632-2e27-4cdc-9869-f456a2d3457d
+  ToNodeId: 41dd7349-8e40-4a58-8266-828a3c392afd
+  CurrencyIndex: 0
   SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 1
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
 --- !u!114 &-5358783115743936271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,15 +138,56 @@ MonoBehaviour:
   OutputNodeIds:
   - b5f4c0ff-4530-4770-b2b9-5c76b90e5573
   CurrencyIndex: 2
-  Outputs:
-  - AmountType: 0
-    Amount: 1
-    Formula: 
-    RandomAmount: 0
-    RandomChance: 0
-    RandomRangeMin: 0
-    RandomRangeMax: 0
+--- !u!114 &-5181519143644396048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: 4d92572c-0a1f-4f94-ab46-4598c512f7da
+  FromNodeId: 80f9bc52-df38-4f0b-bf6e-f0c782027611
+  ToNodeId: de1355c7-5656-4869-a4c7-d77e4acd87bf
+  CurrencyIndex: 4
   SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 1
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
+--- !u!114 &-2069326297426214451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: c79fc76b-e2af-49ed-9529-5db37ba4b0a4
+  FromNodeId: 0cfdb2eb-f502-4f1e-b87f-d65d739e6672
+  ToNodeId: 7c92efd6-64e6-4afa-a34a-328c71563999
+  CurrencyIndex: 1
+  SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 2
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
 --- !u!114 &-1683311984811996133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,7 +202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: f0bdf632-2e27-4cdc-9869-f456a2d3457d
   DisplayName: "\u0414\u0435\u043D\u044C\u0433\u0438"
-  Position: {x: 550, y: -34}
+  Position: {x: 492, y: -34}
   InputNodeIds:
   - 6e8a3258-4bf3-46bd-8ea8-008202778496
   OutputNodeIds:
@@ -105,31 +210,8 @@ MonoBehaviour:
   - 41dd7349-8e40-4a58-8266-828a3c392afd
   - 352d62b1-f309-4a43-bf2b-ce482f02abbe
   CurrencyIndex: 0
-  Outputs:
-  - AmountType: 0
-    Amount: 1
-    Formula: 
-    RandomAmount: 0
-    RandomChance: 0
-    RandomRangeMin: 0
-    RandomRangeMax: 0
-  - AmountType: 0
-    Amount: 3
-    Formula: 
-    RandomAmount: 0
-    RandomChance: 0
-    RandomRangeMin: 0
-    RandomRangeMax: 0
-  - AmountType: 0
-    Amount: 11
-    Formula: 
-    RandomAmount: 0
-    RandomChance: 0
-    RandomRangeMin: 0
-    RandomRangeMax: 0
   StartAmount: 0
-  StoredAmount: 6
-  SendInterval: 0
+  StoredAmount: 8
 --- !u!114 &-1135392559493692095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,15 +226,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 2b8bd040-d6ac-49bc-b4fb-fcc0efccd1ef
   DisplayName: "\u041B\u0443\u043A\u0438"
-  Position: {x: 1172, y: -101}
+  Position: {x: 1165, y: -101}
   InputNodeIds:
   - 7c92efd6-64e6-4afa-a34a-328c71563999
   OutputNodeIds: []
   CurrencyIndex: 5
-  Outputs: []
   StartAmount: 0
-  StoredAmount: 198
+  StoredAmount: 16
+--- !u!114 &-887421457675600658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: c269f829-630e-4dce-acae-715f616df2cf
+  FromNodeId: 352d62b1-f309-4a43-bf2b-ce482f02abbe
+  ToNodeId: b5f4c0ff-4530-4770-b2b9-5c76b90e5573
+  CurrencyIndex: 2
   SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 1
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
 --- !u!114 &-336696389047407442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,15 +278,6 @@ MonoBehaviour:
   OutputNodeIds:
   - 0cfdb2eb-f502-4f1e-b87f-d65d739e6672
   CurrencyIndex: 1
-  Outputs:
-  - AmountType: 0
-    Amount: 1
-    Formula: 
-    RandomAmount: 0
-    RandomChance: 0
-    RandomRangeMin: 0
-    RandomRangeMax: 0
-  SendInterval: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,59 +296,46 @@ MonoBehaviour:
     Visible: 1
   - Name: "\u041F\u0430\u043B\u043A\u0438"
     Color: {r: 0.5754717, g: 0.3180686, b: 0.25787646, a: 1}
-    Visible: 1
+    Visible: 0
   - Name: "\u0416\u0435\u043B\u0435\u0437\u043E"
     Color: {r: 0.7073247, g: 0.7299374, b: 0.8018868, a: 1}
-    Visible: 1
+    Visible: 0
   - Name: "\u0421\u0442\u0440\u0435\u043B\u0430"
     Color: {r: 0.3370553, g: 0.9245283, b: 0.30962977, a: 1}
     Visible: 1
   - Name: "\u041D\u0438\u0442\u044C"
     Color: {r: 0.48584908, g: 0.739756, b: 1, a: 1}
-    Visible: 1
+    Visible: 0
   - Name: "\u041B\u0443\u043A"
     Color: {r: 0.72, g: 0.35, b: 0.95, a: 1}
     Visible: 1
   Nodes:
+  - {fileID: -6851925455004852428}
+  - {fileID: 3911810688264273594}
+  - {fileID: -1135392559493692095}
+  - {fileID: 4142341827937764128}
+  - {fileID: -7106954843128510259}
+  - {fileID: -5358783115743936271}
+  - {fileID: 7535764856408580637}
+  - {fileID: -336696389047407442}
+  - {fileID: 1729287433999083589}
+  - {fileID: 6699274524439780080}
   - {fileID: -1683311984811996133}
   - {fileID: 223407951365364711}
-  - {fileID: 6699274524439780080}
-  - {fileID: 1729287433999083589}
-  - {fileID: -336696389047407442}
-  - {fileID: 7535764856408580637}
-  - {fileID: -5358783115743936271}
-  - {fileID: -7106954843128510259}
-  - {fileID: 4142341827937764128}
-  - {fileID: -1135392559493692095}
-  - {fileID: 3911810688264273594}
-  - {fileID: -6851925455004852428}
-  Connections:
-  - FromNodeId: 6e8a3258-4bf3-46bd-8ea8-008202778496
-    ToNodeId: f0bdf632-2e27-4cdc-9869-f456a2d3457d
-  - FromNodeId: f0bdf632-2e27-4cdc-9869-f456a2d3457d
-    ToNodeId: 80f9bc52-df38-4f0b-bf6e-f0c782027611
-  - FromNodeId: 80f9bc52-df38-4f0b-bf6e-f0c782027611
-    ToNodeId: de1355c7-5656-4869-a4c7-d77e4acd87bf
-  - FromNodeId: f0bdf632-2e27-4cdc-9869-f456a2d3457d
-    ToNodeId: 41dd7349-8e40-4a58-8266-828a3c392afd
-  - FromNodeId: 41dd7349-8e40-4a58-8266-828a3c392afd
-    ToNodeId: 0cfdb2eb-f502-4f1e-b87f-d65d739e6672
-  - FromNodeId: f0bdf632-2e27-4cdc-9869-f456a2d3457d
-    ToNodeId: 352d62b1-f309-4a43-bf2b-ce482f02abbe
-  - FromNodeId: 352d62b1-f309-4a43-bf2b-ce482f02abbe
-    ToNodeId: b5f4c0ff-4530-4770-b2b9-5c76b90e5573
-  - FromNodeId: de1355c7-5656-4869-a4c7-d77e4acd87bf
-    ToNodeId: 7c92efd6-64e6-4afa-a34a-328c71563999
-  - FromNodeId: 0cfdb2eb-f502-4f1e-b87f-d65d739e6672
-    ToNodeId: 7c92efd6-64e6-4afa-a34a-328c71563999
-  - FromNodeId: 7c92efd6-64e6-4afa-a34a-328c71563999
-    ToNodeId: 2b8bd040-d6ac-49bc-b4fb-fcc0efccd1ef
-  - FromNodeId: 0cfdb2eb-f502-4f1e-b87f-d65d739e6672
-    ToNodeId: 3130f909-fc3b-4685-befc-6ec16f856f5d
-  - FromNodeId: b5f4c0ff-4530-4770-b2b9-5c76b90e5573
-    ToNodeId: 3130f909-fc3b-4685-befc-6ec16f856f5d
-  - FromNodeId: 3130f909-fc3b-4685-befc-6ec16f856f5d
-    ToNodeId: 2dca5965-280d-43cc-8c15-489b3c2e7bea
+  Arrows:
+  - {fileID: 7977621173033854890}
+  - {fileID: 8868190334939395244}
+  - {fileID: -5181519143644396048}
+  - {fileID: -6819451817793882092}
+  - {fileID: 7841536135280832163}
+  - {fileID: 4342126639891519252}
+  - {fileID: -887421457675600658}
+  - {fileID: -7761525243088328178}
+  - {fileID: -2069326297426214451}
+  - {fileID: 5263903156592152175}
+  - {fileID: 462057007646951896}
+  - {fileID: -7420980210316314564}
+  - {fileID: 742732443951428285}
   TickCount: 100
 --- !u!114 &223407951365364711
 MonoBehaviour:
@@ -268,20 +351,61 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 6e8a3258-4bf3-46bd-8ea8-008202778496
   DisplayName: "\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0434\u0435\u043D\u0435\u0433"
-  Position: {x: 374, y: -34}
+  Position: {x: 303, y: -34}
   InputNodeIds: []
   OutputNodeIds:
   - f0bdf632-2e27-4cdc-9869-f456a2d3457d
   CurrencyIndex: 0
-  Outputs:
-  - AmountType: 0
-    Amount: 10
-    Formula: 
-    RandomAmount: 0
-    RandomChance: 0
-    RandomRangeMin: 0
-    RandomRangeMax: 0
+--- !u!114 &462057007646951896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: 38d66a81-4140-448e-9d88-f6e7a7044e45
+  FromNodeId: 0cfdb2eb-f502-4f1e-b87f-d65d739e6672
+  ToNodeId: 3130f909-fc3b-4685-befc-6ec16f856f5d
+  CurrencyIndex: 1
   SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 2
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
+--- !u!114 &742732443951428285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: 7922be9a-dbb0-471d-9a8e-a65fe5d3ba2f
+  FromNodeId: 3130f909-fc3b-4685-befc-6ec16f856f5d
+  ToNodeId: 2dca5965-280d-43cc-8c15-489b3c2e7bea
+  CurrencyIndex: 3
+  SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 1
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
 --- !u!114 &1729287433999083589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,17 +426,8 @@ MonoBehaviour:
   OutputNodeIds:
   - 7c92efd6-64e6-4afa-a34a-328c71563999
   CurrencyIndex: 4
-  Outputs:
-  - AmountType: 0
-    Amount: 3
-    Formula: 
-    RandomAmount: 0
-    RandomChance: 0
-    RandomRangeMin: 0
-    RandomRangeMax: 0
   StartAmount: 0
   StoredAmount: 1
-  SendInterval: 0
 --- !u!114 &3911810688264273594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,22 +442,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 3130f909-fc3b-4685-befc-6ec16f856f5d
   DisplayName: "\u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u0441\u0442\u0440\u0435\u043B"
-  Position: {x: 1003, y: 35}
+  Position: {x: 1001, y: 34}
   InputNodeIds:
   - 0cfdb2eb-f502-4f1e-b87f-d65d739e6672
   - b5f4c0ff-4530-4770-b2b9-5c76b90e5573
   OutputNodeIds:
   - 2dca5965-280d-43cc-8c15-489b3c2e7bea
   CurrencyIndex: 3
-  Outputs:
-  - AmountType: 0
-    Amount: 1
-    Formula: 
-    RandomAmount: 0
-    RandomChance: 0
-    RandomRangeMin: 0
-    RandomRangeMax: 0
-  SendInterval: 0
 --- !u!114 &4142341827937764128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,15 +463,63 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 7c92efd6-64e6-4afa-a34a-328c71563999
   DisplayName: "\u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u043B\u0443\u043A\u0430"
-  Position: {x: 1010, y: -101}
+  Position: {x: 1001, y: -100}
   InputNodeIds:
   - de1355c7-5656-4869-a4c7-d77e4acd87bf
   - 0cfdb2eb-f502-4f1e-b87f-d65d739e6672
   OutputNodeIds:
   - 2b8bd040-d6ac-49bc-b4fb-fcc0efccd1ef
   CurrencyIndex: 5
-  Outputs: []
+--- !u!114 &4342126639891519252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: d354309e-da01-4f0a-8424-4d306f19b53c
+  FromNodeId: f0bdf632-2e27-4cdc-9869-f456a2d3457d
+  ToNodeId: 352d62b1-f309-4a43-bf2b-ce482f02abbe
+  CurrencyIndex: 0
   SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 11
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
+--- !u!114 &5263903156592152175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: 5142e096-149d-4306-9c82-8aa1750c3f44
+  FromNodeId: 7c92efd6-64e6-4afa-a34a-328c71563999
+  ToNodeId: 2b8bd040-d6ac-49bc-b4fb-fcc0efccd1ef
+  CurrencyIndex: 5
+  SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 1
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
 --- !u!114 &6699274524439780080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,15 +540,6 @@ MonoBehaviour:
   OutputNodeIds:
   - de1355c7-5656-4869-a4c7-d77e4acd87bf
   CurrencyIndex: 4
-  Outputs:
-  - AmountType: 0
-    Amount: 1
-    Formula: 
-    RandomAmount: 0
-    RandomChance: 0
-    RandomRangeMin: 0
-    RandomRangeMax: 0
-  SendInterval: 0
 --- !u!114 &7535764856408580637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,21 +561,80 @@ MonoBehaviour:
   - 7c92efd6-64e6-4afa-a34a-328c71563999
   - 3130f909-fc3b-4685-befc-6ec16f856f5d
   CurrencyIndex: 1
-  Outputs:
-  - AmountType: 0
-    Amount: 3
-    Formula: 
-    RandomAmount: 0
-    RandomChance: 0
-    RandomRangeMin: 0
-    RandomRangeMax: 0
-  - AmountType: 0
-    Amount: 3
-    Formula: 
-    RandomAmount: 0
-    RandomChance: 0
-    RandomRangeMin: 0
-    RandomRangeMax: 0
   StartAmount: 0
-  StoredAmount: 1
+  StoredAmount: 0
+--- !u!114 &7841536135280832163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: 8bf78114-8799-4632-80eb-5d02bad18334
+  FromNodeId: 41dd7349-8e40-4a58-8266-828a3c392afd
+  ToNodeId: 0cfdb2eb-f502-4f1e-b87f-d65d739e6672
+  CurrencyIndex: 1
   SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 1
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
+--- !u!114 &7977621173033854890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: 7e2977fd-993b-484c-9d78-0296dba93006
+  FromNodeId: 6e8a3258-4bf3-46bd-8ea8-008202778496
+  ToNodeId: f0bdf632-2e27-4cdc-9869-f456a2d3457d
+  CurrencyIndex: 0
+  SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 10
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
+--- !u!114 &8868190334939395244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: a1597c20-7190-4337-a023-dccb12aa61e6
+  FromNodeId: f0bdf632-2e27-4cdc-9869-f456a2d3457d
+  ToNodeId: 80f9bc52-df38-4f0b-bf6e-f0c782027611
+  CurrencyIndex: 0
+  SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 1
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10

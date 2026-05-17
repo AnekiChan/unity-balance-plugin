@@ -19,7 +19,12 @@ namespace BalancePlugin
         public abstract bool CanHaveOutput { get; }
 
         public abstract void Initialize();
-        public abstract void ProcessResources(BalancingData data, int tick, int SendCurrencyIndex, int SendAmount);
+
+        public virtual void ReceiveResource(BalancingData data, int tick, int currencyIndex, int amount) { }
+
+        public virtual bool CanSend(BalancingData data, int tick, int currencyIndex, int amount) { return CanHaveOutput; }
+
+        public virtual void BeforeSend(BalancingData data, int tick, int currencyIndex, int amount) { }
 
         private void OnEnable()
         {

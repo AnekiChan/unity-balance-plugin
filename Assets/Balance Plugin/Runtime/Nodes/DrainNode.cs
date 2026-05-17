@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace BalancePlugin
 {
@@ -9,25 +10,37 @@ namespace BalancePlugin
         public override bool CanHaveInput => true;
         public override bool CanHaveOutput => false;
 
-        [Min(1)] public int DrainAmount = 1;
-        [Min(0)] public int SendInterval = 0;
+        [Min(0)] public int DrainAmount = 1;
         public int DrainedAmount = 0;
+        public Dictionary<int, int> DrainedByCurrency = new Dictionary<int, int>();
 
-        private int prevTick = 0;
+        private int _lastTick;
 
         public override void Initialize()
         {
             DrainedAmount = 0;
-            prevTick = 0;
+            DrainedByCurrency.Clear();
+            _lastTick = -1;
         }
 
-        public override void ProcessResources(BalancingData data, int tick, int SendCurrencyIndex, int SendAmount)
+        public override bool CanSend(BalancingData data, int tick, int currencyIndex, int amount)
         {
-            if (prevTick != tick && SendAmount > 0)
+            return false;
+        }
+
+        public override void ReceiveResource(BalancingData data, int tick, int currencyIndex, int amount)
+        {
+            if (_lastTick != tick)
             {
-                DrainedAmount += SendAmount;
-                prevTick = tick;
+                _lastTick = tick;
+                DrainedByCurrency.Clear();
             }
+
+            DrainedAmount += amount;
+            if (DrainedByCurrency.ContainsKey(currencyIndex))
+                DrainedByCurrency[currencyIndex] += amount;
+            else
+                DrainedByCurrency[currencyIndex] = amount;
         }
     }
 }

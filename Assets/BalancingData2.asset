@@ -14,20 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 22767ce4-e595-4127-bfce-8522c7133f26
   DisplayName: Source
-  Position: {x: 288, y: 162}
+  Position: {x: 284, y: 180}
   InputNodeIds: []
   OutputNodeIds:
-  - 82c2281d-9a49-4010-af24-31e45f43e28b
   - c07acaad-8378-45d3-977f-55404efcda14
+  - 82c2281d-9a49-4010-af24-31e45f43e28b
   CurrencyIndex: 0
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
-  SendInterval: 1
 --- !u!114 &-4100903886359840317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42,21 +34,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeId: 82c2281d-9a49-4010-af24-31e45f43e28b
   DisplayName: Pool
-  Position: {x: 487, y: 273}
+  Position: {x: 436, y: 273}
   InputNodeIds:
   - 22767ce4-e595-4127-bfce-8522c7133f26
   OutputNodeIds: []
   CurrencyIndex: 0
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 100
-  SendInterval: 1
+  StoredAmount: 500
 --- !u!114 &-3238084182884107214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,14 +61,31 @@ MonoBehaviour:
   OutputNodeIds:
   - 0550ddff-ac4e-408f-9242-74278585307e
   CurrencyIndex: 1
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: 1
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
+--- !u!114 &-1479553734369521616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: ace78f91-82ec-436a-aff3-b6f008dafb6e
+  FromNodeId: 56297537-5730-4b0c-9cf6-08b79a8ca02d
+  ToNodeId: 0550ddff-ac4e-408f-9242-74278585307e
+  CurrencyIndex: 1
   SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 1
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,16 +111,62 @@ MonoBehaviour:
   - {fileID: -3238084182884107214}
   - {fileID: 7213885663186602774}
   - {fileID: 8160663312115862930}
-  Connections:
-  - FromNodeId: 56297537-5730-4b0c-9cf6-08b79a8ca02d
-    ToNodeId: 0550ddff-ac4e-408f-9242-74278585307e
-  - FromNodeId: 22767ce4-e595-4127-bfce-8522c7133f26
-    ToNodeId: 82c2281d-9a49-4010-af24-31e45f43e28b
-  - FromNodeId: 22767ce4-e595-4127-bfce-8522c7133f26
-    ToNodeId: c07acaad-8378-45d3-977f-55404efcda14
-  - FromNodeId: c07acaad-8378-45d3-977f-55404efcda14
-    ToNodeId: 56297537-5730-4b0c-9cf6-08b79a8ca02d
+  Arrows:
+  - {fileID: 1170962608051632551}
+  - {fileID: 7978549580523969086}
+  - {fileID: -1479553734369521616}
+  - {fileID: 1145434693706595895}
   TickCount: 100
+--- !u!114 &1145434693706595895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: 0c92723e-e150-46c5-ac56-633ceb837190
+  FromNodeId: 22767ce4-e595-4127-bfce-8522c7133f26
+  ToNodeId: 82c2281d-9a49-4010-af24-31e45f43e28b
+  CurrencyIndex: 0
+  SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 5
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
+--- !u!114 &1170962608051632551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: bfde55e3-bcaa-4c3f-a0b8-74a0878d4730
+  FromNodeId: 22767ce4-e595-4127-bfce-8522c7133f26
+  ToNodeId: c07acaad-8378-45d3-977f-55404efcda14
+  CurrencyIndex: 0
+  SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 5
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
 --- !u!114 &7213885663186602774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,16 +186,33 @@ MonoBehaviour:
   - 56297537-5730-4b0c-9cf6-08b79a8ca02d
   OutputNodeIds: []
   CurrencyIndex: 1
-  OutputAmountType: 0
-  OutputAmount: 1
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 98
-  SendInterval: 1
+  StoredAmount: 100
+--- !u!114 &7978549580523969086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: fc4f0145-2198-4c8a-855d-f7120956f62a
+  FromNodeId: c07acaad-8378-45d3-977f-55404efcda14
+  ToNodeId: 56297537-5730-4b0c-9cf6-08b79a8ca02d
+  CurrencyIndex: 0
+  SendInterval: 0
+  Output:
+    AmountType: 0
+    Amount: 3
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
 --- !u!114 &8160663312115862930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,13 +233,5 @@ MonoBehaviour:
   OutputNodeIds:
   - 56297537-5730-4b0c-9cf6-08b79a8ca02d
   CurrencyIndex: 0
-  OutputAmountType: 0
-  OutputAmount: 2
-  OutputFormula: x
-  OutputRandomAmount: 1
-  OutputRandomChance: 50
-  OutputRandomRangeMin: 1
-  OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 2
-  SendInterval: 1
+  StoredAmount: 200

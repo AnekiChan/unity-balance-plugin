@@ -16,11 +16,8 @@ MonoBehaviour:
   DisplayName: Source
   Position: {x: 0, y: 0}
   InputNodeIds: []
-  OutputNodeIds:
-  - f020000e-1863-456a-ac21-559fd844bb4c
+  OutputNodeIds: []
   CurrencyIndex: 0
-  Outputs: []
-  SendInterval: 0
 --- !u!114 &-2224030653817408529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36,15 +33,11 @@ MonoBehaviour:
   NodeId: 966691f8-02c5-488e-b4b2-0af21ce46531
   DisplayName: Pool
   Position: {x: 0, y: 0}
-  InputNodeIds:
-  - 5d1bcc78-aa2f-4200-9cae-b5ba7cbe1326
-  OutputNodeIds:
-  - b5594c4d-0073-4749-8766-ef4346acd108
+  InputNodeIds: []
+  OutputNodeIds: []
   CurrencyIndex: 2
-  Outputs: []
   StartAmount: 0
   StoredAmount: 2
-  SendInterval: 0
 --- !u!114 &-1192188692808475818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,13 +53,9 @@ MonoBehaviour:
   NodeId: c350c02b-e917-44da-badd-4e02dbc2f8ff
   DisplayName: Converter
   Position: {x: 0, y: 0}
-  InputNodeIds:
-  - f020000e-1863-456a-ac21-559fd844bb4c
-  OutputNodeIds:
-  - 025c1c1a-59ee-4266-91c3-0a0d27ea7bbd
+  InputNodeIds: []
+  OutputNodeIds: []
   CurrencyIndex: 1
-  Outputs: []
-  SendInterval: 0
 --- !u!114 &-1168172656411539944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,15 +71,9 @@ MonoBehaviour:
   NodeId: b5594c4d-0073-4749-8766-ef4346acd108
   DisplayName: Converter
   Position: {x: 0, y: 0}
-  InputNodeIds:
-  - 025c1c1a-59ee-4266-91c3-0a0d27ea7bbd
-  - 966691f8-02c5-488e-b4b2-0af21ce46531
-  - e74e6eb3-d650-47ce-9ccd-363ea4cc1461
-  OutputNodeIds:
-  - d5558792-0280-453b-8ea6-3d3fe8d448a0
+  InputNodeIds: []
+  OutputNodeIds: []
   CurrencyIndex: 4
-  Outputs: []
-  SendInterval: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,31 +111,8 @@ MonoBehaviour:
   - {fileID: 8889532273671071716}
   - {fileID: 3087361984619838075}
   - {fileID: -1192188692808475818}
-  - {fileID: 1089488118459540303}
   - {fileID: -5201836439896649415}
-  Connections:
-  - FromNodeId: bf4b3c75-ec14-48d8-8607-0d464400c851
-    ToNodeId: f020000e-1863-456a-ac21-559fd844bb4c
-  - FromNodeId: f020000e-1863-456a-ac21-559fd844bb4c
-    ToNodeId: c350c02b-e917-44da-badd-4e02dbc2f8ff
-  - FromNodeId: f020000e-1863-456a-ac21-559fd844bb4c
-    ToNodeId: 5d1bcc78-aa2f-4200-9cae-b5ba7cbe1326
-  - FromNodeId: f020000e-1863-456a-ac21-559fd844bb4c
-    ToNodeId: 178be2f6-257a-43bb-8823-1d20606afade
-  - FromNodeId: c350c02b-e917-44da-badd-4e02dbc2f8ff
-    ToNodeId: 025c1c1a-59ee-4266-91c3-0a0d27ea7bbd
-  - FromNodeId: 5d1bcc78-aa2f-4200-9cae-b5ba7cbe1326
-    ToNodeId: 966691f8-02c5-488e-b4b2-0af21ce46531
-  - FromNodeId: 178be2f6-257a-43bb-8823-1d20606afade
-    ToNodeId: e74e6eb3-d650-47ce-9ccd-363ea4cc1461
-  - FromNodeId: 025c1c1a-59ee-4266-91c3-0a0d27ea7bbd
-    ToNodeId: b5594c4d-0073-4749-8766-ef4346acd108
-  - FromNodeId: 966691f8-02c5-488e-b4b2-0af21ce46531
-    ToNodeId: b5594c4d-0073-4749-8766-ef4346acd108
-  - FromNodeId: e74e6eb3-d650-47ce-9ccd-363ea4cc1461
-    ToNodeId: b5594c4d-0073-4749-8766-ef4346acd108
-  - FromNodeId: b5594c4d-0073-4749-8766-ef4346acd108
-    ToNodeId: d5558792-0280-453b-8ea6-3d3fe8d448a0
+  Arrows: []
   TickCount: 100
 --- !u!114 &1089488118459540303
 MonoBehaviour:
@@ -197,14 +157,11 @@ MonoBehaviour:
   NodeId: d5558792-0280-453b-8ea6-3d3fe8d448a0
   DisplayName: Pool
   Position: {x: 0, y: 0}
-  InputNodeIds:
-  - b5594c4d-0073-4749-8766-ef4346acd108
+  InputNodeIds: []
   OutputNodeIds: []
   CurrencyIndex: 4
-  Outputs: []
   StartAmount: 0
   StoredAmount: 23
-  SendInterval: 0
 --- !u!114 &1665881442669630275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,15 +177,11 @@ MonoBehaviour:
   NodeId: 025c1c1a-59ee-4266-91c3-0a0d27ea7bbd
   DisplayName: Pool
   Position: {x: 0, y: 0}
-  InputNodeIds:
-  - c350c02b-e917-44da-badd-4e02dbc2f8ff
-  OutputNodeIds:
-  - b5594c4d-0073-4749-8766-ef4346acd108
+  InputNodeIds: []
+  OutputNodeIds: []
   CurrencyIndex: 1
-  Outputs: []
   StartAmount: 0
   StoredAmount: 1
-  SendInterval: 0
 --- !u!114 &3087361984619838075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,13 +197,9 @@ MonoBehaviour:
   NodeId: 5d1bcc78-aa2f-4200-9cae-b5ba7cbe1326
   DisplayName: Converter
   Position: {x: 0, y: 0}
-  InputNodeIds:
-  - f020000e-1863-456a-ac21-559fd844bb4c
-  OutputNodeIds:
-  - 966691f8-02c5-488e-b4b2-0af21ce46531
+  InputNodeIds: []
+  OutputNodeIds: []
   CurrencyIndex: 2
-  Outputs: []
-  SendInterval: 0
 --- !u!114 &3671489524986941169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,15 +215,11 @@ MonoBehaviour:
   NodeId: e74e6eb3-d650-47ce-9ccd-363ea4cc1461
   DisplayName: Pool
   Position: {x: 0, y: 0}
-  InputNodeIds:
-  - 178be2f6-257a-43bb-8823-1d20606afade
-  OutputNodeIds:
-  - b5594c4d-0073-4749-8766-ef4346acd108
+  InputNodeIds: []
+  OutputNodeIds: []
   CurrencyIndex: 3
-  Outputs: []
   StartAmount: 0
   StoredAmount: 1
-  SendInterval: 0
 --- !u!114 &8889532273671071716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,10 +235,6 @@ MonoBehaviour:
   NodeId: 178be2f6-257a-43bb-8823-1d20606afade
   DisplayName: Converter
   Position: {x: 0, y: 0}
-  InputNodeIds:
-  - f020000e-1863-456a-ac21-559fd844bb4c
-  OutputNodeIds:
-  - e74e6eb3-d650-47ce-9ccd-363ea4cc1461
+  InputNodeIds: []
+  OutputNodeIds: []
   CurrencyIndex: 3
-  Outputs: []
-  SendInterval: 0

@@ -18,10 +18,8 @@ MonoBehaviour:
   InputNodeIds: []
   OutputNodeIds: []
   CurrencyIndex: 0
-  Outputs: []
   StartAmount: 0
   StoredAmount: 0
-  SendInterval: 0
 --- !u!114 &-4829000079505853818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40,8 +38,6 @@ MonoBehaviour:
   InputNodeIds: []
   OutputNodeIds: []
   CurrencyIndex: 0
-  Outputs: []
-  SendInterval: 0
 --- !u!114 &-2802115748813457416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,8 +56,6 @@ MonoBehaviour:
   InputNodeIds: []
   OutputNodeIds: []
   CurrencyIndex: 0
-  Outputs: []
-  SendInterval: 0
 --- !u!114 &-1007046894146559043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,12 +94,11 @@ MonoBehaviour:
     Color: {r: 1, g: 0, b: 0, a: 1}
     Visible: 1
   Nodes:
-  - {fileID: -1007046894146559043}
   - {fileID: -6085040994059788094}
   - {fileID: -2802115748813457416}
   - {fileID: 4769654904120156361}
   - {fileID: -4829000079505853818}
-  Connections: []
+  Arrows: []
   TickCount: 1
 --- !u!114 &4769654904120156361
 MonoBehaviour:
@@ -126,5 +119,4 @@ MonoBehaviour:
   OutputNodeIds: []
   CurrencyIndex: 0
   DrainAmount: 1
-  SendInterval: 0
   DrainedAmount: 0

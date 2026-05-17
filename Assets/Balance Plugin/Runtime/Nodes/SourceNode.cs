@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BalancePlugin
@@ -10,24 +9,28 @@ namespace BalancePlugin
         public override bool CanHaveInput => true;
         public override bool CanHaveOutput => true;
 
-        public List<NodeOutput> Outputs = new List<NodeOutput>();
-        [Min(0)] public int SendInterval = 0;
+        [System.NonSerialized] public int TriggerCount;
+        private int _lastTriggerTick;
 
         public override void Initialize()
         {
+            TriggerCount = 0;
+            _lastTriggerTick = -1;
         }
 
-        public override void ProcessResources(BalancingData data, int tick, int SendCurrencyIndex, int SendAmount)
+        public override bool CanSend(BalancingData data, int tick, int currencyIndex, int amount)
         {
-            if (SendInterval > 0 && tick % SendInterval != 0) return;
-            if (OutputNodeIds == null || OutputNodeIds.Count == 0) return;
+            return true;
+        }
 
-            for (int i = 0; i < OutputNodeIds.Count; i++)
+        public override void ReceiveResource(BalancingData data, int tick, int currencyIndex, int amount)
+        {
+            if (_lastTriggerTick != tick)
             {
-                int amount = i < Outputs.Count ? Outputs[i].GetAmount(tick) : 1;
-                if (amount <= 0) continue;
-                data.GetNode(OutputNodeIds[i])?.ProcessResources(data, tick, CurrencyIndex, amount);
+                _lastTriggerTick = tick;
+                TriggerCount = 0;
             }
+            TriggerCount++;
         }
     }
 }
