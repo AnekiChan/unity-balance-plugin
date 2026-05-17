@@ -10,7 +10,8 @@ namespace BalancePlugin
         Number,
         Formula,
         Random,
-        RandomRange
+        RandomRange,
+        All
     }
 
     public static class FormulaEvaluator

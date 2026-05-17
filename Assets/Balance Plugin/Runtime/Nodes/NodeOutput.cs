@@ -34,6 +34,9 @@ namespace BalancePlugin
                     int max = Mathf.Max(RandomRangeMin, RandomRangeMax);
                     return UnityEngine.Random.Range(min, max + 1);
 
+                case OutputAmountType.All:
+                    return -1;
+
                 default:
                     return Amount;
             }

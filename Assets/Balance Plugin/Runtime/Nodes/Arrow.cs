@@ -11,6 +11,9 @@ namespace BalancePlugin
         [Min(0)] public int SendInterval = 0;
         public NodeOutput Output = new NodeOutput();
 
+        [Range(0, 100)] public int GateRatio = 10;
+        [Range(0, 100)] public float GateChance = 50f;
+
         [System.NonSerialized] public bool FiredThisTick;
 
         private void OnEnable()
@@ -32,10 +35,45 @@ namespace BalancePlugin
                 return 0;
 
             int amount;
-            if (from is ConverterNode conv)
+
+            if (from is GateNode gate)
+            {
+                if (gate.TotalInputThisTick <= 0)
+                    return 0;
+
+                if (gate.Mode == GateMode.RandomPath)
+                {
+                    if (!gate.HasResolvedThisTick)
+                        gate.ResolveRandomPath(data);
+                    if (gate.SelectedArrowId != ArrowId)
+                        return 0;
+                    amount = gate.TotalInputThisTick;
+                }
+                else
+                {
+                    var outgoing = data.GetOutgoingArrows(gate.NodeId);
+                    int totalRatio = 0;
+                    foreach (Arrow a in outgoing)
+                    {
+                        if (a != null)
+                            totalRatio += a.GateRatio;
+                    }
+                    amount = totalRatio > 0
+                        ? gate.TotalInputThisTick * GateRatio / totalRatio
+                        : 0;
+                }
+            }
+            else if (from is ConverterNode conv)
+            {
                 amount = Output.GetAmount(tick, conv.TotalReceived);
+            }
             else
-                amount = Output.GetAmount(tick, 0);
+            {
+                if (Output.AmountType == OutputAmountType.All && from is PoolNode pool)
+                    amount = pool.GetStored(CurrencyIndex);
+                else
+                    amount = Output.GetAmount(tick, 0);
+            }
 
             if (amount <= 0)
                 return 0;

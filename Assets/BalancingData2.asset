@@ -17,8 +17,8 @@ MonoBehaviour:
   Position: {x: 284, y: 180}
   InputNodeIds: []
   OutputNodeIds:
-  - c07acaad-8378-45d3-977f-55404efcda14
   - 82c2281d-9a49-4010-af24-31e45f43e28b
+  - c07acaad-8378-45d3-977f-55404efcda14
   CurrencyIndex: 0
 --- !u!114 &-4100903886359840317
 MonoBehaviour:
@@ -86,6 +86,8 @@ MonoBehaviour:
     RandomChance: 50
     RandomRangeMin: 1
     RandomRangeMax: 10
+  GateRatio: 10
+  GateChance: 50
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,10 +114,10 @@ MonoBehaviour:
   - {fileID: 7213885663186602774}
   - {fileID: 8160663312115862930}
   Arrows:
-  - {fileID: 1170962608051632551}
-  - {fileID: 7978549580523969086}
-  - {fileID: -1479553734369521616}
   - {fileID: 1145434693706595895}
+  - {fileID: -1479553734369521616}
+  - {fileID: 7978549580523969086}
+  - {fileID: 1170962608051632551}
   TickCount: 100
 --- !u!114 &1145434693706595895
 MonoBehaviour:
@@ -142,6 +144,8 @@ MonoBehaviour:
     RandomChance: 50
     RandomRangeMin: 1
     RandomRangeMax: 10
+  GateRatio: 10
+  GateChance: 50
 --- !u!114 &1170962608051632551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,6 +171,8 @@ MonoBehaviour:
     RandomChance: 50
     RandomRangeMin: 1
     RandomRangeMax: 10
+  GateRatio: 10
+  GateChance: 50
 --- !u!114 &7213885663186602774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,6 +219,8 @@ MonoBehaviour:
     RandomChance: 50
     RandomRangeMin: 1
     RandomRangeMax: 10
+  GateRatio: 10
+  GateChance: 50
 --- !u!114 &8160663312115862930
 MonoBehaviour:
   m_ObjectHideFlags: 0

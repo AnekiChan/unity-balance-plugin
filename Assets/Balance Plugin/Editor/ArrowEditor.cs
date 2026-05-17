@@ -14,6 +14,8 @@ namespace BalancePlugin
         private SerializedProperty _randomChance;
         private SerializedProperty _randomRangeMin;
         private SerializedProperty _randomRangeMax;
+        private SerializedProperty _gateRatio;
+        private SerializedProperty _gateChance;
 
         private void OnEnable()
         {
@@ -25,6 +27,8 @@ namespace BalancePlugin
             _randomChance = serializedObject.FindProperty("Output.RandomChance");
             _randomRangeMin = serializedObject.FindProperty("Output.RandomRangeMin");
             _randomRangeMax = serializedObject.FindProperty("Output.RandomRangeMax");
+            _gateRatio = serializedObject.FindProperty("GateRatio");
+            _gateChance = serializedObject.FindProperty("GateChance");
         }
 
         public override void OnInspectorGUI()
@@ -43,6 +47,52 @@ namespace BalancePlugin
             DrawCurrency(arrow);
             DrawProperty(serializedObject.FindProperty("SendInterval"), "Send Interval");
 
+            if (IsFromGate(arrow))
+            {
+                DrawGateSection(arrow);
+            }
+            else
+            {
+                DrawOutputSection(arrow);
+            }
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        private bool IsFromGate(Arrow arrow)
+        {
+            if (_data == null || string.IsNullOrEmpty(arrow.FromNodeId))
+                return false;
+            return _data.GetNode(arrow.FromNodeId) is GateNode;
+        }
+
+        private void DrawGateSection(Arrow arrow)
+        {
+            GateNode gate = _data?.GetNode(arrow.FromNodeId) as GateNode;
+            if (gate == null)
+                return;
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Gate Output", EditorStyles.boldLabel);
+
+            if (gate.Mode == GateMode.Distribution)
+            {
+                EditorGUILayout.PropertyField(_gateRatio, new GUIContent("Ratio (%)"));
+                EditorGUILayout.LabelField(
+                    $"Share of input: {_gateRatio.intValue}%",
+                    EditorStyles.miniLabel);
+            }
+            else
+            {
+                EditorGUILayout.PropertyField(_gateChance, new GUIContent("Chance (%)"));
+                EditorGUILayout.LabelField(
+                    "Weight for random path selection",
+                    EditorStyles.miniLabel);
+            }
+        }
+
+        private void DrawOutputSection(Arrow arrow)
+        {
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Output", EditorStyles.boldLabel);
 
@@ -70,9 +120,11 @@ namespace BalancePlugin
                     EditorGUILayout.PropertyField(_randomRangeMin, new GUIContent("Min"));
                     EditorGUILayout.PropertyField(_randomRangeMax, new GUIContent("Max"));
                     break;
-            }
 
-            serializedObject.ApplyModifiedProperties();
+                case OutputAmountType.All:
+                    EditorGUILayout.HelpBox("Takes all resources from the source pool.", MessageType.Info);
+                    break;
+            }
         }
 
         private void DrawFormulaPreview(Arrow arrow)

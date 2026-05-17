@@ -69,6 +69,11 @@ namespace BalancePlugin
                 poolNode.StartAmount = EditorGUILayout.IntField("Initial Amount", poolNode.StartAmount);
                 DrawPoolStoredInfo(poolNode);
             }
+            else if (_currentNode is GateNode gateNode)
+            {
+                DrawCurrencySelector("Currency");
+                gateNode.Mode = (GateMode)EditorGUILayout.EnumPopup("Mode", gateNode.Mode);
+            }
             else
             {
                 DrawCurrencySelector("Currency");

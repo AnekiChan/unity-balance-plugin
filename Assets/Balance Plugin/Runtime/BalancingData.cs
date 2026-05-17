@@ -113,6 +113,17 @@ namespace BalancePlugin
             return Arrows.Find(a => a != null && a.FromNodeId == fromNodeId && a.ToNodeId == toNodeId);
         }
 
+        public List<Arrow> GetOutgoingArrows(string nodeId)
+        {
+            List<Arrow> result = new List<Arrow>();
+            foreach (Arrow arrow in Arrows)
+            {
+                if (arrow != null && arrow.FromNodeId == nodeId)
+                    result.Add(arrow);
+            }
+            return result;
+        }
+
 #if UNITY_EDITOR
         public void CreateGraphSO(string currencyName, string folderPath = "Assets")
         {

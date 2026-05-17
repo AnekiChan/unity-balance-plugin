@@ -37,6 +37,10 @@ namespace BalancePlugin
             {
                 DrawProperty("DrainAmount");
             }
+            else if (node is GateNode)
+            {
+                DrawProperty("Mode");
+            }
 
             EditorGUILayout.Space();
             using (new EditorGUI.DisabledScope(true))

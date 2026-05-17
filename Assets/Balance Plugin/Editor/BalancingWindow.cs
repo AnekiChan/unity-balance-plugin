@@ -288,6 +288,7 @@ namespace BalancePlugin
             AddNodeButton("Drain", () => CreateNodeAtGraphCenter<DrainNode>());
             AddNodeButton("Converter", () => CreateNodeAtGraphCenter<ConverterNode>());
             AddNodeButton("Pool", () => CreateNodeAtGraphCenter<PoolNode>());
+            AddNodeButton("Gate", () => CreateNodeAtGraphCenter<GateNode>());
 
             var spacer = new VisualElement { style = { height = 12 } };
             _rightPanel.Add(spacer);
@@ -818,6 +819,7 @@ namespace BalancePlugin
                 evt.menu.AppendAction("Create/Drain", _ => _window.CreateNode<DrainNode>(graphPosition));
                 evt.menu.AppendAction("Create/Converter", _ => _window.CreateNode<ConverterNode>(graphPosition));
                 evt.menu.AppendAction("Create/Pool", _ => _window.CreateNode<PoolNode>(graphPosition));
+                evt.menu.AppendAction("Create/Gate", _ => _window.CreateNode<GateNode>(graphPosition));
             }
 
             public Vector2 GetGraphCenterPosition()
