@@ -1,0 +1,154 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6085040994059788094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: bfae2fcc-7151-4c9f-b406-5d8010aed143
+  DisplayName: Pool
+  Position: {x: 1004, y: 327}
+  InputNodeIds: []
+  OutputNodeIds: []
+  CurrencyIndex: 0
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  StartAmount: 0
+  StoredAmount: 0
+  SendInterval: 0
+--- !u!114 &-4829000079505853818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d21edcf200ebb9c49870c3c69acddaf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 73fd3bcf-f1dc-444d-bbc7-dc858f6fa3c3
+  DisplayName: Source
+  Position: {x: 967, y: 214}
+  InputNodeIds: []
+  OutputNodeIds: []
+  CurrencyIndex: 0
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  SendInterval: 0
+--- !u!114 &-2802115748813457416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d39a91973cc6f64429985602188291c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: e0fe75bf-d8ef-4a15-affd-f5bcea14d7e2
+  DisplayName: Converter
+  Position: {x: 1229, y: 214}
+  InputNodeIds: []
+  OutputNodeIds: []
+  CurrencyIndex: 0
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  SendInterval: 0
+--- !u!114 &-1007046894146559043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5c7e338b6727fe4db787f26e5be7535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: bec426a3-091d-40ab-bc93-a34259bb78af
+  DisplayName: Gate
+  Position: {x: 1168, y: 327}
+  InputNodeIds: []
+  OutputNodeIds: []
+  CurrencyIndex: 0
+  OutputAmountType: 0
+  OutputAmount: 1
+  OutputFormula: x
+  OutputRandomAmount: 1
+  OutputRandomChance: 50
+  OutputRandomRangeMin: 1
+  OutputRandomRangeMax: 10
+  SendInterval: 0
+  OutputChances: []
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8b2b5d5e722a6c4bb85647efda313bd, type: 3}
+  m_Name: BalancingData 2
+  m_EditorClassIdentifier: 
+  Currencies:
+  - Name: Coin
+    Color: {r: 1, g: 0, b: 0, a: 1}
+    Visible: 1
+  Nodes:
+  - {fileID: -1007046894146559043}
+  - {fileID: -6085040994059788094}
+  - {fileID: -2802115748813457416}
+  - {fileID: 4769654904120156361}
+  - {fileID: -4829000079505853818}
+  Connections: []
+  TickCount: 1
+--- !u!114 &4769654904120156361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff83140eba3c9646bfdf84edc9df85d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: a80d714b-1fcf-47cc-89c6-163f6fa60984
+  DisplayName: Drain
+  Position: {x: 1106, y: 214}
+  InputNodeIds: []
+  OutputNodeIds: []
+  CurrencyIndex: 0
+  DrainAmount: 1
+  SendInterval: 0
+  DrainedAmount: 0

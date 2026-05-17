@@ -147,7 +147,7 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 50
+  StoredAmount: 98
   SendInterval: 1
 --- !u!114 &8160663312115862930
 MonoBehaviour:
@@ -177,5 +177,5 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 0
+  StoredAmount: 2
   SendInterval: 1

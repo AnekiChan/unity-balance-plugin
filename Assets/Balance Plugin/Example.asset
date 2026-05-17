@@ -83,7 +83,7 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 34
+  StoredAmount: 28
   SendInterval: 0
 --- !u!114 &-2877309964583737448
 MonoBehaviour:
@@ -113,7 +113,7 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 6
+  StoredAmount: 3
   SendInterval: 0
 --- !u!114 &-2599234685207421811
 MonoBehaviour:
@@ -177,7 +177,7 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 4
+  StoredAmount: 1
   SendInterval: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -297,7 +297,7 @@ MonoBehaviour:
   OutputRandomRangeMin: 1
   OutputRandomRangeMax: 10
   StartAmount: 0
-  StoredAmount: 278
+  StoredAmount: 264
   SendInterval: 0
 --- !u!114 &8065141507291406317
 MonoBehaviour:

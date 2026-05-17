@@ -16,24 +16,24 @@ MonoBehaviour:
   cells:
   - intValue: 0
     floatValue: 0
-    stringValue: "\u043F\u0432"
+    stringValue: Healer
     spriteValue: {fileID: 0}
     formulaString: 
     formulaResult: 
   - intValue: 0
     floatValue: 0
     stringValue: 
-    spriteValue: {fileID: 0}
+    spriteValue: {fileID: -779178000821955330, guid: 8a9b1ca5aab256742ac234594e9de34a, type: 3}
     formulaString: 
     formulaResult: 
-  - intValue: 10
+  - intValue: 5
     floatValue: 0
     stringValue: 
     spriteValue: {fileID: 0}
     formulaString: 
     formulaResult: 
   - intValue: 0
-    floatValue: 6
+    floatValue: 60
     stringValue: 
     spriteValue: {fileID: 0}
     formulaString: 
@@ -43,7 +43,7 @@ MonoBehaviour:
     stringValue: 
     spriteValue: {fileID: 0}
     formulaString: sqrt(attack*health)
-    formulaResult: 7.745967
+    formulaResult: 17.320508
   - intValue: 0
     floatValue: 0
     stringValue: 

@@ -16,24 +16,24 @@ MonoBehaviour:
   cells:
   - intValue: 0
     floatValue: 0
-    stringValue: "\u0444\u0432\u044B\u0444\u0432"
+    stringValue: Knight
     spriteValue: {fileID: 0}
     formulaString: 
     formulaResult: 
   - intValue: 0
     floatValue: 0
     stringValue: 
-    spriteValue: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    spriteValue: {fileID: -5918137915363136097, guid: 8a9b1ca5aab256742ac234594e9de34a, type: 3}
     formulaString: 
     formulaResult: 
-  - intValue: 5
+  - intValue: 15
     floatValue: 0
     stringValue: 
     spriteValue: {fileID: 0}
     formulaString: 
     formulaResult: 
   - intValue: 0
-    floatValue: 10
+    floatValue: 20
     stringValue: "\u044B\u0430\u0432"
     spriteValue: {fileID: 0}
     formulaString: 
@@ -43,7 +43,7 @@ MonoBehaviour:
     stringValue: 
     spriteValue: {fileID: 0}
     formulaString: sqrt(attack*health)
-    formulaResult: 7.071068
+    formulaResult: 17.320508
   - intValue: 0
     floatValue: 0
     stringValue: "\u044B\u0432"
