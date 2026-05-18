@@ -9,7 +9,7 @@ namespace BalancePlugin
         public string ToNodeId;
         public int CurrencyIndex = 0;
         [Min(0)] public int SendInterval = 0;
-        [Min(1)] public int RepeatCount = 1;
+        public bool UnlimitedRepeats = false;
         public bool SubtractResource = true;
         public NodeOutput Output = new NodeOutput();
 
@@ -91,7 +91,7 @@ namespace BalancePlugin
             }
             else
             {
-                for (int n = 0; n < RepeatCount; n++)
+                for (int n = 0; ; n++)
                 {
                     int amount;
                     if (from is ConverterNode conv)
@@ -113,6 +113,9 @@ namespace BalancePlugin
                     from.BeforeSend(data, tick, CurrencyIndex, amount);
                     to.ReceiveResource(data, tick, CurrencyIndex, amount);
                     totalSent += amount;
+
+                    if (!UnlimitedRepeats)
+                        break;
                 }
             }
 

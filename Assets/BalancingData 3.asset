@@ -18,6 +18,7 @@ MonoBehaviour:
   CurrencyIndex: 2
   SendInterval: 0
   RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 2
     Amount: 1
@@ -46,6 +47,7 @@ MonoBehaviour:
   CurrencyIndex: 2
   SendInterval: 0
   RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 0
     Amount: 1
@@ -74,6 +76,7 @@ MonoBehaviour:
   CurrencyIndex: 2
   SendInterval: 0
   RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 1
     Amount: 1
@@ -102,6 +105,7 @@ MonoBehaviour:
   CurrencyIndex: 0
   SendInterval: 0
   RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 1
     Amount: 1
@@ -172,6 +176,7 @@ MonoBehaviour:
   CurrencyIndex: 1
   SendInterval: 0
   RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 4
     Amount: 1
@@ -258,6 +263,7 @@ MonoBehaviour:
   CurrencyIndex: 2
   SendInterval: 0
   RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 4
     Amount: 1
@@ -307,6 +313,7 @@ MonoBehaviour:
   CurrencyIndex: 1
   SendInterval: 0
   RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 0
     Amount: 1

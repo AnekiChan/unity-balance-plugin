@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d50fec27fa7a45148ba4e9f6201493e3, type: 3}
+  m_Name: NewTable
+  m_EditorClassIdentifier: 
+  columns:
+  - Name: name
+    Type: 2
+  - Name: icon
+    Type: 3
+  - Name: rank
+    Type: 2
+  - Name: likes
+    Type: 0
+  - Name: followers
+    Type: 4
+  - Name: count
+    Type: 0
+  - Name: benefit points
+    Type: 4
+  rows:
+  - {fileID: 11400000, guid: 6f08e93767ff05f49af59104c86731d0, type: 2}
+  - {fileID: 11400000, guid: 75e29af2c46657a42971c80edfcb4441, type: 2}
+  - {fileID: 11400000, guid: d05f48d658887ef4d8e5d05c59c1873d, type: 2}
+  - {fileID: 11400000, guid: 122c3a8fed62eae4ba6915b1dd1fc40f, type: 2}
+  - {fileID: 11400000, guid: 6238f6fbc1a68fa448f3bc750415535a, type: 2}

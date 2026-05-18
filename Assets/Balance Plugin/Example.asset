@@ -37,7 +37,7 @@ MonoBehaviour:
   ToNodeId: a421a75d-2b6b-4e1d-ac15-90db0d82ce35
   CurrencyIndex: 2
   SendInterval: 0
-  RepeatCount: 1
+  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
   OutputNodeIds: []
   CurrencyIndex: 3
   StartAmount: 0
-  StoredAmount: 99
+  StoredAmount: 97
 --- !u!114 &-6073449172046358890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,7 +87,7 @@ MonoBehaviour:
   ToNodeId: ca39ee69-ec2b-4b1a-b5f6-594687507e3c
   CurrencyIndex: 2
   SendInterval: 0
-  RepeatCount: 1
+  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -116,7 +116,7 @@ MonoBehaviour:
   ToNodeId: a421a75d-2b6b-4e1d-ac15-90db0d82ce35
   CurrencyIndex: 1
   SendInterval: 0
-  RepeatCount: 1
+  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -179,7 +179,7 @@ MonoBehaviour:
   ToNodeId: 849d7c41-99c7-42a3-9c0c-e7cf9f61c96d
   CurrencyIndex: 1
   SendInterval: 0
-  RepeatCount: 1
+  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -212,7 +212,7 @@ MonoBehaviour:
   - a421a75d-2b6b-4e1d-ac15-90db0d82ce35
   CurrencyIndex: 1
   StartAmount: 0
-  StoredAmount: 1
+  StoredAmount: 0
 --- !u!114 &-745035446447823003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,7 +230,7 @@ MonoBehaviour:
   ToNodeId: 676749b1-f6fd-4572-8ead-a7b556a208e9
   CurrencyIndex: 3
   SendInterval: 0
-  RepeatCount: 1
+  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -323,7 +323,7 @@ MonoBehaviour:
   ToNodeId: bd9f0fba-e349-4da6-ac9b-35443463cb98
   CurrencyIndex: 0
   SendInterval: 0
-  RepeatCount: 1
+  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 4
@@ -377,7 +377,7 @@ MonoBehaviour:
   - a421a75d-2b6b-4e1d-ac15-90db0d82ce35
   CurrencyIndex: 2
   StartAmount: 0
-  StoredAmount: 31
+  StoredAmount: 5
 --- !u!114 &6455539389786889090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,7 +395,7 @@ MonoBehaviour:
   ToNodeId: 13017b40-9d0f-4191-9878-3834169650c7
   CurrencyIndex: 0
   SendInterval: 0
-  RepeatCount: 1
+  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 3

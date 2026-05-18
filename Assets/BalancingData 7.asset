@@ -1,0 +1,414 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8689063243254281019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 5abb5df6-d947-4e89-b482-a15bdf67d28f
+  DisplayName: "\u0414\u043E\u043C\u0430"
+  Position: {x: 948, y: -239}
+  InputNodeIds:
+  - c79db2b0-0665-4376-b28d-3b38f41c3f57
+  OutputNodeIds: []
+  CurrencyIndex: 3
+  StartAmount: 0
+  StoredAmount: 99
+--- !u!114 &-7016166639149424894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: a4bf6108-fac9-4c6a-9f72-3bd16d86bbb1
+  FromNodeId: 0989c18b-2514-4a4a-8029-cd2cf6f38be4
+  ToNodeId: 8081752d-e99c-4828-b3ad-b01c054445ec
+  CurrencyIndex: 2
+  SendInterval: 0
+  UnlimitedRepeats: 0
+  SubtractResource: 1
+  Output:
+    AmountType: 3
+    Amount: 1
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 3
+  GateRatio: 10
+  GateChance: 50
+--- !u!114 &-5448192639239833309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d39a91973cc6f64429985602188291c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: c79db2b0-0665-4376-b28d-3b38f41c3f57
+  DisplayName: "\u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u0434\u043E\u043C\u0430"
+  Position: {x: 762, y: -238}
+  InputNodeIds:
+  - 32b79096-93c0-4a8f-9f26-6b500b25a28d
+  - 2b881b53-2231-4ea9-ba39-c0915bda78b9
+  - 8081752d-e99c-4828-b3ad-b01c054445ec
+  OutputNodeIds:
+  - 5abb5df6-d947-4e89-b482-a15bdf67d28f
+  CurrencyIndex: 3
+--- !u!114 &-3538756678140592720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d21edcf200ebb9c49870c3c69acddaf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: ffb5ca3a-fce9-4f09-bc1c-e8d80f6539e8
+  DisplayName: "\u0414\u043E\u0431\u044B\u0447\u0430 \u043A\u0430\u043C\u043D\u044F"
+  Position: {x: 339, y: -234}
+  InputNodeIds: []
+  OutputNodeIds:
+  - 2b881b53-2231-4ea9-ba39-c0915bda78b9
+  CurrencyIndex: 1
+--- !u!114 &-1418551013859602284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 2b881b53-2231-4ea9-ba39-c0915bda78b9
+  DisplayName: "\u041A\u0430\u043C\u043D\u0438"
+  Position: {x: 559, y: -235}
+  InputNodeIds:
+  - ffb5ca3a-fce9-4f09-bc1c-e8d80f6539e8
+  OutputNodeIds:
+  - c79db2b0-0665-4376-b28d-3b38f41c3f57
+  CurrencyIndex: 0
+  StartAmount: 0
+  StoredAmount: 8
+--- !u!114 &-1115654874178159726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: 5ed531e5-3f16-4cab-bda6-beeda9699e18
+  FromNodeId: c12e8a3c-2764-441d-aba3-b5500fb5dd42
+  ToNodeId: 32b79096-93c0-4a8f-9f26-6b500b25a28d
+  CurrencyIndex: 0
+  SendInterval: 0
+  UnlimitedRepeats: 0
+  SubtractResource: 1
+  Output:
+    AmountType: 3
+    Amount: 1
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 30
+  GateRatio: 10
+  GateChance: 50
+--- !u!114 &-810630572441258692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: 55f6b0f3-01ba-4d19-9f49-3246623b8b4c
+  FromNodeId: ffb5ca3a-fce9-4f09-bc1c-e8d80f6539e8
+  ToNodeId: 2b881b53-2231-4ea9-ba39-c0915bda78b9
+  CurrencyIndex: 1
+  SendInterval: 0
+  UnlimitedRepeats: 0
+  SubtractResource: 1
+  Output:
+    AmountType: 3
+    Amount: 1
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 5
+  GateRatio: 10
+  GateChance: 50
+--- !u!114 &-439470580440824250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: 19728bb3-5133-4f7f-a3e6-f4207b9bb605
+  FromNodeId: 2b881b53-2231-4ea9-ba39-c0915bda78b9
+  ToNodeId: c79db2b0-0665-4376-b28d-3b38f41c3f57
+  CurrencyIndex: 1
+  SendInterval: 0
+  UnlimitedRepeats: 0
+  SubtractResource: 1
+  Output:
+    AmountType: 0
+    Amount: 10
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
+  GateRatio: 10
+  GateChance: 50
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8b2b5d5e722a6c4bb85647efda313bd, type: 3}
+  m_Name: BalancingData 7
+  m_EditorClassIdentifier: 
+  Currencies:
+  - Name: "\u0414\u0435\u0440\u0435\u0432\u043E"
+    Color: {r: 0.7924528, g: 0.30277678, b: 0.30277678, a: 1}
+    Visible: 1
+  - Name: "\u041A\u043C\u0435\u043D\u044C"
+    Color: {r: 0.38412246, g: 0.8854142, b: 0.9811321, a: 1}
+    Visible: 1
+  - Name: "\u041A\u0440\u0438\u0441\u0442\u0430\u043B\u043B"
+    Color: {r: 0.8646208, g: 0.19999999, b: 0.9490196, a: 1}
+    Visible: 1
+  - Name: "\u0414\u043E\u043C"
+    Color: {r: 0.37243086, g: 0.9490196, b: 0.3490196, a: 1}
+    Visible: 1
+  Nodes:
+  - {fileID: 2735033874870572608}
+  - {fileID: -3538756678140592720}
+  - {fileID: 1860495195519758904}
+  - {fileID: 8148181513345544048}
+  - {fileID: -1418551013859602284}
+  - {fileID: 7692259192498065899}
+  - {fileID: -5448192639239833309}
+  - {fileID: -8689063243254281019}
+  Arrows:
+  - {fileID: -1115654874178159726}
+  - {fileID: -810630572441258692}
+  - {fileID: -7016166639149424894}
+  - {fileID: 6258866116304975008}
+  - {fileID: -439470580440824250}
+  - {fileID: 2167900034043396357}
+  - {fileID: 668309607155316710}
+  TickCount: 100
+--- !u!114 &668309607155316710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: e5156b1d-40e3-4c9d-acfa-9a148e9d3b60
+  FromNodeId: c79db2b0-0665-4376-b28d-3b38f41c3f57
+  ToNodeId: 5abb5df6-d947-4e89-b482-a15bdf67d28f
+  CurrencyIndex: 3
+  SendInterval: 0
+  UnlimitedRepeats: 0
+  SubtractResource: 1
+  Output:
+    AmountType: 0
+    Amount: 1
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
+  GateRatio: 10
+  GateChance: 50
+--- !u!114 &1860495195519758904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d21edcf200ebb9c49870c3c69acddaf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 0989c18b-2514-4a4a-8029-cd2cf6f38be4
+  DisplayName: "\u0414\u043E\u0431\u044B\u0447\u0430 \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B\u043E\u0432"
+  Position: {x: 339, y: -130}
+  InputNodeIds: []
+  OutputNodeIds:
+  - 8081752d-e99c-4828-b3ad-b01c054445ec
+  CurrencyIndex: 2
+--- !u!114 &2167900034043396357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: c3ccabb5-a56e-4f81-af55-22f044e18106
+  FromNodeId: 8081752d-e99c-4828-b3ad-b01c054445ec
+  ToNodeId: c79db2b0-0665-4376-b28d-3b38f41c3f57
+  CurrencyIndex: 2
+  SendInterval: 0
+  UnlimitedRepeats: 0
+  SubtractResource: 1
+  Output:
+    AmountType: 0
+    Amount: 5
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
+  GateRatio: 10
+  GateChance: 50
+--- !u!114 &2735033874870572608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d21edcf200ebb9c49870c3c69acddaf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: c12e8a3c-2764-441d-aba3-b5500fb5dd42
+  DisplayName: "\u0414\u043E\u0431\u044B\u0447\u0430 \u0434\u0435\u0440\u0435\u0432\u0430"
+  Position: {x: 333, y: -350}
+  InputNodeIds: []
+  OutputNodeIds:
+  - 32b79096-93c0-4a8f-9f26-6b500b25a28d
+  CurrencyIndex: 0
+--- !u!114 &6258866116304975008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2793008f5cb514b4f8ef87b8d410287d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ArrowId: 2812926a-04d1-443b-903a-737afdd668af
+  FromNodeId: 32b79096-93c0-4a8f-9f26-6b500b25a28d
+  ToNodeId: c79db2b0-0665-4376-b28d-3b38f41c3f57
+  CurrencyIndex: 0
+  SendInterval: 0
+  UnlimitedRepeats: 0
+  SubtractResource: 1
+  Output:
+    AmountType: 0
+    Amount: 15
+    Formula: s
+    RandomAmount: 1
+    RandomChance: 50
+    RandomRangeMin: 1
+    RandomRangeMax: 10
+  GateRatio: 10
+  GateChance: 50
+--- !u!114 &7692259192498065899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 8081752d-e99c-4828-b3ad-b01c054445ec
+  DisplayName: "\u041A\u0440\u0438\u0441\u0442\u0430\u043B\u043B\u044B"
+  Position: {x: 559, y: -131}
+  InputNodeIds:
+  - 0989c18b-2514-4a4a-8029-cd2cf6f38be4
+  OutputNodeIds:
+  - c79db2b0-0665-4376-b28d-3b38f41c3f57
+  CurrencyIndex: 0
+  StartAmount: 0
+  StoredAmount: 3
+--- !u!114 &8148181513345544048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1813f3a6860dd498e3337228c041d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 32b79096-93c0-4a8f-9f26-6b500b25a28d
+  DisplayName: "\u0414\u0435\u0440\u0435\u0432\u043E"
+  Position: {x: 559, y: -351}
+  InputNodeIds:
+  - c12e8a3c-2764-441d-aba3-b5500fb5dd42
+  OutputNodeIds:
+  - c79db2b0-0665-4376-b28d-3b38f41c3f57
+  CurrencyIndex: 0
+  StartAmount: 0
+  StoredAmount: 98

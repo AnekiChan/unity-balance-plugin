@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba07c3a81864dd74fbd0b89d45a8b411, type: 3}
+  m_Name: Row_000
+  m_EditorClassIdentifier: 
+  ParentTable: {fileID: 11400000, guid: 861b6d05e0b549a429bde0b73571da2c, type: 2}
+  cells:
+  - intValue: 0
+    floatValue: 0
+    stringValue: Brown
+    spriteValue: {fileID: 0}
+    formulaString: 
+    formulaResult: 
+  - intValue: 0
+    floatValue: 0
+    stringValue: 
+    spriteValue: {fileID: 2713921515292411146, guid: 2c73df8f09e701247b54f35c8719834b, type: 3}
+    formulaString: 
+    formulaResult: 
+  - intValue: 0
+    floatValue: 0
+    stringValue: common
+    spriteValue: {fileID: 0}
+    formulaString: 
+    formulaResult: 
+  - intValue: 10
+    floatValue: 0
+    stringValue: 
+    spriteValue: {fileID: 0}
+    formulaString: 
+    formulaResult: 
+  - intValue: 0
+    floatValue: 0
+    stringValue: 
+    spriteValue: {fileID: 0}
+    formulaString: likes*0.1
+    formulaResult: 1
+  - intValue: 13
+    floatValue: 0
+    stringValue: 
+    spriteValue: {fileID: 0}
+    formulaString: 
+    formulaResult: 
+  - intValue: 0
+    floatValue: 0
+    stringValue: 
+    spriteValue: {fileID: 0}
+    formulaString: sqrt((likes+followers)*count)
+    formulaResult: 11.958261
