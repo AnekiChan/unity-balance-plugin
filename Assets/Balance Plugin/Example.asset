@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeId: 4f425bd5-0943-43d6-9ddb-ea8eaec08ee1
-  DisplayName: "\u0414\u043E\u0431\u044B\u0447\u0430"
-  Position: {x: 642, y: 266}
+  DisplayName: "\u0414\u043E\u0431\u044B\u0447\u0430 \u0440\u0435\u0441\u0443\u0440\u0441\u043E\u0432
+    \u043E\u0442 1 \u0434\u043E 5"
+  Position: {x: 536, y: 266}
   InputNodeIds: []
   OutputNodeIds:
   - 13017b40-9d0f-4191-9878-3834169650c7
@@ -36,9 +37,11 @@ MonoBehaviour:
   ToNodeId: a421a75d-2b6b-4e1d-ac15-90db0d82ce35
   CurrencyIndex: 2
   SendInterval: 0
+  RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 0
-    Amount: 1
+    Amount: 2
     Formula: s
     RandomAmount: 1
     RandomChance: 50
@@ -59,14 +62,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeId: 676749b1-f6fd-4572-8ead-a7b556a208e9
-  DisplayName: Pool
+  DisplayName: "\u041C\u0435\u0447\u0438"
   Position: {x: 1402, y: 267}
   InputNodeIds:
   - a421a75d-2b6b-4e1d-ac15-90db0d82ce35
   OutputNodeIds: []
   CurrencyIndex: 3
   StartAmount: 0
-  StoredAmount: 69
+  StoredAmount: 99
 --- !u!114 &-6073449172046358890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,6 +87,8 @@ MonoBehaviour:
   ToNodeId: ca39ee69-ec2b-4b1a-b5f6-594687507e3c
   CurrencyIndex: 2
   SendInterval: 0
+  RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 0
     Amount: 1
@@ -111,6 +116,8 @@ MonoBehaviour:
   ToNodeId: a421a75d-2b6b-4e1d-ac15-90db0d82ce35
   CurrencyIndex: 1
   SendInterval: 0
+  RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 0
     Amount: 3
@@ -172,6 +179,8 @@ MonoBehaviour:
   ToNodeId: 849d7c41-99c7-42a3-9c0c-e7cf9f61c96d
   CurrencyIndex: 1
   SendInterval: 0
+  RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 0
     Amount: 1
@@ -195,15 +204,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeId: 849d7c41-99c7-42a3-9c0c-e7cf9f61c96d
-  DisplayName: Pool
-  Position: {x: 1063, y: 172}
+  DisplayName: "\u0423\u0433\u043E\u043B\u044C"
+  Position: {x: 1105, y: 172}
   InputNodeIds:
   - bd9f0fba-e349-4da6-ac9b-35443463cb98
   OutputNodeIds:
   - a421a75d-2b6b-4e1d-ac15-90db0d82ce35
   CurrencyIndex: 1
   StartAmount: 0
-  StoredAmount: 2
+  StoredAmount: 1
 --- !u!114 &-745035446447823003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,6 +230,8 @@ MonoBehaviour:
   ToNodeId: 676749b1-f6fd-4572-8ead-a7b556a208e9
   CurrencyIndex: 3
   SendInterval: 0
+  RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 0
     Amount: 1
@@ -246,7 +257,7 @@ MonoBehaviour:
   Currencies:
   - Name: "\u0420\u0435\u0441\u0443\u0440\u0441"
     Color: {r: 0.72, g: 0.35, b: 0.95, a: 1}
-    Visible: 1
+    Visible: 0
   - Name: "\u0423\u0433\u043E\u043B\u044C"
     Color: {r: 0.10196077, g: 0.34664172, b: 0.8509804, a: 1}
     Visible: 1
@@ -286,7 +297,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeId: 13017b40-9d0f-4191-9878-3834169650c7
-  DisplayName: Pool
+  DisplayName: "\u0420\u0435\u0441\u0443\u0440\u0441\u044B"
   Position: {x: 769, y: 266}
   InputNodeIds:
   - 4f425bd5-0943-43d6-9ddb-ea8eaec08ee1
@@ -294,7 +305,7 @@ MonoBehaviour:
   - bd9f0fba-e349-4da6-ac9b-35443463cb98
   CurrencyIndex: 0
   StartAmount: 0
-  StoredAmount: 0
+  StoredAmount: 3
 --- !u!114 &2082647026573811101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,6 +323,8 @@ MonoBehaviour:
   ToNodeId: bd9f0fba-e349-4da6-ac9b-35443463cb98
   CurrencyIndex: 0
   SendInterval: 0
+  RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 4
     Amount: 1
@@ -335,8 +348,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeId: a421a75d-2b6b-4e1d-ac15-90db0d82ce35
-  DisplayName: Converter
-  Position: {x: 1250, y: 267}
+  DisplayName: "\u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u043C\u0435\u0447\u0430"
+  Position: {x: 1233, y: 267}
   InputNodeIds:
   - ca39ee69-ec2b-4b1a-b5f6-594687507e3c
   - 849d7c41-99c7-42a3-9c0c-e7cf9f61c96d
@@ -356,15 +369,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeId: ca39ee69-ec2b-4b1a-b5f6-594687507e3c
-  DisplayName: Pool
-  Position: {x: 1063, y: 359}
+  DisplayName: "\u0416\u0435\u043B\u0435\u0437\u043E"
+  Position: {x: 1105, y: 361}
   InputNodeIds:
   - bd9f0fba-e349-4da6-ac9b-35443463cb98
   OutputNodeIds:
   - a421a75d-2b6b-4e1d-ac15-90db0d82ce35
   CurrencyIndex: 2
   StartAmount: 0
-  StoredAmount: 106
+  StoredAmount: 31
 --- !u!114 &6455539389786889090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,6 +395,8 @@ MonoBehaviour:
   ToNodeId: 13017b40-9d0f-4191-9878-3834169650c7
   CurrencyIndex: 0
   SendInterval: 0
+  RepeatCount: 1
+  SubtractResource: 1
   Output:
     AmountType: 3
     Amount: 2
@@ -405,7 +420,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeId: bd9f0fba-e349-4da6-ac9b-35443463cb98
-  DisplayName: Gate
+  DisplayName: "\u0423\u0433\u043E\u043B\u044C 60% \u0416\u0435\u043B\u0435\u0437\u043E
+    40%"
   Position: {x: 892, y: 266}
   InputNodeIds:
   - 13017b40-9d0f-4191-9878-3834169650c7

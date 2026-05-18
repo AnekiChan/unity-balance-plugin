@@ -9,6 +9,8 @@ namespace BalancePlugin
         public string ToNodeId;
         public int CurrencyIndex = 0;
         [Min(0)] public int SendInterval = 0;
+        [Min(1)] public int RepeatCount = 1;
+        public bool SubtractResource = true;
         public NodeOutput Output = new NodeOutput();
 
         [Range(0, 100)] public int GateRatio = 10;
@@ -34,7 +36,7 @@ namespace BalancePlugin
             if (from == null || to == null)
                 return 0;
 
-            int amount;
+            int totalSent = 0;
 
             if (from is GateNode gate)
             {
@@ -47,7 +49,19 @@ namespace BalancePlugin
                         gate.ResolveRandomPath(data);
                     if (gate.SelectedArrowId != ArrowId)
                         return 0;
-                    amount = gate.TotalInputThisTick;
+                    int gateAmount = gate.TotalInputThisTick;
+                    if (gateAmount <= 0)
+                        return 0;
+
+                    if (!from.CanSend(data, tick, CurrencyIndex, gateAmount))
+                        return 0;
+
+                    if (SubtractResource && from is PoolNode p)
+                        p.Withdraw(CurrencyIndex, gateAmount);
+
+                    from.BeforeSend(data, tick, CurrencyIndex, gateAmount);
+                    to.ReceiveResource(data, tick, CurrencyIndex, gateAmount);
+                    totalSent = gateAmount;
                 }
                 else
                 {
@@ -58,34 +72,52 @@ namespace BalancePlugin
                         if (a != null)
                             totalRatio += a.GateRatio;
                     }
-                    amount = totalRatio > 0
+                    int amount = totalRatio > 0
                         ? gate.TotalInputThisTick * GateRatio / totalRatio
                         : 0;
+                    if (amount <= 0)
+                        return 0;
+
+                    if (!from.CanSend(data, tick, CurrencyIndex, amount))
+                        return 0;
+
+                    if (SubtractResource && from is PoolNode pp)
+                        pp.Withdraw(CurrencyIndex, amount);
+
+                    from.BeforeSend(data, tick, CurrencyIndex, amount);
+                    to.ReceiveResource(data, tick, CurrencyIndex, amount);
+                    totalSent = amount;
                 }
-            }
-            else if (from is ConverterNode conv)
-            {
-                amount = Output.GetAmount(tick, conv.TotalReceived);
             }
             else
             {
-                if (Output.AmountType == OutputAmountType.All && from is PoolNode pool)
-                    amount = pool.GetStored(CurrencyIndex);
-                else
-                    amount = Output.GetAmount(tick, 0);
+                for (int n = 0; n < RepeatCount; n++)
+                {
+                    int amount;
+                    if (from is ConverterNode conv)
+                        amount = Output.GetAmount(tick, conv.TotalReceived, n);
+                    else if (Output.AmountType == OutputAmountType.All && from is PoolNode poolAll)
+                        amount = poolAll.GetStored(CurrencyIndex);
+                    else
+                        amount = Output.GetAmount(tick, 0, n);
+
+                    if (amount <= 0)
+                        break;
+
+                    if (!from.CanSend(data, tick, CurrencyIndex, amount))
+                        break;
+
+                    if (SubtractResource && from is PoolNode pool)
+                        pool.Withdraw(CurrencyIndex, amount);
+
+                    from.BeforeSend(data, tick, CurrencyIndex, amount);
+                    to.ReceiveResource(data, tick, CurrencyIndex, amount);
+                    totalSent += amount;
+                }
             }
 
-            if (amount <= 0)
-                return 0;
-
-            if (!from.CanSend(data, tick, CurrencyIndex, amount))
-                return 0;
-
-            from.BeforeSend(data, tick, CurrencyIndex, amount);
-            to.ReceiveResource(data, tick, CurrencyIndex, amount);
-
             FiredThisTick = true;
-            return amount;
+            return totalSent;
         }
     }
 }

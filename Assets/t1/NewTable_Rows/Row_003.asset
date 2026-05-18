@@ -26,14 +26,14 @@ MonoBehaviour:
     spriteValue: {fileID: 6847130768412236191, guid: 8a9b1ca5aab256742ac234594e9de34a, type: 3}
     formulaString: 
     formulaResult: 
-  - intValue: 12
+  - intValue: 20
     floatValue: 0
     stringValue: 
     spriteValue: {fileID: 0}
     formulaString: 
     formulaResult: 
   - intValue: 0
-    floatValue: 15
+    floatValue: 10
     stringValue: 
     spriteValue: {fileID: 0}
     formulaString: 
@@ -42,5 +42,11 @@ MonoBehaviour:
     floatValue: 0
     stringValue: 
     spriteValue: {fileID: 0}
-    formulaString: sqrt(attack*health)
-    formulaResult: 13.416408
+    formulaString: sqrt(attack*health*2)
+    formulaResult: 20
+  - intValue: 0
+    floatValue: 0
+    stringValue: 
+    spriteValue: {fileID: 0}
+    formulaString: health*mana/100
+    formulaResult: 2

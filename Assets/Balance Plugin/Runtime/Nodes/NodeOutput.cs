@@ -14,7 +14,7 @@ namespace BalancePlugin
         public int RandomRangeMin = 1;
         public int RandomRangeMax = 10;
 
-        public int GetAmount(int tick, int s = 0)
+        public int GetAmount(int tick, int s = 0, int n = 0)
         {
             switch (AmountType)
             {
@@ -22,7 +22,7 @@ namespace BalancePlugin
                     return Amount;
 
                 case OutputAmountType.Formula:
-                    return FormulaEvaluator.EvaluateSingle(Formula, tick, s);
+                    return FormulaEvaluator.EvaluateSingle(Formula, tick, s, n);
 
                 case OutputAmountType.Random:
                     if (UnityEngine.Random.value * 100f < RandomChance)

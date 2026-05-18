@@ -39,6 +39,11 @@ namespace BalancePlugin
             BuildWindow();
         }
 
+        private void OnInspectorUpdate()
+        {
+            _graphView?.RefreshNodeTitles();
+        }
+
         private void OnDisable()
         {
             _graphView?.SaveNodePositions();
@@ -840,6 +845,18 @@ namespace BalancePlugin
                     EditorUtility.SetDirty(view.Node);
                 }
                 EditorUtility.SetDirty(_data);
+            }
+
+            public void RefreshNodeTitles()
+            {
+                foreach (BalanceNodeView view in _nodeViews.Values)
+                {
+                    if (view?.Node == null)
+                        continue;
+                    string expected = string.IsNullOrWhiteSpace(view.Node.DisplayName) ? view.Node.NodeType : view.Node.DisplayName;
+                    if (view.title != expected)
+                        view.title = expected;
+                }
             }
 
             private GraphViewChange OnGraphViewChanged(GraphViewChange change)

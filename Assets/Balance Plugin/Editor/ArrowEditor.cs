@@ -46,6 +46,8 @@ namespace BalancePlugin
             EditorGUILayout.Space();
             DrawCurrency(arrow);
             DrawProperty(serializedObject.FindProperty("SendInterval"), "Send Interval");
+            DrawProperty(serializedObject.FindProperty("RepeatCount"), "Repeat Count");
+            DrawProperty(serializedObject.FindProperty("SubtractResource"), "Subtract Resource");
 
             if (IsFromGate(arrow))
             {
@@ -148,7 +150,7 @@ namespace BalancePlugin
             GUIStyle hintStyle = new GUIStyle(GUI.skin.label);
             hintStyle.normal.textColor = Color.gray;
             hintStyle.fontSize = 10;
-            EditorGUILayout.LabelField("x = tick, s = input amount (converter total)", hintStyle);
+            EditorGUILayout.LabelField("x = tick, s = input amount, n = repeat index (0-based)", hintStyle);
         }
 
         private void DrawCurrency(Arrow arrow)

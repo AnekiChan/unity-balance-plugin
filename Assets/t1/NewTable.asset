@@ -21,7 +21,9 @@ MonoBehaviour:
     Type: 0
   - Name: health
     Type: 1
-  - Name: points
+  - Name: mana
+    Type: 4
+  - Name: recovery
     Type: 4
   rows:
   - {fileID: 11400000, guid: 6dbe66eb09e651f448e6bd4a9156b5fe, type: 2}

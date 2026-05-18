@@ -42,14 +42,14 @@ MonoBehaviour:
     floatValue: 0
     stringValue: 
     spriteValue: {fileID: 0}
-    formulaString: sqrt(attack*health)
-    formulaResult: 17.320508
+    formulaString: sqrt(attack*health*2)
+    formulaResult: 24.494897
   - intValue: 0
     floatValue: 0
     stringValue: 
     spriteValue: {fileID: 0}
-    formulaString: 
-    formulaResult: 
+    formulaString: health*mana/100
+    formulaResult: 14.696938
   - intValue: 0
     floatValue: 0
     stringValue: 

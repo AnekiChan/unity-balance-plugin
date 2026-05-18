@@ -32,11 +32,11 @@ namespace BalancePlugin
 
         public override void BeforeSend(BalancingData data, int tick, int currencyIndex, int amount)
         {
-            if (_lastWithdrawTick != tick)
-            {
-                _lastWithdrawTick = tick;
-            }
+            _lastWithdrawTick = tick;
+        }
 
+        public void Withdraw(int currencyIndex, int amount)
+        {
             int stored = GetStored(currencyIndex);
             StoredByCurrency[currencyIndex] = Mathf.Max(0, stored - amount);
             UpdateTotalStored();

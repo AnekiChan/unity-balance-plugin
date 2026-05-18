@@ -56,20 +56,20 @@ namespace BalancePlugin
             { "e", Math.E }
         };
 
-        public static (bool success, string result, string preview) Evaluate(string formula, int x, int s = 0)
+        public static (bool success, string result, string preview) Evaluate(string formula, int x, int s = 0, int n = 0)
         {
             if (string.IsNullOrWhiteSpace(formula))
                 return (false, "Formula is empty", "");
 
             try
             {
-                double result = EvaluateFormula(formula, x, s);
+                double result = EvaluateFormula(formula, x, s, n);
                 int rounded = (int)Math.Round(result);
 
                 string preview = "";
                 for (int i = 1; i <= 2; i++)
                 {
-                    double previewValue = EvaluateFormula(formula, i, s);
+                    double previewValue = EvaluateFormula(formula, i, s, n);
                     preview += ((int)Math.Round(previewValue)).ToString(CultureInfo.InvariantCulture);
                     if (i < 2) preview += ", ";
                 }
@@ -82,11 +82,11 @@ namespace BalancePlugin
             }
         }
 
-        public static int EvaluateSingle(string formula, int x, int s = 0)
+        public static int EvaluateSingle(string formula, int x, int s = 0, int n = 0)
         {
             try
             {
-                double result = EvaluateFormula(formula, x, s);
+                double result = EvaluateFormula(formula, x, s, n);
                 return (int)Math.Round(result);
             }
             catch
@@ -106,14 +106,14 @@ namespace BalancePlugin
             return result;
         }
 
-        private static double EvaluateFormula(string formula, int x, int s = 0)
+        private static double EvaluateFormula(string formula, int x, int s = 0, int n = 0)
         {
-            return new Parser(formula, x, s).Parse();
+            return new Parser(formula, x, s, n).Parse();
         }
 
         private static double EvaluateExpression(string expr)
         {
-            return new Parser(expr, 0, 0).Parse();
+            return new Parser(expr, 0, 0, 0).Parse();
         }
 
         private sealed class Parser
@@ -121,13 +121,15 @@ namespace BalancePlugin
             private readonly string _text;
             private readonly int _x;
             private readonly int _s;
+            private readonly int _n;
             private int _position;
 
-            public Parser(string text, int x, int s)
+            public Parser(string text, int x, int s, int n)
             {
                 _text = text ?? "";
                 _x = x;
                 _s = s;
+                _n = n;
             }
 
             public double Parse()
@@ -261,6 +263,9 @@ namespace BalancePlugin
 
                 if (name == "s")
                     return _s;
+
+                if (name == "n")
+                    return _n;
 
                 if (Constants.TryGetValue(name, out double constant))
                     return constant;

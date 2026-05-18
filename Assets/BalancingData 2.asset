@@ -98,6 +98,7 @@ MonoBehaviour:
   - {fileID: -2802115748813457416}
   - {fileID: 4769654904120156361}
   - {fileID: -4829000079505853818}
+  - {fileID: 8147783968160236535}
   Arrows: []
   TickCount: 1
 --- !u!114 &4769654904120156361
@@ -120,3 +121,22 @@ MonoBehaviour:
   CurrencyIndex: 0
   DrainAmount: 1
   DrainedAmount: 0
+--- !u!114 &8147783968160236535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2bedbea6175b5a4a8d58c18f9ac5317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 898d3ad9-5e45-401b-a639-3e9c4d302ba4
+  DisplayName: Gate
+  Position: {x: 1178, y: 327}
+  InputNodeIds: []
+  OutputNodeIds: []
+  CurrencyIndex: 0
+  Mode: 0

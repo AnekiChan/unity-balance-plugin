@@ -17,6 +17,7 @@ MonoBehaviour:
   ToNodeId: 7c92efd6-64e6-4afa-a34a-328c71563999
   CurrencyIndex: 4
   SendInterval: 0
+  RepeatCount: 1
   Output:
     AmountType: 0
     Amount: 3
@@ -44,6 +45,7 @@ MonoBehaviour:
   ToNodeId: 3130f909-fc3b-4685-befc-6ec16f856f5d
   CurrencyIndex: 2
   SendInterval: 0
+  RepeatCount: 1
   Output:
     AmountType: 0
     Amount: 1
@@ -96,7 +98,7 @@ MonoBehaviour:
   OutputNodeIds: []
   CurrencyIndex: 3
   StartAmount: 0
-  StoredAmount: 35
+  StoredAmount: 40
 --- !u!114 &-6819451817793882092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,9 +116,10 @@ MonoBehaviour:
   ToNodeId: 41dd7349-8e40-4a58-8266-828a3c392afd
   CurrencyIndex: 0
   SendInterval: 0
+  RepeatCount: 1
   Output:
     AmountType: 0
-    Amount: 1
+    Amount: 3
     Formula: s
     RandomAmount: 1
     RandomChance: 50
@@ -161,6 +164,7 @@ MonoBehaviour:
   ToNodeId: de1355c7-5656-4869-a4c7-d77e4acd87bf
   CurrencyIndex: 4
   SendInterval: 0
+  RepeatCount: 1
   Output:
     AmountType: 0
     Amount: 1
@@ -188,9 +192,10 @@ MonoBehaviour:
   ToNodeId: 7c92efd6-64e6-4afa-a34a-328c71563999
   CurrencyIndex: 1
   SendInterval: 0
+  RepeatCount: 1
   Output:
     AmountType: 0
-    Amount: 2
+    Amount: 3
     Formula: s
     RandomAmount: 1
     RandomChance: 50
@@ -221,7 +226,7 @@ MonoBehaviour:
   - 80f9bc52-df38-4f0b-bf6e-f0c782027611
   CurrencyIndex: 0
   StartAmount: 0
-  StoredAmount: 8
+  StoredAmount: 0
 --- !u!114 &-1135392559493692095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,6 +265,7 @@ MonoBehaviour:
   ToNodeId: b5f4c0ff-4530-4770-b2b9-5c76b90e5573
   CurrencyIndex: 2
   SendInterval: 0
+  RepeatCount: 1
   Output:
     AmountType: 0
     Amount: 1
@@ -385,6 +391,7 @@ MonoBehaviour:
   ToNodeId: 3130f909-fc3b-4685-befc-6ec16f856f5d
   CurrencyIndex: 1
   SendInterval: 0
+  RepeatCount: 1
   Output:
     AmountType: 0
     Amount: 2
@@ -412,6 +419,7 @@ MonoBehaviour:
   ToNodeId: 2dca5965-280d-43cc-8c15-489b3c2e7bea
   CurrencyIndex: 3
   SendInterval: 0
+  RepeatCount: 1
   Output:
     AmountType: 0
     Amount: 1
@@ -503,6 +511,7 @@ MonoBehaviour:
   ToNodeId: 352d62b1-f309-4a43-bf2b-ce482f02abbe
   CurrencyIndex: 0
   SendInterval: 0
+  RepeatCount: 1
   Output:
     AmountType: 0
     Amount: 11
@@ -530,6 +539,7 @@ MonoBehaviour:
   ToNodeId: 2b8bd040-d6ac-49bc-b4fb-fcc0efccd1ef
   CurrencyIndex: 5
   SendInterval: 0
+  RepeatCount: 1
   Output:
     AmountType: 0
     Amount: 1
@@ -600,6 +610,7 @@ MonoBehaviour:
   ToNodeId: 0cfdb2eb-f502-4f1e-b87f-d65d739e6672
   CurrencyIndex: 1
   SendInterval: 0
+  RepeatCount: 1
   Output:
     AmountType: 0
     Amount: 1
@@ -627,6 +638,7 @@ MonoBehaviour:
   ToNodeId: f0bdf632-2e27-4cdc-9869-f456a2d3457d
   CurrencyIndex: 0
   SendInterval: 0
+  RepeatCount: 1
   Output:
     AmountType: 0
     Amount: 10
@@ -654,6 +666,7 @@ MonoBehaviour:
   ToNodeId: 80f9bc52-df38-4f0b-bf6e-f0c782027611
   CurrencyIndex: 0
   SendInterval: 0
+  RepeatCount: 1
   Output:
     AmountType: 0
     Amount: 1
