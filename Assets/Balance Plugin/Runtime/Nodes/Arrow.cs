@@ -130,7 +130,8 @@ namespace BalancePlugin
                 }
             }
 
-            FiredThisTick = true;
+            if (totalSent > 0)
+                FiredThisTick = true;
             return totalSent;
         }
     }

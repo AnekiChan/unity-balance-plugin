@@ -134,7 +134,7 @@ MonoBehaviour:
   - 7d6ac544-388c-4e75-b3fa-9bcbf9d0eeae
   CurrencyIndex: 0
   StartAmount: 0
-  StoredAmount: 338251
+  StoredAmount: 338250
   CapacityMode: 0
   MaxAmount: 0
 --- !u!114 &-1881997209517525378
@@ -157,7 +157,7 @@ MonoBehaviour:
   OutputNodeIds: []
   CurrencyIndex: 1
   StartAmount: 0
-  StoredAmount: 0
+  StoredAmount: 100
   CapacityMode: 0
   MaxAmount: 0
 --- !u!114 &11400000

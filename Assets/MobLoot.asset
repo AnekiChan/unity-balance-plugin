@@ -20,7 +20,7 @@ MonoBehaviour:
   OutputNodeIds: []
   CurrencyIndex: 1
   StartAmount: 0
-  StoredAmount: 700
+  StoredAmount: 926
   CapacityMode: 0
   MaxAmount: 0
 --- !u!114 &-8628169268865472062
@@ -40,7 +40,6 @@ MonoBehaviour:
   ToNodeId: 26d07d59-7687-437b-ad07-3c987b7b13c9
   CurrencyIndex: 0
   SendInterval: 0
-  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -69,7 +68,6 @@ MonoBehaviour:
   ToNodeId: 1c09979e-7755-46b2-8d3c-efb30c2da1e8
   CurrencyIndex: 3
   SendInterval: 0
-  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -98,7 +96,6 @@ MonoBehaviour:
   ToNodeId: 4b7111bd-4254-4e6b-b7ea-305aef8772b4
   CurrencyIndex: 0
   SendInterval: 0
-  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -147,7 +144,6 @@ MonoBehaviour:
   ToNodeId: 3027e77e-ee47-44b0-8efa-f193d8db8de2
   CurrencyIndex: 0
   SendInterval: 0
-  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -179,7 +175,7 @@ MonoBehaviour:
   OutputNodeIds: []
   CurrencyIndex: 2
   StartAmount: 0
-  StoredAmount: 256
+  StoredAmount: 433
   CapacityMode: 0
   MaxAmount: 0
 --- !u!114 &-2807411995265058406
@@ -219,7 +215,6 @@ MonoBehaviour:
   ToNodeId: 8ea2c7de-8681-4efd-8f28-e6a8257a637f
   CurrencyIndex: 2
   SendInterval: 0
-  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -248,7 +243,6 @@ MonoBehaviour:
   ToNodeId: 872f42b4-0799-479e-bdb8-31e9f10f5671
   CurrencyIndex: 1
   SendInterval: 0
-  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -342,7 +336,6 @@ MonoBehaviour:
   ToNodeId: fa57b767-c796-4ea6-ba6d-29905a815733
   CurrencyIndex: 0
   SendInterval: 0
-  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -394,7 +387,7 @@ MonoBehaviour:
   - 3027e77e-ee47-44b0-8efa-f193d8db8de2
   CurrencyIndex: 0
   StartAmount: 0
-  StoredAmount: 1
+  StoredAmount: 0
   CapacityMode: 0
   MaxAmount: 0
 --- !u!114 &2599004097669114454
@@ -440,7 +433,7 @@ MonoBehaviour:
   OutputNodeIds: []
   CurrencyIndex: 3
   StartAmount: 0
-  StoredAmount: 43
+  StoredAmount: 72
   CapacityMode: 0
   MaxAmount: 0
 --- !u!114 &8167296941833181498
@@ -460,7 +453,6 @@ MonoBehaviour:
   ToNodeId: b9cefbe3-7a59-4298-a384-7002dc56bd3c
   CurrencyIndex: 0
   SendInterval: 0
-  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
