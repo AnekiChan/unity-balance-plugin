@@ -9,7 +9,6 @@ namespace BalancePlugin
         public string ToNodeId;
         public int CurrencyIndex = 0;
         [Min(0)] public int SendInterval = 0;
-        public bool UnlimitedRepeats = false;
         public bool SubtractResource = true;
         public NodeOutput Output = new NodeOutput();
 
@@ -75,8 +74,13 @@ namespace BalancePlugin
                     int amount = totalRatio > 0
                         ? gate.TotalInputThisTick * GateRatio / totalRatio
                         : 0;
+                    if (amount <= 0 && gate.TotalInputThisTick > gate.TotalDistributedThisTick && GateRatio > 0)
+                        amount = 1;
+                    int maxRemaining = gate.TotalInputThisTick - gate.TotalDistributedThisTick;
+                    amount = Mathf.Min(amount, maxRemaining);
                     if (amount <= 0)
                         return 0;
+                    gate.TotalDistributedThisTick += amount;
 
                     if (!from.CanSend(data, tick, CurrencyIndex, amount))
                         return 0;
@@ -104,18 +108,25 @@ namespace BalancePlugin
                     if (amount <= 0)
                         break;
 
+                    if (from is PoolNode pool && Output.AmountType != OutputAmountType.All)
+                    {
+                        if (!pool.HasFairAllocatedThisTick)
+                            pool.FairAllocate(data, tick);
+                        if (pool.FairAllocateAmounts.TryGetValue(ArrowId, out int fairAmount))
+                            amount = Mathf.Min(amount, fairAmount);
+                    }
+
                     if (!from.CanSend(data, tick, CurrencyIndex, amount))
                         break;
 
-                    if (SubtractResource && from is PoolNode pool)
-                        pool.Withdraw(CurrencyIndex, amount);
+                    if (SubtractResource && from is PoolNode poolNode)
+                        poolNode.Withdraw(CurrencyIndex, amount);
 
                     from.BeforeSend(data, tick, CurrencyIndex, amount);
                     to.ReceiveResource(data, tick, CurrencyIndex, amount);
                     totalSent += amount;
 
-                    if (!UnlimitedRepeats)
-                        break;
+                    break;
                 }
             }
 

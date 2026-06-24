@@ -17,7 +17,6 @@ MonoBehaviour:
   ToNodeId: 86b8cfe4-3beb-47b0-a997-54544b84a575
   CurrencyIndex: 2
   SendInterval: 0
-  RepeatCount: 1
   SubtractResource: 1
   Output:
     AmountType: 2
@@ -46,7 +45,6 @@ MonoBehaviour:
   ToNodeId: 432613af-55ae-4436-829e-d35f5debeef8
   CurrencyIndex: 2
   SendInterval: 0
-  RepeatCount: 1
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -75,7 +73,6 @@ MonoBehaviour:
   ToNodeId: 432613af-55ae-4436-829e-d35f5debeef8
   CurrencyIndex: 2
   SendInterval: 0
-  RepeatCount: 1
   SubtractResource: 1
   Output:
     AmountType: 1
@@ -104,7 +101,6 @@ MonoBehaviour:
   ToNodeId: d9c4995e-d880-497b-b926-a9684185c545
   CurrencyIndex: 0
   SendInterval: 0
-  RepeatCount: 1
   SubtractResource: 1
   Output:
     AmountType: 1
@@ -157,7 +153,9 @@ MonoBehaviour:
   - 33e21913-e1c7-498c-bbb7-51c254b6a4e6
   CurrencyIndex: 1
   StartAmount: 0
-  StoredAmount: 0
+  StoredAmount: 1
+  CapacityMode: 0
+  MaxAmount: 0
 --- !u!114 &-78645572347868039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,7 +173,6 @@ MonoBehaviour:
   ToNodeId: 33e21913-e1c7-498c-bbb7-51c254b6a4e6
   CurrencyIndex: 1
   SendInterval: 0
-  RepeatCount: 1
   SubtractResource: 1
   Output:
     AmountType: 4
@@ -262,7 +259,6 @@ MonoBehaviour:
   ToNodeId: 5b819e91-5b6b-483b-a82d-3554ad38b8bc
   CurrencyIndex: 2
   SendInterval: 0
-  RepeatCount: 1
   SubtractResource: 1
   Output:
     AmountType: 4
@@ -294,7 +290,9 @@ MonoBehaviour:
   OutputNodeIds: []
   CurrencyIndex: 0
   StartAmount: 0
-  StoredAmount: 1120
+  StoredAmount: 0
+  CapacityMode: 0
+  MaxAmount: 0
 --- !u!114 &2604344281820240124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,7 +310,6 @@ MonoBehaviour:
   ToNodeId: 40725606-32ec-466f-845f-beb62e03316a
   CurrencyIndex: 1
   SendInterval: 0
-  RepeatCount: 1
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -348,6 +345,8 @@ MonoBehaviour:
   CurrencyIndex: 2
   StartAmount: 0
   StoredAmount: 1
+  CapacityMode: 0
+  MaxAmount: 0
 --- !u!114 &5619087988054905214
 MonoBehaviour:
   m_ObjectHideFlags: 0

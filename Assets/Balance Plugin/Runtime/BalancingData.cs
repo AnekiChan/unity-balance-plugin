@@ -49,6 +49,12 @@ namespace BalancePlugin
                         arrow.FiredThisTick = false;
                 }
 
+                foreach (BalancingNode node in Nodes)
+                {
+                    if (node != null)
+                        node.OnTickStart(this, i);
+                }
+
                 bool changed;
                 do
                 {

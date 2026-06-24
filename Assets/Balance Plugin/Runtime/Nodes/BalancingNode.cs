@@ -24,6 +24,8 @@ namespace BalancePlugin
 
         public virtual bool CanSend(BalancingData data, int tick, int currencyIndex, int amount) { return CanHaveOutput; }
 
+        public virtual void OnTickStart(BalancingData data, int tick) { }
+
         public virtual void BeforeSend(BalancingData data, int tick, int currencyIndex, int amount) { }
 
         private void OnEnable()

@@ -17,7 +17,6 @@ MonoBehaviour:
   ToNodeId: a9377a96-0803-4a6a-97ee-2fadf68d038b
   CurrencyIndex: 0
   SendInterval: 0
-  RepeatCount: 1
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -46,7 +45,6 @@ MonoBehaviour:
   ToNodeId: bf636951-46da-430c-bd5a-46aa17e20dfc
   CurrencyIndex: 1
   SendInterval: 0
-  RepeatCount: 1
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -75,7 +73,6 @@ MonoBehaviour:
   ToNodeId: 7d6ac544-388c-4e75-b3fa-9bcbf9d0eeae
   CurrencyIndex: 0
   SendInterval: 0
-  RepeatCount: 1
   SubtractResource: 1
   Output:
     AmountType: 1
@@ -104,7 +101,6 @@ MonoBehaviour:
   ToNodeId: bd624f84-fbb4-4cb9-8c42-a57e6e875cf7
   CurrencyIndex: 0
   SendInterval: 0
-  RepeatCount: 1
   SubtractResource: 1
   Output:
     AmountType: 1
@@ -138,7 +134,9 @@ MonoBehaviour:
   - 7d6ac544-388c-4e75-b3fa-9bcbf9d0eeae
   CurrencyIndex: 0
   StartAmount: 0
-  StoredAmount: 270
+  StoredAmount: 338251
+  CapacityMode: 0
+  MaxAmount: 0
 --- !u!114 &-1881997209517525378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,7 +157,9 @@ MonoBehaviour:
   OutputNodeIds: []
   CurrencyIndex: 1
   StartAmount: 0
-  StoredAmount: 10
+  StoredAmount: 0
+  CapacityMode: 0
+  MaxAmount: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,7 +195,7 @@ MonoBehaviour:
   - {fileID: 6159957183644947781}
   - {fileID: -5935448048657848796}
   - {fileID: -5275442355578857427}
-  TickCount: 10
+  TickCount: 100
 --- !u!114 &3007196840469154789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -233,7 +233,6 @@ MonoBehaviour:
   ToNodeId: 4b511668-c60d-40eb-8c81-05b82c954c90
   CurrencyIndex: 2
   SendInterval: 0
-  RepeatCount: 1
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -285,7 +284,9 @@ MonoBehaviour:
   OutputNodeIds: []
   CurrencyIndex: 2
   StartAmount: 0
-  StoredAmount: 8
+  StoredAmount: 0
+  CapacityMode: 0
+  MaxAmount: 0
 --- !u!114 &8447681603733316252
 MonoBehaviour:
   m_ObjectHideFlags: 0

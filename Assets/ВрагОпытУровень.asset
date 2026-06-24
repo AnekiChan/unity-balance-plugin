@@ -42,6 +42,8 @@ MonoBehaviour:
   CurrencyIndex: 0
   StartAmount: 0
   StoredAmount: 100
+  CapacityMode: 0
+  MaxAmount: 0
 --- !u!114 &-3647653801184544872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,8 +61,6 @@ MonoBehaviour:
   ToNodeId: adf938ad-3f01-4fd1-8591-453c2949b21b
   CurrencyIndex: 2
   SendInterval: 0
-  RepeatCount: 1
-  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -93,7 +93,9 @@ MonoBehaviour:
   - f6ef7b43-73ae-405e-b863-5e5d43580e3f
   CurrencyIndex: 1
   StartAmount: 0
-  StoredAmount: 1
+  StoredAmount: 2
+  CapacityMode: 0
+  MaxAmount: 0
 --- !u!114 &-1406356784919524294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,7 +126,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a8b2b5d5e722a6c4bb85647efda313bd, type: 3}
-  m_Name: BalancingData
+  m_Name: "\u0412\u0440\u0430\u0433\u041E\u043F\u044B\u0442\u0423\u0440\u043E\u0432\u0435\u043D\u044C"
   m_EditorClassIdentifier: 
   Currencies:
   - Name: "\u0412\u0440\u0430\u0433"
@@ -186,8 +188,6 @@ MonoBehaviour:
   ToNodeId: f883279c-1974-41d9-b1cc-58da750433ca
   CurrencyIndex: 0
   SendInterval: 0
-  RepeatCount: 1
-  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -216,8 +216,6 @@ MonoBehaviour:
   ToNodeId: 51046cd8-f5fa-47a9-b4be-4346a0ee6aae
   CurrencyIndex: 0
   SendInterval: 0
-  RepeatCount: 1
-  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 0
@@ -246,8 +244,6 @@ MonoBehaviour:
   ToNodeId: f6ef7b43-73ae-405e-b863-5e5d43580e3f
   CurrencyIndex: 1
   SendInterval: 0
-  RepeatCount: 1
-  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 1
@@ -276,8 +272,6 @@ MonoBehaviour:
   ToNodeId: 4fd4ed9e-8ae6-4c84-a149-a35b6fc2c4cf
   CurrencyIndex: 1
   SendInterval: 0
-  RepeatCount: 1
-  UnlimitedRepeats: 0
   SubtractResource: 1
   Output:
     AmountType: 3
@@ -309,4 +303,6 @@ MonoBehaviour:
   OutputNodeIds: []
   CurrencyIndex: 2
   StartAmount: 0
-  StoredAmount: 70
+  StoredAmount: 0
+  CapacityMode: 0
+  MaxAmount: 0

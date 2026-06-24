@@ -20,12 +20,14 @@ namespace BalancePlugin
         [System.NonSerialized] public int TotalInputThisTick;
         [System.NonSerialized] public bool HasResolvedThisTick;
         [System.NonSerialized] public string SelectedArrowId = "";
+        [System.NonSerialized] public int TotalDistributedThisTick;
 
         private int _lastReceiveTick;
 
         public override void Initialize()
         {
             TotalInputThisTick = 0;
+            TotalDistributedThisTick = 0;
             HasResolvedThisTick = false;
             SelectedArrowId = "";
             _lastReceiveTick = -1;
@@ -44,6 +46,7 @@ namespace BalancePlugin
                 TotalInputThisTick = 0;
                 HasResolvedThisTick = false;
                 SelectedArrowId = "";
+                TotalDistributedThisTick = 0;
             }
             TotalInputThisTick += amount;
         }

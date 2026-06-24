@@ -30,6 +30,9 @@ namespace BalancePlugin
 
             if (node is PoolNode)
             {
+                DrawProperty("CapacityMode");
+                if (((PoolNode)node).CapacityMode == PoolCapacityMode.Limited)
+                    DrawProperty("MaxAmount");
                 DrawProperty("StartAmount");
                 DrawMultiCurrencyInfo(node as PoolNode);
             }

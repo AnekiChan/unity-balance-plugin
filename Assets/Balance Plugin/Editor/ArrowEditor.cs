@@ -16,7 +16,6 @@ namespace BalancePlugin
         private SerializedProperty _randomRangeMax;
         private SerializedProperty _gateRatio;
         private SerializedProperty _gateChance;
-        private SerializedProperty _unlimitedRepeats;
 
         private void OnEnable()
         {
@@ -30,7 +29,6 @@ namespace BalancePlugin
             _randomRangeMax = serializedObject.FindProperty("Output.RandomRangeMax");
             _gateRatio = serializedObject.FindProperty("GateRatio");
             _gateChance = serializedObject.FindProperty("GateChance");
-            _unlimitedRepeats = serializedObject.FindProperty("UnlimitedRepeats");
         }
 
         public override void OnInspectorGUI()
@@ -48,7 +46,6 @@ namespace BalancePlugin
             EditorGUILayout.Space();
             DrawCurrency(arrow);
             DrawProperty(serializedObject.FindProperty("SendInterval"), "Send Interval");
-            EditorGUILayout.PropertyField(_unlimitedRepeats, new GUIContent("Unlimited Repeats"));
             DrawProperty(serializedObject.FindProperty("SubtractResource"), "Subtract Resource");
 
             if (IsFromGate(arrow))

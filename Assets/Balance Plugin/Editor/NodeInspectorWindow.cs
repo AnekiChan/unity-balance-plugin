@@ -66,6 +66,9 @@ namespace BalancePlugin
             else if (_currentNode is PoolNode poolNode)
             {
                 DrawCurrencySelector("Stored Currency");
+                poolNode.CapacityMode = (PoolCapacityMode)EditorGUILayout.EnumPopup("Capacity", poolNode.CapacityMode);
+                if (poolNode.CapacityMode == PoolCapacityMode.Limited)
+                    poolNode.MaxAmount = EditorGUILayout.IntField("Max Amount", poolNode.MaxAmount);
                 poolNode.StartAmount = EditorGUILayout.IntField("Initial Amount", poolNode.StartAmount);
                 DrawPoolStoredInfo(poolNode);
             }
